@@ -14,7 +14,7 @@
 	$: altString = form?.alteredString;
 </script>
 
-<div class="flex h-screen w-full flex-col rounded-lg bg-slate-300 p-6 shadow">
+<div class="flex h-screen w-full flex-col rounded-lg bg-gray-300 p-6 shadow">
 	<div class="mb-8">
 		<div class="mb-4 text-center text-lg font-bold">Simple Form</div>
 		<div class="mb-4 text-center text-sm">Turns lowercase string into uppercase</div>
