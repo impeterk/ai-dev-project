@@ -1,0 +1,4 @@
+{
+    "purgeOnStart": true,
+    "persistStorage": false
+}
