@@ -1,15 +1,17 @@
+import { initiateCrawler } from '$lib/server/crawler.js'
+
 export const actions = {
   default: async ({ request }) => {
+    // get the form
     const formData = await request.formData()
-    const url = formData.get('url')
-    const count = formData.get('count')
 
-    const arrayOfUrls = []
-    for (let i = 0; i < count; i++) {
-      arrayOfUrls.push(url)
-    }
+    // get the specific field from form
+    const domain = formData.get('domain')
 
-    return { arrayOfUrls }
+    // call the server side function
+    const response = await initiateCrawler(domain);
 
+    // Return the data back 
+    return { success: true, crawlResult: response };
   }
 }
