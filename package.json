@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"apify": "^3.1.8",
 		"crawlee": "^3.5.0"
 	}
 }

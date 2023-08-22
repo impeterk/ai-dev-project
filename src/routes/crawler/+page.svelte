@@ -15,6 +15,7 @@
 	}
 
 	$: crawlResult = form?.crawlResult;
+	$: isSuccess = form?.success;
 	$: {
 		console.log(crawlResult);
 	}
@@ -38,11 +39,13 @@
 		</form>
 	</div>
 
-	{#if crawlResult}
+	{#if crawlResult && isSuccess}
 		{#each Object.keys(crawlResult.items) as item}
 			<div class="mb-8 flex w-full flex-col rounded-lg bg-slate-500/60 p-6 text-center shadow">
 				<p class="font-semiblod text-slate-900">{item}: {crawlResult.items[item].url}</p>
 			</div>
 		{/each}
+		{:else if crawlResult && !isSuccess}
+			<p>{crawlResult}</p>
 	{/if}
 </div>
