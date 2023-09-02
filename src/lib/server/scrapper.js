@@ -1,18 +1,15 @@
 // Get complete data
 export function scrapAllData($) {
 	return {
-		title: $('title').text(),
-		description: $('meta[name="description"]').attr('content'),
-		social: {
-			title: $('meta[property="og:title"]').attr('content'),
-			description: $('meta[property="og:description"]').attr('content'),
-			image: $('meta[property="og:image"]').attr('content')
-		},
-		schema: processJson($('script[type="application/ld+json"]').html())
+		title: this.scrapBasicData($).title,
+		description: this.scrapBasicData($).description,
+		social: this.scrapSocialData($),
+		schema: this.scrapSchemaData($)
 	};
 }
 
 // Get only meta-title & meta-description
+// Used for getting all data but also callable as standalone function from crawler
 export function scrapBasicData($) {
 	return {
 		title: $('title').text(),
@@ -21,21 +18,19 @@ export function scrapBasicData($) {
 }
 
 // Get only social open graph data
+// Used for getting all data but also callable as standalone function from crawler
 export function scrapSocialData($) {
 	return {
-		social: {
-			title: $('meta[property="og:title"]').attr('content'),
-			description: $('meta[property="og:description"]').attr('content'),
-			image: $('meta[property="og:image"]').attr('content')
-		}
+		title: $('meta[property="og:title"]').attr('content'),
+		description: $('meta[property="og:description"]').attr('content'),
+		image: $('meta[property="og:image"]').attr('content')
 	};
 }
 
 // Get only parsed Schema data
+// Used for getting all data but also callable as standalone function from crawler
 export function scrapSchemaData($) {
-	return {
-		schema: processJson($('script[type="application/ld+json"]').html())
-	};
+	return processJson($('script[type="application/ld+json"]').html());
 }
 
 // Helper function for parsing & stringifying JSON data such as schema
