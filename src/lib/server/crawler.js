@@ -2,8 +2,20 @@
 import { CheerioCrawler, Dataset } from 'crawlee';
 // Import the Apify SDK into your project
 import { Actor } from 'apify';
-import {scrapAllData} from "./scrapper";
+import { scrapAllData } from './scrapper';
 
+/**
+ * Initiates the web crawler using CheerioCrawler.
+ * 
+ * This function sets up and runs the CheerioCrawler to crawl website 
+ * from a given domain. It also uses Apify's actor system for managing 
+ * the request queue and dataset. For each crawled website it runs an 
+ * instance of the scrapper to retrieve page's data.
+ * After processing, it stores the scraped data alongside the URL in the dataset.
+ * 
+ * @param {string} domain - The starting URL/domain to crawl.
+ * @returns {Promise<Object[]>} - A promise that resolves to an array of objects containing scraped data and URLs.
+ */
 export async function initiateCrawler(domain) {
 	// Get a config for the crawler
 	let config = getConfig(domain);
@@ -21,11 +33,10 @@ export async function initiateCrawler(domain) {
 
 		// Use the requestHandler to process each of the crawled pages.
 		async requestHandler({ request, $, enqueueLinks }) {
-			// Save results as JSON to ./storage/datasets/default
 			await requestDataset.pushData({ url: request.loadedUrl, data: scrapAllData($) });
-
-			// Extract links from the current page and add them to the crawling queue
-			await enqueueLinks();
+						
+			// Extract links from the current page and add them to the crawling queue if they match the pattern
+			await enqueueLinks({globs: config.domainPattern});
 		}
 	});
 
@@ -36,12 +47,22 @@ export async function initiateCrawler(domain) {
 	return requestDataset.getData();
 }
 
-// Helper method to get the unique named data for queue & dataset
+/**
+ * Generates a configuration object for the crawler based on the provided domain.
+ * 
+ * This helper function creates unique names for the request queue and dataset, 
+ * ensuring that each crawl session has its distinct queue & dataset. It also constructs 
+ * a domain-specific pattern for URLs that should be enqueued by the crawler.
+ * 
+ * @param {string} domain - The base domain for which the configuration should be created.
+ * @returns {Object} - An object containing the queue name, dataset name, and domain pattern.
+ */
 function getConfig(domain) {
 	let timeStamp = new Date().getTime().toString();
 
 	return {
 		queueName: domain + '-' + timeStamp + '-' + 'queue',
-		datasetName: domain + '-' + timeStamp + '-' + 'dataset'
+		datasetName: domain + '-' + timeStamp + '-' + 'dataset',
+		domainPattern: [`${domain}/**`]
 	};
 }
