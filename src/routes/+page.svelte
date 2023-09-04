@@ -5,16 +5,6 @@
 	let password;
 
 	let success = false;
-	//
-	// $: {
-	// 	if (form && form.success) {
-	// 		success = true;
-	// 		setTimeout(() => {
-	// 			success = false;
-	// 		}, 3000);
-	// 	}
-	// }
-	// // $: altString = form?.alteredString;
 </script>
 
 <div class="flex min-h-screen w-full flex-col justify-center">
@@ -40,22 +30,12 @@
 					class="mb-2 w-full rounded border p-1"
 				/>
 			</label>
-			<!-- <button -->
-			<!-- 	disabled={!login && !password} -->
-			<!-- 	class={`${ -->
-			<!-- 		login && password ? 'bg-slate-900' : 'bg-slate-900/60' -->
-			<!-- 	} mx-auto mt-2 w-1/2 rounded-md p-2 text-lg font-semibold text-slate-100`}>Submit</button> -->
+
 			<button
 				class="
 					ml-auto mt-2 w-1/2 rounded-md bg-slate-900 p-2 text-lg font-semibold text-slate-100">Login</button
 			>
 		</form>
-
-		<!-- {#if altString} -->
-		<!-- 	<div class="mb-8 flex w-full flex-col rounded-lg bg-slate-500/60 p-6 text-center shadow"> -->
-		<!-- 		<p class="font-semiblod text-slate-900">{altString}</p> -->
-		<!-- 	</div> -->
-		<!-- {/if} -->
 	</div>
 	<div class="mt-auto flex flex-col items-center justify-center">
 		<h1 class="text-3xl font-bold">Welcome to SvelteKit</h1>
