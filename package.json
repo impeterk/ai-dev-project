@@ -2,6 +2,9 @@
 	"name": "scrapesvelter",
 	"version": "0.0.1",
 	"private": true,
+	"engine": {
+		"node": "18.0.0"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
