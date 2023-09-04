@@ -2,7 +2,7 @@
 	"name": "scrapesvelter",
 	"version": "0.0.1",
 	"private": true,
-	"engine": {
+	"engines": {
 		"node":">=16.0.0"
 	},
 	"scripts": {
