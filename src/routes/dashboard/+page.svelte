@@ -30,6 +30,7 @@
 		<form
 			class="mx-auto mt-2 flex w-full gap-4 p-8"
 			method="POST"
+			action="?/fetch"
 			use:enhance={() => {
 				fetching = true;
 
