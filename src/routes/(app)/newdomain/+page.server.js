@@ -1,5 +1,7 @@
 import {firestore} from "$lib/firebase"
+import { redirect } from "@sveltejs/kit";
 import {doc, setDoc, addDoc, collection } from "firebase/firestore"
+import { initiateCrawler } from "$lib/server/crawler";
 
 export const actions = {
   default: async ({ request }) => {
@@ -9,9 +11,14 @@ export const actions = {
 
     const newDomain = formData.get('newDomain')
     // adds new domain into database
-    await setDoc(doc(firestore, "domain", newDomain) , {status: "added"} )
-    // addes date of creation as the first date of scan -- might be useful
-    await setDoc(doc(firestore, `domain/${newDomain}/dateofscan/${dateOfCreation}`), {})
+	let newEntry = newDomain.replace("https://", '')
+    await setDoc(doc(firestore, "domain", newEntry) , {status: "added"} )
+
+    initiateCrawler(newDomain, dateOfCreation)
+
+    throw new redirect(307, '/')
+
+
   }
 
 }

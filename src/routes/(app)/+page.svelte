@@ -24,7 +24,7 @@
 			<a href="/newdomain" class="rounded bg-gray-800 px-2 py-1 hover:bg-gray-600">Add Domain</a>
 		</div>
 	</div>
-	<ol class="w-full p-2 pt-0" >
+	<ol class="w-full pt-0" >
 		<!-- TODO loading state ---------------------------------------------------->
 		<Collection ref={'domain'} let:data>
 			{#each data as domain, index}
@@ -38,6 +38,8 @@
 							class="border-inherrit w-20 rounded border px-2 text-center text-sm"
 							class:bg-yellow-200={domain.status == 'added'}
 							class:bg-green-200={domain.status == 'finished'}
+							class:bg-red-200={domain.status == 'aborted'}
+							class:bg-blue-200={domain.status == 'aborted'}
 						>
 							{domain.status}
 						</p>

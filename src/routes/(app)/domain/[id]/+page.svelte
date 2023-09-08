@@ -10,7 +10,7 @@
 
 <section class="w-full">
 	<button on:click={handleBack}>Back</button>
-	<Collection ref={$page.url.pathname + '/dateofscan'} let:data let:count>
+	<Collection ref={`domain/${$page.params.id}/dateofscan`} let:data let:count>
 		<div class="mt-20 w-full rounded-lg bg-slate-300/60">
 			<div class="flex items-center justify-between rounded-t-lg bg-slate-500 p-4 text-slate-100">
 				<p class="ml-10 text-2xl font-semibold">
@@ -51,7 +51,7 @@
 							<td class="text-lg">{new Date(parseInt(domain.id))}</td>
 							<td class="ml-auto mr-4">
 								<a
-									href="domain/{domain.id}"
+									href="{$page.url.pathname}/{domain.id}"
 									type="button"
 									class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
 									>Continue</a
