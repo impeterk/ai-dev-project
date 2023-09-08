@@ -6,6 +6,6 @@
 	// Initialize Firebase
 </script>
 
-<FirebaseApp {auth} {firestore}>
+<FirebaseApp {auth} {firestore} >
 	<slot />
 </FirebaseApp>

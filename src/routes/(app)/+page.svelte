@@ -3,13 +3,12 @@
 	import { Collection } from 'sveltefire';
 	import { SearchOutline } from 'flowbite-svelte-icons';
 	export let form;
-	let added = 'bg-yellow-500/50 rounded';
 </script>
 
 <section>
 	<div class=" flex items-center justify-between bg-slate-500 px-8 py-4 text-slate-100">
 		<h3 class="text-2xl font-semibold">Domains</h3>
-		<div class="flex items-center gap-4">
+		<div class="flex items-center gap-4" >
 			<label for="table-search" class="sr-only">Search</label>
 			<div class="relative">
 				<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -25,13 +24,14 @@
 			<a href="/newdomain" class="rounded bg-gray-800 px-2 py-1 hover:bg-gray-600">Add Domain</a>
 		</div>
 	</div>
-	<ol class="w-full p-2 pt-0">
+	<ol class="w-full p-2 pt-0" >
+		<!-- TODO loading state ---------------------------------------------------->
 		<Collection ref={'domain'} let:data>
 			{#each data as domain, index}
 				<li
-					class="group flex w-full items-center border-y py-1 odd:bg-white hover:border-slate-400"
+					class="group flex w-full items-center border-y py-1 bg-white hover:border-slate-400"
 				>
-					<p class="ml-4 w-8">{index + 1}.</p>
+					<p class="ml-4 w-8" >{index + 1}.</p>
 					<p class="text-lg">{domain.id}</p>
 					<div class="ml-auto flex items-center gap-12">
 						<p
@@ -52,5 +52,6 @@
 			{/each}
 			<p slot="loading" class="absolute text-4xl">Loading...</p>
 		</Collection>
+		<!--TODO Error state------------------------------------------------->
 	</ol>
 </section>

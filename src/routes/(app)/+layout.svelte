@@ -7,7 +7,7 @@
 	<div class="sticky left-0 top-0 z-40 h-screen w-72 shrink-0 bg-gray-800 p-4">
 		<Sidebar />
 	</div>
-	<div class="mt-20 w-full">
+	<div class="pt-20 w-full bg-slate-600">
 		<slot />
 	</div>
 </div>
