@@ -4,8 +4,7 @@
 		ChartPieSolid,
 		BookSolid,
 		LifeBuoySolid,
-		UserSolid,
-		ArrowRightToBracketSolid,
+FilePlusSolid,
 		ArrowLeftToBracketOutline
 	} from 'flowbite-svelte-icons';
 	$: activeUrl = $page.url.pathname;
@@ -28,6 +27,20 @@
 					class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 				/>
 				<span class="ml-3">Dashboard</span>
+			</a>
+		</li>
+		<li class='ml-8'>
+			<a
+				href="/newdomain"
+				class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${activeUrl ==
+				'/newdomain'
+					? 'dark:group:text-white bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white'
+					: ''}"
+			>
+				<FilePlusSolid
+					class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+				/>
+				<span class="ml-3">Add Domain</span>
 			</a>
 		</li>
 	</ul>

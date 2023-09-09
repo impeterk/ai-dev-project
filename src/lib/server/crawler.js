@@ -35,6 +35,7 @@ export async function initiateCrawler(domain, dateOfScan) {
 	const requestQueue = await Actor.openRequestQueue(config.queueName);
 	const requestDataset = await Actor.openDataset(config.datasetName);
 
+
 	// CheerioCrawler crawls the web using HTTP requests
 	const crawler = new CheerioCrawler({
 		requestQueue, // passing the new unique queue
@@ -61,10 +62,13 @@ export async function initiateCrawler(domain, dateOfScan) {
 			meta: item.data.meta,
 			social: item.data.social,
 			headlines: item.data.body.headlines,
-			images: item.data.body.images
+			images: item.data.body.images,
+            schema: item.data.schema
 		})
 	})
-	await updateDoc(docRef, { status: "finished" })
+    console.log(scrapedData.items)
+	await updateDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}`), {totalPages: scrapedData.items.length })
+	await updateDoc(docRef, { status: "finished", })
 
 }
 

@@ -1,21 +1,18 @@
 <script>
 	import { Collection } from 'sveltefire';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 
-	async function handleBack() {
-		goto('/');
-	}
+ const {id} = $page.params
+
 </script>
 
 <section class="w-full">
-	<button on:click={handleBack}>Back</button>
-	<Collection ref={`domain/${$page.params.id}/dateofscan`} let:data let:count>
-		<div class="mt-20 w-full rounded-lg bg-slate-300/60">
-			<div class="flex items-center justify-between rounded-t-lg bg-slate-500 p-4 text-slate-100">
-				<p class="ml-10 text-2xl font-semibold">
-					Domain {$page.url.pathname.split('/').at(-1)}
-				</p>
+	<Collection ref={`domain/${id}/dateofscan`} let:data let:count>
+			<div class="flex flex-col bg-slate-500 p-4 text-slate-100">
+				<div class="flex items-center justify-between">
+				<h3 class="ml-10 text-3xl font-semibold">
+					{id}
+				</h3>
 				<label for="table-search" class="sr-only">Search</label>
 				<div class="relative mt-1">
 					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -42,28 +39,32 @@
 						placeholder="Search for items"
 					/>
 				</div>
+				</div>
+				<div class="flex justify-between content-center pt-4 px-8">
+					<p>date of scan</p>
+					<p>scanned pages</p>
+					<form method="POST">
+						<input hidden value={id} name="domainid">
+					<button class="bg-slate-200 text-slate-900 px-2.5 py-1 rounded hover:bg-green-200">New scan</button>
+					</form>
+				</div>
 			</div>
-			<table class="w-full">
-				<tbody class="pt-10">
+			<ol>
 					{#each data as domain, index}
-						<tr class="flex w-full items-center p-2">
-							<td class="ml-4 w-8">{index + 1}.</td>
-							<td class="text-lg">{new Date(parseInt(domain.id))}</td>
-							<td class="ml-auto mr-4">
+						<li class="flex w-full items-center p-2">
+							<p class="ml-4 w-8">{index + 1}.</p>
+							<p class="text-lg">{new Date(parseInt(domain.id))}</p>
+							<p class="text-lg">{domain.totalPages}</p>
+							<p class="ml-auto mr-4">
 								<a
 									href="{$page.url.pathname}/{domain.id}"
 									type="button"
 									class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
 									>Continue</a
-								></td
+								></p
 							>
-						</tr>
+						</li>
 					{/each}
-				</tbody>
-			</table>
-		</div>
-		<div slot="loading">
-			<Spinner />
-		</div>
+			</ol>
 	</Collection>
 </section>
