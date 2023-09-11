@@ -7,7 +7,7 @@
 	let success = false;
 </script>
 
-<div class="flex min-h-screen w-full flex-col justify-center">
+<div class="flex min-h-screen w-full flex-col justify-center" >
 	<div class="mt-[20vh]">
 		<div class="m-4 text-center">
 			<h1 class="text-3xl font-bold">Login</h1>
