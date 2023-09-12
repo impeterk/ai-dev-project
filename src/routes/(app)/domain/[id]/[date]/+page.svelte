@@ -9,14 +9,14 @@
 <section class="">
 	<div class="flex flex-col bg-slate-500 p-4 text-slate-100">
 		<div class="mx-4 flex items-center justify-between">
-            <div class="flex gap-8 items-center">
-                <a href="/domain/{id}">
-                <AngleLeftSolid class="w-8 h-8" />
-                </a>
-			<h3 class="text-3xl font-semibold">
-				{id}
-			</h3>
-            </div>
+			<div class="flex items-center gap-8">
+				<a href="/domain/{id}">
+					<AngleLeftSolid class="h-8 w-8" />
+				</a>
+				<h3 class="text-3xl font-semibold">
+					{id}
+				</h3>
+			</div>
 			<h3 class="ml-10 text-3xl font-semibold">
 				{date}
 			</h3>
@@ -29,7 +29,7 @@
 					<div class="ml-4 flex content-center items-center text-lg">
 						<div class="item-start flex gap-2">
 							<p>{index + 1}.</p>
-							<p>{url.id}</p>
+							<p>{url.url}</p>
 						</div>
 						<div class="ml-auto flex items-baseline gap-4">
 							<p>{url.meta.title}</p>

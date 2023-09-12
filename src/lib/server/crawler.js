@@ -4,7 +4,7 @@ import { CheerioCrawler, Dataset } from 'crawlee';
 import { Actor } from 'apify';
 import { scrapAllData } from './scrapper';
 import { firestore } from '$lib/firebase'
-import { doc, setDoc, collection, updateDoc } from "firebase/firestore"
+import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore"
 /**
  * Initiates the web crawler using CheerioCrawler.
  *
@@ -58,16 +58,18 @@ export async function initiateCrawler(domain, dateOfScan) {
 	scrapedData.items.map(item => {
 		let slug = item.url.split("/").at(-1)
 		if (slug == '') slug = "home"
-		setDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}/scannedurls/${slug}`), {
+		addDoc(collection(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}/scannedurls/`), {
+			url: item.url,
+			slug,
 			meta: item.data.meta,
 			social: item.data.social,
 			headlines: item.data.body.headlines,
 			images: item.data.body.images,
-            schema: item.data.schema
+			schema: item.data.schema
 		})
 	})
-    console.log(scrapedData.items)
-	await updateDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}`), {totalPages: scrapedData.items.length })
+	console.log(scrapedData.items)
+	await updateDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}`), { totalPages: scrapedData.items.length })
 	await updateDoc(docRef, { status: "finished", })
 
 }
