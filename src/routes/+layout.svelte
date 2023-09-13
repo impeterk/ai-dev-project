@@ -1,7 +1,11 @@
 <script>
 	import '../app.css';
+	import { FirebaseApp } from 'sveltefire';
+	import { firestore, auth } from '$lib/firebase';
+
+	// Initialize Firebase
 </script>
 
-<main class="container mx-auto flex max-w-6xl flex-col">
+<FirebaseApp {auth} {firestore} >
 	<slot />
-</main>
+</FirebaseApp>
