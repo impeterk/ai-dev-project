@@ -1,4 +1,4 @@
-import { initiateCrawler } from '$lib/server/crawler.js';
+import { initiateCrawler } from '$lib/server/crawler';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -15,7 +15,7 @@ export const actions = {
 			// Return the data back
 			return { success: true, crawlResult: response };
 		} catch (err) {
-			console.error('Error on server side:', err); 
+			console.error('Error on server side:', err);
 			return { success: false, crawlResult: 'An unexpected error occurred. Please try again.' };
 		}
 	}
