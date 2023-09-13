@@ -1,3 +1,6 @@
+import { getAllObjects } from "./objectScrapper";
+import { processJson } from "./processJson";
+
 /**
  * Extracts comprehensive data from a given web page body.
  * 
@@ -42,9 +45,9 @@ export function scrapAllData($) {
  */
 export function scrapMetaData($) {
 	return {
-		title: $('title').text(),
-		description: $('meta[name="description"]').attr('content'),
-		canonical: $('link[rel="canonical"]').attr('href'),
+		title: $('title').text() || "",
+		description: $('meta[name="description"]').attr('content') || "",
+		canonical: $('link[rel="canonical"]').attr('href') || "",
 		alternates: getAllObjects($, 'link[rel="alternate"][hreflang]', ['href', 'hreflang'])
 	};
 }
@@ -93,9 +96,9 @@ export function scrapBodyData($) {
  */
 export function scrapSocialData($) {
 	return {
-		title: $('meta[property="og:title"]').attr('content'),
-		description: $('meta[property="og:description"]').attr('content'),
-		image: $('meta[property="og:image"]').attr('content')
+		title: $('meta[property="og:title"]').attr('content') || "",
+		description: $('meta[property="og:description"]').attr('content') || "",
+		image: $('meta[property="og:image"]').attr('content') || ""
 	};
 }
 
@@ -114,52 +117,4 @@ export function scrapSocialData($) {
  * console.log(schemaData.name); // If the schema contains a 'name' property, this will output its value.
  */export function scrapSchemaData($) {
 	return processJson($('script[type="application/ld+json"]').html());
-}
-
-/**
- * Parses a given JSON string and then re-serializes it with formatting for human readability.
- * 
- * This function first parses the input JSON string into a JavaScript object using `JSON.parse()`.
- * It then stringifies this object back into a JSON string using `JSON.stringify()`, 
- * with additional parameters to format it with an indentation of 2 spaces for better readability.
- * 
- * @param {string} data - The input JSON string.
- * @returns {string} A pretty-printed, formatted JSON string.
- * 
- * @example
- * const rawJSON = '{"name":"John","age":30,"city":"New York"}';
- * const formattedJSON = processJson(rawJSON);
- * console.log(formattedJSON);
- * // Outputs:
- * // {
- * //   "name": "John",
- * //   "age": 30,
- * //   "city": "New York"
- * // }
- */function processJson(data) {
-	return JSON.stringify(JSON.parse(data), null, 2);
-}
-
-/**
- * Extracts specified attributes from elements matched by the defined selector.
- * @param {Object} $ - The body of website from crawler instance.
- * @param {string} selector - The CSS selector to match elements.
- * @param {Array<string>} attributes - An array of attribute names to retrieve.
- * @returns {Array<Object>} An array of objects containing the specified attributes.
- */
-function getAllObjects($, selector, attributes) {
-	return $(selector)
-		.map(function () {
-			const element = $(this);
-			const result = {};
-			attributes.forEach((attr) => {
-				if (attr === 'text') {
-					result[attr] = element.text(); // get the actual value of the HTML tag
-				} else {
-					result[attr] = element.attr(attr); // get the value of HTML tag's attribute
-				}
-			});
-			return result;
-		})
-		.get();
 }
