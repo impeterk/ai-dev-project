@@ -2,7 +2,7 @@
 import { CheerioCrawler, Dataset } from 'crawlee';
 // Import the Apify SDK into your project
 import { Actor } from 'apify';
-import { scrapAllData } from './scrapper';
+import { scrapAllData } from '../scrapper';
 import { firestore } from '$lib/firebase'
 import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore"
 /**
@@ -17,14 +17,8 @@ import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore"
  * @param {string} domain - The starting URL/domain to crawl.
  * @returns {Promise<Object[]>} - A promise that resolves to an array of objects containing scraped data and URLs.
  */
-export async function initiateCrawler(domain, dateOfScan) {
-	// add new entry into Data base
-	// TODO connect to front end.
-	let newEntry = domain.replace("https://", '')
-	let docRef = doc(firestore, `domain/${newEntry}`)
-	await updateDoc(docRef, { status: "scanning" })
-	//const dateOfScan = Date.now()
-	await setDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}`), {})
+export async function initiateCrawler(domain) {
+
 	// Get a config for the crawler
 	let config = getConfig(domain);
 
@@ -42,8 +36,7 @@ export async function initiateCrawler(domain, dateOfScan) {
 
 		// Use the requestHandler to process each of the crawled pages.
 		async requestHandler({ request, $, enqueueLinks }) {
-			requestDataset.pushData({ url: request.loadedUrl, data: scrapAllData($) });
-
+			requestDataset.pushData({ url: request.loadedUrl, scrappedData: scrapAllData($), allData: $('body').html() });
 
 			// Extract links from the current page and add them to the crawling queue if they match the pattern
 			await enqueueLinks({ globs: config.domainPattern });
@@ -54,24 +47,7 @@ export async function initiateCrawler(domain, dateOfScan) {
 	await crawler.run([domain]);
 
 	// Finally return the list of urls
-	let scrapedData = await requestDataset.getData()
-	scrapedData.items.map(item => {
-		let slug = item.url.split("/").at(-1)
-		if (slug == '') slug = "home"
-		addDoc(collection(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}/scannedurls/`), {
-			url: item.url,
-			slug,
-			meta: item.data.meta,
-			social: item.data.social,
-			headlines: item.data.body.headlines,
-			images: item.data.body.images,
-			schema: item.data.schema
-		})
-	})
-	console.log(scrapedData.items)
-	await updateDoc(doc(firestore, `domain/${newEntry}/dateofscan/${dateOfScan}`), { totalPages: scrapedData.items.length })
-	await updateDoc(docRef, { status: "finished", })
-
+	return requestDataset.getData()
 }
 
 /**
