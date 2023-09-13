@@ -1,18 +1,20 @@
 import { initiateCrawler } from "../crawler";
+import {adjustDomain} from "../scanner/adjustDomain";
+
 import { firestore } from '$lib/firebase'
 import { doc, setDoc, addDoc, collection, updateDoc } from "firebase/firestore"
 
 
-export async function initiateScan(domain, startingUrl = domain) {
+export async function initiateScan(domain, dateOfScan, startingUrl = domain, ) {
 
     // creates a date when the scan started
-    const dateOfScan = Date.now()
+    // const dateOfScan = Date.now()
 
-    // cleans domain of // for firebase
-    if (domain.includes('https://')) {
-        domain = domain.replace('https://', '')
-    }
-    domain = domain.split('/').at(0)
+    // // cleans domain of // for firebase
+    // if (domain.includes('https://')) {
+    //     domain = domain.replace('https://', '')
+    // }
+    domain = adjustDomain(domain);
 
     // add new entry into Data base
     let docRef = doc(firestore, `domain/${domain}`)
@@ -29,9 +31,8 @@ export async function initiateScan(domain, startingUrl = domain) {
                 url: item.url,
                 slug,
                 meta: item.scrappedData.meta,
+                body: item.scrappedData.body,
                 social: item.scrappedData.social,
-                headlines: item.scrappedData.body.headlines,
-                images: item.scrappedData.body.images,
                 schema: item.scrappedData.schema,
                 allData: item.allData
             })
