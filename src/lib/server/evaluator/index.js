@@ -7,14 +7,20 @@ import { getScanCollection } from '../../firebase/getCollection';
 import { adjustDomain } from '../scanner/adjustDomain';
 
 export async function initiateEvaluation(domain, dateOfScan) {
-	domain = adjustDomain(domain);
+	// domain = adjustDomain(domain);
+	let config = {
+		domain: adjustDomain(domain),
+		dateOfScan: dateOfScan,
+		urlId: null
+	}
 
 	try {
-		const scanResults = await getScanCollection(domain, dateOfScan);
+		const scanResults = await getScanCollection(config.domain, config.dateOfScan);
 
 		// Run all checks for each scanned url
 		const promises = Object.entries(scanResults).map(([urlId, urlData]) => {
-			checkMetaData(domain, dateOfScan, urlData.meta, urlId);
+			config.urlId = urlId;
+			checkMetaData(config, urlData.meta);
 		});
 
 		await Promise.all(promises);
