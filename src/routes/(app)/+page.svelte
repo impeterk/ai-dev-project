@@ -40,6 +40,7 @@
 							class:bg-green-200={domain.status == 'finished'}
 							class:bg-red-200={domain.status == 'aborted'}
 							class:bg-blue-200={domain.status == 'scanning'}
+							class:bg-yellow-300={domain.status == 'evaluating'}
 						>
 							{domain.status}
 						</p>
