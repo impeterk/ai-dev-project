@@ -6,23 +6,24 @@ import { evaluateAlternates } from './alternatesCheck';
 export async function checkMetaData(config, data) {
 	const metaData = Object.entries(data);
 	const type = 'meta';
+	const promises = [];
 
 	for (const [key, value] of metaData) {
 		switch (key) {
 			case 'title':
-				await evaluateTitle(config, value, type, key);
+				promises.push(evaluateTitle(config, value, type, key));
 				break;
 
 			case 'description':
-				await evaluateDescription(config, value, type, key);
+				promises.push(evaluateDescription(config, value, type, key));
 				break;
 
 			case 'canonical':
-				await evaluateCanonical(config, value, type, key);
+				promises.push(evaluateCanonical(config, value, type, key));
 				break;
 
 			case 'alternates':
-				await evaluateAlternates(config, value, type, key);
+				promises.push(evaluateAlternates(config, value, type, key));
 				break;
 
 			default:
@@ -30,4 +31,6 @@ export async function checkMetaData(config, data) {
 				break;
 		}
 	}
+
+	await Promise.all(promises);
 }
