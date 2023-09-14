@@ -4,6 +4,7 @@ import { checkBodyData } from './body';
 import { checkSocialData } from './social';
 import { checkSchemaData } from './schema';
 import { getScanCollection } from '../../firebase/getCollection';
+import { updateStatus } from '../../firebase/updateStatus';
 import { adjustDomain } from '../scanner/adjustDomain';
 
 export async function initiateEvaluation(domain, dateOfScan) {
@@ -12,10 +13,11 @@ export async function initiateEvaluation(domain, dateOfScan) {
 		domain: adjustDomain(domain),
 		dateOfScan: dateOfScan,
 		urlId: null
-	}
+	};
 
 	try {
 		const scanResults = await getScanCollection(config.domain, config.dateOfScan);
+		await updateStatus(config.domain, 'evaluating');
 
 		// Run all checks for each scanned url
 		const promises = Object.entries(scanResults).map(([urlId, urlData]) => {
@@ -23,34 +25,11 @@ export async function initiateEvaluation(domain, dateOfScan) {
 			checkMetaData(config, urlData.meta);
 		});
 
-		await Promise.all(promises);
+		await Promise.all(promises).then(async () => {
+			await updateStatus(config.domain, 'finished');
+		});
 	} catch (error) {
 		console.error('Error during evaluation:', error);
 		throw error;
 	}
-
-	return true;
-
-	let foundIssues = {};
-
-	// const dataset = dataForEvaluate.items.map((item) => {
-
-	//     foundIssues = checkMetaData(item.data.meta, item.url);
-	// });
-
-	dataForEvaluate.items.forEach((item) => {
-		foundIssues.meta = {
-			[item.url]: checkMetaData(item.data.meta, item.url)
-		};
-
-		// add BODY logic
-		// add SOCIAL logic
-		// add SCHEMA data
-
-		// Finally return all found issues
-	});
-
-	// console.log('Howdy from index.js: ');
-	// console.log(foundIssues.meta);
-	return foundIssues;
 }
