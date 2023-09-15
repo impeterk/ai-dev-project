@@ -1,7 +1,6 @@
 import { firestore } from './index';
 import { doc, updateDoc } from 'firebase/firestore';
 
-
 /**
  * Updates a specific document in a Firestore collection.
  *
@@ -36,21 +35,19 @@ export async function updateIssueDocument(
 	data,
 	isObject = false
 ) {
+	const pathToUrlUpdate = `domain/${domain}/dateofscan/${dateOfScan}/scannedurls/${urlId}`;
+	let pathToIssueUpdate = key ? `issues.${type}.${key}` : `issues.${type}`;
+
 	if (isObject == false) {
-		await updateDoc(
-			doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}/scannedurls/${urlId}`),
-			{
-				[`issues.${type}.${key}`]: data
-			}
-		);
+		await updateDoc(doc(firestore, pathToUrlUpdate), {
+			[pathToIssueUpdate]: data
+		});
 	} else if (isObject == true) {
 		let index = Object.keys(data)[0];
+		pathToIssueUpdate += `.${index}`;
 
-		await updateDoc(
-			doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}/scannedurls/${urlId}`),
-			{
-				[`issues.${type}.${key}.${index}`]: data[index]
-			}
-		);
+		await updateDoc(doc(firestore, pathToUrlUpdate), {
+			[pathToIssueUpdate]: data[index]
+		});
 	}
 }
