@@ -1,6 +1,6 @@
-import { evaluateTitle } from "./titleCheck";
-import { evaluateDescription } from "./descriptionCheck";
-import { evaluateImage } from "./imageCheck";
+import { evaluateTitle } from './titleCheck';
+import { evaluateDescription } from './descriptionCheck';
+import { evaluateImage } from './imageCheck';
 
 export async function checkSocialData(config, data) {
 	const socialData = Object.entries(data);
@@ -17,6 +17,10 @@ export async function checkSocialData(config, data) {
 				break;
 			case 'image':
 				promises.push(evaluateImage(config, value, type, key));
+				break;
+
+			default:
+				console.warn('Unknown value passed to checkSocialData method: ' + key);
 				break;
 		}
 	}
