@@ -1,16 +1,16 @@
-import { getAllObjects } from "./objectScrapper";
-import { processJson } from "./processJson";
+import { getAllObjects } from './objectScrapper';
+import { processJson } from './processJson';
 
 /**
  * Extracts comprehensive data from a given web page body.
- * 
- * This function aggregates data from multiple scraping functions to provide 
+ *
+ * This function aggregates data from multiple scraping functions to provide
  * a holistic view of the webpage's relevant information. The data extracted includes:
  * - Meta information (e.g., title, description, canonical URL, alternate URLs)
  * - Body content (e.g., headlines, images)
  * - Social open graph data (e.g., OG title, OG description, OG image)
  * - Parsed Schema data
- * 
+ *
  * @param {Object} $ - An instance of the web page body (received from the crawler instance).
  * @returns {Object} An object containing:
  *   - meta: Meta information extracted by the scrapMetaData function.
@@ -29,13 +29,13 @@ export function scrapAllData($) {
 
 /**
  * Extracts meta data from a given web page body.
- * 
+ *
  * This function retrieves the following information:
  * - Page title
  * - Meta description
  * - Canonical URL
  * - Alternate URLs (with hreflang attributes)
- * 
+ *
  * @param {Object} $ - An instance of the web page body (received from the crawler instance).
  * @returns {Object} An object containing:
  *   - title: The content of the <title> tag.
@@ -45,26 +45,26 @@ export function scrapAllData($) {
  */
 export function scrapMetaData($) {
 	return {
-		title: $('title').text() || "",
-		description: $('meta[name="description"]').attr('content') || "",
-		canonical: $('link[rel="canonical"]').attr('href') || "",
+		title: $('title').text() || '',
+		description: $('meta[name="description"]').attr('content') || '',
+		canonical: $('link[rel="canonical"]').attr('href') || '',
 		alternates: getAllObjects($, 'link[rel="alternate"][hreflang]', ['href', 'hreflang'])
 	};
 }
 
 /**
  * Extracts relevant content data from the body of a given web page.
- * 
+ *
  * This function focuses on gathering the main content-related elements of a webpage.
  * Specifically, it extracts:
  * - Headlines ranging from h1 to h6.
  * - Images along with their source URLs and alt texts.
- * 
+ *
  * @param {Object} $ - An instance of the web page body received from the crawler instance.
  * @returns {Object} An object containing:
- *   - headlines: An object with keys h1 through h6, each containing an array of 
+ *   - headlines: An object with keys h1 through h6, each containing an array of
  *                the respective headlines' text.
- *   - images: An array of objects, each containing the 'src' (source URL) and 
+ *   - images: An array of objects, each containing the 'src' (source URL) and
  *             'alt' (alt text) attributes of the images found in the page body.
  */
 export function scrapBodyData($) {
@@ -75,7 +75,7 @@ export function scrapBodyData($) {
 			h3: getAllObjects($, 'h3', ['text']),
 			h4: getAllObjects($, 'h4', ['text']),
 			h5: getAllObjects($, 'h5', ['text']),
-			h6: getAllObjects($, 'h6', ['text']),
+			h6: getAllObjects($, 'h6', ['text'])
 		},
 		images: getAllObjects($, 'img', ['src', 'alt'])
 	};
@@ -83,38 +83,39 @@ export function scrapBodyData($) {
 
 /**
  * Extracts social media-specific metadata from a given webpage body.
- * 
+ *
  * This function specifically extracts Open Graph (OG) meta tags, which are commonly used
  * to control how URLs are displayed when shared on social media platforms like Facebook.
- * 
+ *
  * @param {Object} $ - The body of the website received from the crawler instance.
  * @returns {Object} An object containing the OG title, description, and image URL.
- * 
+ *
  * @example
  * const result = scrapSocialData($);
  * console.log(result.title); // Outputs the content of <meta property="og:title">
  */
 export function scrapSocialData($) {
 	return {
-		title: $('meta[property="og:title"]').attr('content') || "",
-		description: $('meta[property="og:description"]').attr('content') || "",
-		image: $('meta[property="og:image"]').attr('content') || ""
+		title: $('meta[property="og:title"]').attr('content') || '',
+		description: $('meta[property="og:description"]').attr('content') || '',
+		image: $('meta[property="og:image"]').attr('content') || ''
 	};
 }
 
 /**
  * Extracts, processes, and returns the structured Schema.org data (JSON-LD) from a given webpage body.
- * 
+ *
  * Schema.org data in JSON-LD format is commonly embedded in web pages to provide structured
- * metadata about the content. This function extracts the content of the <script> tag 
+ * metadata about the content. This function extracts the content of the <script> tag
  * containing this data, and then processes it to return a structured representation.
- * 
+ *
  * @param {Object} $ - The body of the website received from the crawler instance.
  * @returns {Object} A structured representation of the Schema.org data.
- * 
+ *
  * @example
  * const schemaData = scrapSchemaData($);
  * console.log(schemaData.name); // If the schema contains a 'name' property, this will output its value.
- */export function scrapSchemaData($) {
-	return processJson($('script[type="application/ld+json"]').html());
+ */ export function scrapSchemaData($) {
+	// return processJson($('script[type="application/ld+json"]').html());
+	return $('script[type="application/ld+json"]').html();
 }
