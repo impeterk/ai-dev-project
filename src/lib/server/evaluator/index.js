@@ -25,6 +25,7 @@ export async function initiateEvaluation(domain, dateOfScan) {
 			
 			checkMetaData(config, urlData.meta);
 			checkSocialData(config, urlData.social);
+			checkBodyData(config, urlData.body)
 		});
 
 		await Promise.all(promises).then(async () => {
