@@ -1,4 +1,5 @@
 import { evaluateHeadlines } from './headlinesCheck';
+import { evaluateImages } from './imagesCheck';
 
 // To make your content effective and actionable, heading tags optimization is vital. In short, make sure to:
 // TO CHECK IN BODY FOR HEADLINES
@@ -15,8 +16,8 @@ export function checkBodyData(config, data) {
 	const type = 'body';
 	const promises = [];
 
-	// console.log(bodyData.headlines);
 	promises.push(evaluateHeadlines(config, bodyData.headlines, type, 'headlines'));
+	promises.push(evaluateImages(config, bodyData.images, type, 'images'));
 
 	Promise.all(promises);
 }
