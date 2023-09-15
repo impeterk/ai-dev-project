@@ -1,4 +1,3 @@
-import { isEmpty } from './isEmpty';
 import { checkMetaData } from './meta';
 import { checkBodyData } from './body';
 import { checkSocialData } from './social';
@@ -22,10 +21,11 @@ export async function initiateEvaluation(domain, dateOfScan) {
 		// Run all checks for each scanned url
 		const promises = Object.entries(scanResults).map(([urlId, urlData]) => {
 			config.urlId = urlId;
-			
+
 			checkMetaData(config, urlData.meta);
 			checkSocialData(config, urlData.social);
-			checkBodyData(config, urlData.body)
+			checkBodyData(config, urlData.body);
+			checkSchemaData(config, urlData.schema);
 		});
 
 		await Promise.all(promises).then(async () => {
