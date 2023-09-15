@@ -20,10 +20,10 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
 export async function evaluateH1(config, type, key, data) {
 	let h1Status = 'missing'; // default value
 
-	if (!isEmpty(data)) {
-		const h1Length = data[0].replace(/\s+/g, '').length; // without whitespaces
+	if (!isEmpty(data) && !isEmpty(data[0])) {
+		// const h1Length = data[0].replace(/\s+/g, '').length; // without whitespaces
 
-		if (data.length === 1 && h1Length > 0) {
+		if (data.length === 1) {
 			h1Status = 'ok';
 		} else if (data.length > 1) {
 			h1Status = 'multiple';
