@@ -58,7 +58,6 @@ export async function initiateScan(domain, dateOfScan, startingUrl = domain) {
 			await updateDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
 				totalPages: result.items.length
 			});
-			await updateStatus(domain, 'finished');
 		})
 		.then(async () => {
 			await updateStatus(domain, 'evaluating');
