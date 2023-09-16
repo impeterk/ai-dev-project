@@ -1,11 +1,11 @@
 import { isEmpty } from '../isEmpty';
 import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export async function evaluateCanonical(config, value, type, key) {
+export async function evaluateCanonical(config, value) {
 	if (isEmpty(value)) {
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'missing');
+		await updateIssueDocument(config, 'missing');
 	} else {
 		// Placeholder: Assuming if it's not empty, it's fine.
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'ok');
+		await updateIssueDocument(config, 'ok');
 	}
 }

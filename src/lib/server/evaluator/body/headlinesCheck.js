@@ -24,7 +24,7 @@ import { evaluateHx } from './hx';
  * 3. Any unexpected headline type will trigger a warning in the console.
  * 4. All evaluations are run concurrently using promises, and the function awaits their completion.
  */
-export async function evaluateHeadlines(config, data, type, key) {
+export async function evaluateHeadlines(config, data) {
 	const headlines = adjustHeadlinesData(data);
 	const promises = [];
 
@@ -33,13 +33,13 @@ export async function evaluateHeadlines(config, data, type, key) {
 
 		if (index == 'h1') {
 			// run checks for h1
-			promises.push(evaluateH1(config, type, key, headline[index]));
+			promises.push(evaluateH1(config, headline[index]));
 		} else {
 			// run checks for rest of the headlines
 			if (['h2', 'h3', 'h4', 'h5', 'h6'].includes(index)) {
-				promises.push(evaluateHx(config, type, key, index, headline));
+				promises.push(evaluateHx(config, index, headline));
 			} else {
-				console.warn('Unknown value passed to evaluateHeadlines method: ' + key);
+				console.warn('Unknown value passed to evaluateHeadlines method: ' + config.key);
 			}
 		}
 	}

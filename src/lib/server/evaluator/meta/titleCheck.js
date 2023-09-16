@@ -1,16 +1,16 @@
 import { isEmpty } from '../isEmpty';
 import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export async function evaluateTitle(config, value, type, key) {
+export async function evaluateTitle(config, value) {
 	if (!isEmpty(value)) {
 		if (value.length >= 50 && value.length < 60) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'ok');
+			await updateIssueDocument(config, 'ok');
 		} else if (value.length < 50) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'short');
+			await updateIssueDocument(config, 'short');
 		} else if (value.length > 60) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'long');
+			await updateIssueDocument(config, 'long');
 		}
 	} else {
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'missing');
+		await updateIssueDocument(config, 'missing');
 	}
 }

@@ -1,23 +1,13 @@
 import { evaluateHeadlines } from './headlinesCheck';
 import { evaluateImages } from './imagesCheck';
 
-// To make your content effective and actionable, heading tags optimization is vital. In short, make sure to:
-// TO CHECK IN BODY FOR HEADLINES
-// Use one <h1> tag.
-// Don’t forget about hierarchy <h1> through <h6> (though Google currently claims it’s not of top importance, it’s important to illustrate proper flow for readers).
-// Apply keywords within headings based on their search volume.
-// Keep headings brief and to the point.
-// Don’t overuse H tags.
-// Clear styles and format headings within the CMS to avoid unexpected/extra symbols within the tags.
-
 export function checkBodyData(config, data) {
-	// const bodyData = Object.entries(data);
 	const bodyData = data;
-	const type = 'body';
+	config.type = 'body';
 	const promises = [];
 
-	promises.push(evaluateHeadlines(config, bodyData.headlines, type, 'headlines'));
-	promises.push(evaluateImages(config, bodyData.images, type, 'images'));
+	promises.push(evaluateHeadlines({ ...config, key: 'headlines' }, bodyData.headlines));
+	promises.push(evaluateImages({ ...config, key: 'images' }, bodyData.images));
 
 	Promise.all(promises);
 }

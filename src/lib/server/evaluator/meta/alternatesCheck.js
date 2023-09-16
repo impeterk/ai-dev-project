@@ -1,11 +1,11 @@
 import { isEmpty } from '../isEmpty';
 import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export async function evaluateAlternates(config, value, type, key) {
+export async function evaluateAlternates(config, value) {
 	if (!isEmpty(value)) {
 		// Placeholder: Assuming if it's not empty, it's fine.
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'ok');
+		await updateIssueDocument(config, 'ok');
 	} else {
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'missing');
+		await updateIssueDocument(config, 'missing');
 	}
 }

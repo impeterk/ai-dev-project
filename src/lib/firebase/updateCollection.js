@@ -27,16 +27,19 @@ import { doc, updateDoc } from 'firebase/firestore';
  * where 'index' is the key extracted from the 'data' object. This is used for instance for headlines
  */
 export async function updateIssueDocument(
-	domain,
-	dateOfScan,
-	urlId,
-	type,
-	key,
+	// domain,
+	// dateOfScan,
+	// urlId,
+	// type,
+	// key,
+	config,
 	data,
 	isObject = false
 ) {
-	const pathToUrlUpdate = `domain/${domain}/dateofscan/${dateOfScan}/scannedurls/${urlId}`;
-	let pathToIssueUpdate = key ? `issues.${type}.${key}` : `issues.${type}`;
+	const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/scannedurls/${config.urlId}`;
+	let pathToIssueUpdate = config.key
+		? `issues.${config.type}.${config.key}`
+		: `issues.${config.type}`;
 
 	if (isObject == false) {
 		await updateDoc(doc(firestore, pathToUrlUpdate), {

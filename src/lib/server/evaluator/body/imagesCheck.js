@@ -9,7 +9,7 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
  * The issues, if any, are then updated in the Firestore database.
  *
  * Notes: The existence of an 'images' document under 'issues.body.images' in the database
- * denotes the presence of issues with the images. 
+ * denotes the presence of issues with the images.
  *
  * @param {Object} config - Configuration object containing domain, dateOfScan, and urlId.
  * @param {Array} data - Array of image objects to evaluate. Each object contains properties like 'alt' and 'src'.
@@ -17,14 +17,14 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
  * @param {String} key - Specific key for the evaluation. E.g., 'images'.
  * @returns {Promise<void>} Resolves once the data is evaluated and any issues are updated in the database.
  */
-export async function evaluateImages(config, data, type, key) {
+export async function evaluateImages(config, data) {
 	try {
 		const issues = data
 			.filter((image) => isEmpty(image.alt))
 			.map(({ src }) => ({ alt: 'missing', src }));
 
 		if (issues.length) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, issues);
+			await updateIssueDocument(config, issues);
 		}
 	} catch (error) {
 		console.error('Error evaluating images:', error);

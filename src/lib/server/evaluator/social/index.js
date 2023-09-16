@@ -4,23 +4,25 @@ import { evaluateImage } from './imageCheck';
 
 export async function checkSocialData(config, data) {
 	const socialData = Object.entries(data);
-	const type = 'social';
+	config.type = 'social';
 	const promises = [];
 
 	for (const [key, value] of socialData) {
+		config.key = key;
+
 		switch (key) {
 			case 'title':
-				promises.push(evaluateTitle(config, value, type, key));
+				promises.push(evaluateTitle(config, value));
 				break;
 			case 'description':
-				promises.push(evaluateDescription(config, value, type, key));
+				promises.push(evaluateDescription(config, value));
 				break;
 			case 'image':
-				promises.push(evaluateImage(config, value, type, key));
+				promises.push(evaluateImage(config, value));
 				break;
 
 			default:
-				console.warn('Unknown value passed to checkSocialData method: ' + key);
+				console.warn('Unknown value passed to checkSocialData method: ' + config.key);
 				break;
 		}
 	}

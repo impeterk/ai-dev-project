@@ -1,18 +1,18 @@
 import { isEmpty } from '../isEmpty';
 import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export async function evaluateDescription(config, value, type, key) {
+export async function evaluateDescription(config, value) {
 	if (!isEmpty(value)) {
 		// Assuming you might want to check the length of the description as well
 		// Placeholder logic: adjust as needed.
 		if (value.length >= 150 && value.length < 160) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'ok');
+			await updateIssueDocument(config, 'ok');
 		} else if (value.length < 150) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'short');
+			await updateIssueDocument(config, 'short');
 		} else if (value.length > 160) {
-			await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'long');
+			await updateIssueDocument(config, 'long');
 		}
 	} else {
-		await updateIssueDocument(config.domain, config.dateOfScan, config.urlId, type, key, 'missing');
+		await updateIssueDocument(config, 'missing');
 	}
 }
