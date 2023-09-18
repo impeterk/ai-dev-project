@@ -58,7 +58,15 @@
 			{#each data as date, index}
 				<li class="flex w-full items-center p-2">
 					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">{new Date(parseInt(date.id))}</p>
+					<p class="text-lg">
+						{Intl.DateTimeFormat('en-us', {
+							year: 'numeric',
+							month: 'short',
+							day: 'numeric',
+							hour: '2-digit',
+							minute: '2-digit'
+						}).format(new Date(parseInt(date.id)))}
+					</p>
 					<p class="ml-8 text-lg">
 						{#if date.totalPages}
 							{date.totalPages}

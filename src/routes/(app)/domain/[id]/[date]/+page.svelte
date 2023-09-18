@@ -4,6 +4,7 @@
 	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
 
 	const { id, date } = $page.params;
+	let expanded = null;
 </script>
 
 <section class="">
@@ -25,20 +26,56 @@
 	<Collection ref={`domain/${id}/dateofscan/${date}/scannedurls`} let:data>
 		<ol>
 			{#each data as url, index}
-				<li class="border-y py-1">
-					<div class="ml-4 flex content-center items-center text-lg">
-						<div class="item-start flex gap-2">
-							<p>{index + 1}.</p>
-							<p>{url.url}</p>
-						</div>
-						<div class="ml-auto flex items-baseline gap-4">
-							<p>{url.meta.title}</p>
-							load more
-							<AngleDownSolid class="h-4 w-4" />
+			<li class="border-b py-1">
+						<button class="w-full block mx-4" on:click={() => (expanded = expanded === index ? null : index)}>
+						<div class="w-max-content text-lg">
+							<div class="float flex gap-2">
+								<AngleDownSolid class="h-4 w-4 float-left my-auto" />
+								<p>{url.url}</p>
+							</div>
 							<div />
 						</div>
+					</button>
+					</li>
+				{#if expanded === index}
+					<div class="ml-4 mt-2">
+						{#if url.issues}
+							{#if url.issues.meta.title}
+								<div class="block">
+									Title: {url.issues.meta.title}
+								</div>
+							{/if}
+							{#if url.issues.meta.description}
+								<div class="block">
+									Description: {url.issues.meta.description}
+								</div>
+							{/if}
+							{#if url.issues.meta.canonical}
+								<div class="block">
+									Canonical: {url.issues.meta.canonical}
+								</div>
+							{/if}
+							{#if url.issues.social.title}
+								<div class="block">
+									OG title: {url.issues.social.title}
+								</div>
+							{/if}
+							{#if url.issues.social.description}
+								<div class="block">
+									OG description: {url.issues.social.description}
+								</div>
+							{/if}
+							{#if url.issues.social.image}
+								<div class="block">
+									OG image: {url.issues.social.image}
+								</div>
+							{/if}
+							{#if url.issues.schema}
+								<div class="block">Schema: {url.issues.schema}</div>
+							{/if}
+						{/if}
 					</div>
-				</li>
+				{/if}
 			{/each}
 		</ol>
 	</Collection>

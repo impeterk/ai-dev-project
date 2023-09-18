@@ -1,0 +1,32 @@
+import { isEmpty } from '../isEmpty';
+import { updateIssueDocument } from '../../../firebase/updateCollection';
+
+/**
+ * Evaluates the images in the provided data for compliance with certain standards,
+ * specifically checking for the presence of the 'alt' attribute.
+ *
+ * For images that do not have an 'alt' attribute, they are considered as issues.
+ * The issues, if any, are then updated in the Firestore database.
+ *
+ * Notes: The existence of an 'images' document under 'issues.body.images' in the database
+ * denotes the presence of issues with the images.
+ *
+ * @param {Object} config - Configuration object containing domain, dateOfScan, and urlId.
+ * @param {Array} data - Array of image objects to evaluate. Each object contains properties like 'alt' and 'src'.
+ * @param {String} type - Type of the evaluation. E.g., 'body'.
+ * @param {String} key - Specific key for the evaluation. E.g., 'images'.
+ * @returns {Promise<void>} Resolves once the data is evaluated and any issues are updated in the database.
+ */
+export async function evaluateImages(config, data) {
+	try {
+		const issues = data
+			.filter((image) => isEmpty(image.alt))
+			.map(({ src }) => ({ alt: 'missing', src }));
+
+		if (issues.length) {
+			await updateIssueDocument(config, issues);
+		}
+	} catch (error) {
+		console.error('Error evaluating images:', error);
+	}
+}
