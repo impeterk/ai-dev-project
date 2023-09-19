@@ -12,9 +12,9 @@ export function getAllObjects($, selector, attributes) {
 			const result = {};
 			attributes.forEach((attr) => {
 				if (attr === 'text') {
-					result[attr] = element.text() || ""; // get the actual value of the HTML tag
+					result[attr] = element.text() || ''; // get the actual value of the HTML tag
 				} else {
-					result[attr] = element.attr(attr) || ""; // get the value of HTML tag's attribute
+					result[attr] = element.attr(attr) || ''; // get the value of HTML tag's attribute
 				}
 			});
 			return result;
