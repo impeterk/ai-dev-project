@@ -33,11 +33,12 @@ export async function initiateCrawler(domain) {
 
 			// Use the requestHandler to process each of the crawled pages.
 			async requestHandler({ request, $, enqueueLinks }) {
-				requestDataset.pushData({
-					url: request.loadedUrl,
-					scrappedData: scrapAllData($),
-					allData: $('body').html()
-				});
+				if (request.loadedUrl.includes(domain))
+					requestDataset.pushData({
+						url: request.loadedUrl,
+						scrappedData: scrapAllData($),
+						allData: $('body').html()
+					});
 
 				// Extract links from the current page and add them to the crawling queue if they match the pattern
 				await enqueueLinks({ globs: config.domainPattern });
