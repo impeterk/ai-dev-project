@@ -23,23 +23,26 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
  * - If the headline is empty, an empty string is set for its status.
  * - The evaluated status is then sent to be updated in the database.
  */
-export async function evaluateHx(config, index, headline) {
+export function evaluateHx(config, index, headline) {
 	if (!isEmpty(headline[index])) {
-		const status = isUnique(headline[index]) ? 'ok' : 'duplicates';
-		await updateIssueDocument(
-			config,
-			{
-				[index]: status
-			},
-			true
-		);
+		// const status = isUnique(headline[index]) ? 'ok' : 'duplicates';
+		// await updateIssueDocument(
+		// 	config,
+		// 	{
+		// 		[index]: status
+		// 	},
+		// 	true
+		// );
+
+		return isUnique(headline[index]) ? 'ok' : 'duplicates';
 	} else {
-		await updateIssueDocument(
-			config,
-			{
-				[index]: ''
-			},
-			true
-		);
+		// await updateIssueDocument(
+		// 	config,
+		// 	{
+		// 		[index]: ''
+		// 	},
+		// 	true
+		// );
+		return '';
 	}
 }

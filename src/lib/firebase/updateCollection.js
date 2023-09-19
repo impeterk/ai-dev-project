@@ -26,31 +26,28 @@ import { doc, updateDoc } from 'firebase/firestore';
  * - The Firestore path will be updated with `issues.{type}.{key}.{index}`: data[index],
  * where 'index' is the key extracted from the 'data' object. This is used for instance for headlines
  */
-export async function updateIssueDocument(
-	// domain,
-	// dateOfScan,
-	// urlId,
-	// type,
-	// key,
-	config,
-	data,
-	isObject = false
-) {
+export async function updateIssueDocument(config, data, isObject = false) {
 	const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/scannedurls/${config.urlId}`;
-	let pathToIssueUpdate = config.key
-		? `issues.${config.type}.${config.key}`
-		: `issues.${config.type}`;
 
-	if (isObject == false) {
-		await updateDoc(doc(firestore, pathToUrlUpdate), {
-			[pathToIssueUpdate]: data
-		});
-	} else if (isObject == true) {
-		let index = Object.keys(data)[0];
-		pathToIssueUpdate += `.${index}`;
+	await updateDoc(doc(firestore, pathToUrlUpdate), {
+		issues: data
+	});
 
-		await updateDoc(doc(firestore, pathToUrlUpdate), {
-			[pathToIssueUpdate]: data[index]
-		});
-	}
+	// const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/scannedurls/${config.urlId}`;
+	// let pathToIssueUpdate = config.key
+	// 	? `issues.${config.type}.${config.key}`
+	// 	: `issues.${config.type}`;
+
+	// if (isObject == false) {
+	// 	await updateDoc(doc(firestore, pathToUrlUpdate), {
+	// 		[issues]: data
+	// 	});
+	// } else if (isObject == true) {
+	// 	let index = Object.keys(data)[0];
+	// 	pathToIssueUpdate += `.${index}`;
+
+	// 	await updateDoc(doc(firestore, pathToUrlUpdate), {
+	// 		[pathToIssueUpdate]: data[index]
+	// 	});
+	// }
 }

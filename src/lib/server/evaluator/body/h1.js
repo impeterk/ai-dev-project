@@ -17,7 +17,7 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
  * @param {Array<string>} data - An array containing the H1 header(s) data.
  * @returns {Promise<void>} - Resolves when the update operation to Firebase completes.
  */
-export async function evaluateH1(config, data) {
+export function evaluateH1(config, data) {
 	let h1Status = 'missing'; // default value
 
 	if (!isEmpty(data) && !isEmpty(data[0])) {
@@ -32,11 +32,13 @@ export async function evaluateH1(config, data) {
 		}
 	}
 
-	await updateIssueDocument(
-		config,
-		{
-			h1: h1Status
-		},
-		true
-	);
+	return h1Status;
+
+	// await updateIssueDocument(
+	// 	config,
+	// 	{
+	// 		h1: h1Status
+	// 	},
+	// 	true
+	// );
 }
