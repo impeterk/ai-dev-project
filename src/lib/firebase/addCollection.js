@@ -17,7 +17,7 @@ import { doc, collection, writeBatch } from 'firebase/firestore';
  */
 export async function writeDataInBatches(data, domain, dateOfScan) {
 	// Constants defining maximum sizes and delay for batching
-	const MAX_BATCH_SIZE = 10; // Maximum number of docs in one batch
+	const MAX_BATCH_SIZE = 2; // Maximum number of docs in one batch
 	const MAX_DOC_SIZE = 1048576; // 1 MiB in bytes: Maximum allowed size for one document
 	const MAX_BATCH_DOC_SIZE = 10 * 1024 * 1024; // 10 MiB in bytes: Maximum allowed combined size of batch
     const BATCH_DELAY = 2000; // 2 seconds delay between batches
