@@ -24,12 +24,14 @@ export function evaluateImages(config, data) {
 	try {
 		const imgIssues = data.map((image) => ({
 			alt: isEmpty(image.alt) ? 'missing' : 'ok',
-			src: image.src
+			src: image.src ? image.src : ''
 		}));
 
 		if (imgIssues.length) {
 			// await updateIssueDocument(config, issues);
 			return imgIssues;
+		} else {
+			return '';
 		}
 	} catch (error) {
 		console.error('Error evaluating images:', error);
