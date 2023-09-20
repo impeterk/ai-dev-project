@@ -115,7 +115,7 @@ export function scrapSocialData($) {
  * @example
  * const schemaData = scrapSchemaData($);
  * console.log(schemaData.name); // If the schema contains a 'name' property, this will output its value.
- */ export function scrapSchemaData($) {
-	// return processJson($('script[type="application/ld+json"]').html());
+ */
+export function scrapSchemaData($) {
 	return $('script[type="application/ld+json"]').html();
 }
