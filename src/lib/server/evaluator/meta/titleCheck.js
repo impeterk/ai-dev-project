@@ -1,20 +1,30 @@
 import { isEmpty } from '../isEmpty';
-import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export function evaluateTitle(config, value) {
+/**
+ * Assesses the length and presence of a given webpage title.
+ *
+ * This function evaluates a webpage title based on its length. It categorizes the title into:
+ * - 'ok': if the length is between 50 and 59 characters inclusive.
+ * - 'short': if the length is less than 50 characters.
+ * - 'long': if the length is 60 characters or more.
+ * - 'missing': if the title is absent or an empty string.
+ *
+ * The aforementioned categorization follows best practices for SEO (Search Engine Optimization),
+ * where titles between 50-60 characters are generally considered optimal for most search engines.
+ *
+ * @param {string} value - The webpage title to be evaluated.
+ * @returns {string} - A string indicating the assessment result ('ok', 'short', 'long', or 'missing').
+ */
+export function evaluateTitle(value) {
 	if (!isEmpty(value)) {
 		if (value.length >= 50 && value.length < 60) {
-			// await updateIssueDocument(config, 'ok');
 			return 'ok';
 		} else if (value.length < 50) {
-			// await updateIssueDocument(config, 'short');
 			return 'short';
 		} else if (value.length >= 60) {
-			// await updateIssueDocument(config, 'long');
 			return 'long';
 		}
 	} else {
-		// await updateIssueDocument(config, 'missing');
 		return 'missing';
 	}
 }

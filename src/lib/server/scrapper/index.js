@@ -1,5 +1,4 @@
 import { getAllObjects } from './objectScrapper';
-import { processJson } from './processJson';
 
 /**
  * Extracts comprehensive data from a given web page body.

@@ -1,42 +1,26 @@
 import { evaluateHeadlines } from './headlinesCheck';
 import { evaluateImages } from './imagesCheck';
 
-export function checkBodyData(config, data) {
-	const bodyData = data;
-
+/**
+ * Assesses the body content of a webpage, specifically targeting headlines and images.
+ *
+ * This function takes in data related to the body content of a webpage. It evaluates potential 
+ * issues or properties of both headlines and images present in the body. After evaluation, 
+ * it aggregates the results into a single object that encapsulates the assessed data for 
+ * both headlines and images.
+ * 
+ * @param {Object} data - The body content data to be evaluated.
+ *    @property {Array<Object>} headlines - An array of headline objects present in the body.
+ *    @property {Array<Object>} images - An array of image objects present in the body.
+ * @returns {Object} - An object containing the evaluated data for headlines and images.
+ *    @property {Object} headlines - The assessed data for the provided headlines.
+ *    @property {Object} images - The assessed data for the provided images.
+ */
+export function checkBodyData(data) {
 	let body = {};
 
-	config.type = 'body';
-	// const promises = [];
+	body.headlines = evaluateHeadlines(data.headlines);
+	body.images = evaluateImages(data.images);
 
-	// promises.push(evaluateHeadlines({ ...config, key: 'headlines' }, bodyData.headlines));
-	// promises.push(evaluateImages({ ...config, key: 'images' }, bodyData.images));
-
-	body.headlines = evaluateHeadlines({ ...config, key: 'headlines' }, bodyData.headlines);
-	body.images = evaluateImages({ ...config, key: 'images' }, bodyData.images);
-
-	// Promise.all(promises);
 	return body;
-	
 }
-
-//body: {
-// 		headlines: {
-// 			h1: String,
-// 			h2: String,
-// 			h3: String,
-// 			h4: String,
-// 			h5: String,
-// 			h6: String
-// 		},
-// 		images: [
-// 			{
-// 				alt: String,
-// 				src: String
-// 			},
-// 			{
-// 				alt: String,
-// 				src: String
-// 			}
-// 		]
-// 	},

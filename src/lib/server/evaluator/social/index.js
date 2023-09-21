@@ -2,41 +2,40 @@ import { evaluateTitle } from './titleCheck';
 import { evaluateDescription } from './descriptionCheck';
 import { evaluateImage } from './imageCheck';
 
-export function checkSocialData(config, data) {
+/**
+ * Evaluates social metadata of a webpage and maps them to corresponding evaluations.
+ *
+ * This function inspects the provided social metadata object and, based on its keys (e.g., 'title', 'description', 'image'),
+ * delegates the evaluation to specialized functions. The results of these evaluations are stored in a new object that
+ * mirrors the structure of the input, but with values representing the evaluation outcomes.
+ *
+ * If an unrecognized key is encountered, a warning is logged.
+ *
+ * @param {Object} data - The social metadata object containing properties like title, description, and image.
+ * @returns {Object} - An object with the same keys as the input, but values representing the evaluation of each property.
+ */
+export function checkSocialData(data) {
 	const socialData = Object.entries(data);
 
 	let social = {};
 
-	config.type = 'social';
-	// const promises = []; 
-
 	for (const [key, value] of socialData) {
-		config.key = key;
-
 		switch (key) {
 			case 'title':
-				// promises.push(evaluateTitle(config, value));
-
-				social[key] = evaluateTitle(config, value);
+				social[key] = evaluateTitle(value);
 				break;
 			case 'description':
-				// promises.push(evaluateDescription(config, value));
-
-				social[key] = evaluateDescription(config, value);
+				social[key] = evaluateDescription(value);
 				break;
 			case 'image':
-				// promises.push(evaluateImage(config, value));
-
-				social[key] = evaluateImage(config, value);
+				social[key] = evaluateImage(value);
 				break;
 
 			default:
-				console.warn('Unknown value passed to checkSocialData method: ' + config.key);
+				console.warn('Unknown value passed to checkSocialData method: ' + key);
 				break;
 		}
 	}
-
-	// await Promise.all(promises);
 
 	return social;
 }

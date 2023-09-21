@@ -1,5 +1,4 @@
 import { isEmpty } from '../isEmpty';
-import { updateIssueDocument } from '../../../firebase/updateCollection';
 
 /**
  * Evaluates the images in the provided data based on their 'alt' attribute values.
@@ -20,7 +19,7 @@ import { updateIssueDocument } from '../../../firebase/updateCollection';
  * @param {Array} data - Array of image objects to evaluate. Each object contains properties like 'alt' and 'src'.
  * @returns {Array<Object>} An array containing evaluation results for each image.
  */
-export function evaluateImages(config, data) {
+export function evaluateImages(data) {
 	try {
 		const imgIssues = data.map((image) => ({
 			alt: isEmpty(image.alt) ? 'missing' : 'ok',
@@ -28,7 +27,6 @@ export function evaluateImages(config, data) {
 		}));
 
 		if (imgIssues.length) {
-			// await updateIssueDocument(config, issues);
 			return imgIssues;
 		} else {
 			return '';

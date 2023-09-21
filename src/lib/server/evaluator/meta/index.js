@@ -3,40 +3,44 @@ import { evaluateDescription } from './descriptionCheck';
 import { evaluateCanonical } from './canonicalCheck';
 import { evaluateAlternates } from './alternatesCheck';
 
-export function checkMetaData(config, data) {
+/**
+ * Evaluates the metadata of a webpage and returns their respective statuses.
+ *
+ * This function processes the provided metadata which includes the title, description, canonical,
+ * and alternate values. Each metadata item is evaluated using its respective evaluation function.
+ *
+ * For the following metadata types:
+ * - 'title': Evaluated for length and relevancy.
+ * - 'description': Evaluated for length and content.
+ * - 'canonical': Checked for presence.
+ * - 'alternates': Checked for presence.
+ *
+ * Any unrecognized metadata key will log a warning.
+ *
+ * @param {Object} data - Object containing metadata items to be evaluated.
+ * @returns {Object} - An object with keys being metadata types and values being their respective evaluation results.
+ */
+export function checkMetaData(data) {
 	const metaData = Object.entries(data);
 
 	let meta = {};
 
-	config.type = 'meta';
-	// const promises = [];
-
 	for (const [key, value] of metaData) {
-		config.key = key;
-
 		switch (key) {
 			case 'title':
-				// promises.push(evaluateTitle(config, value));
-
-				meta[key] = evaluateTitle(config, value);
+				meta[key] = evaluateTitle(value);
 				break;
 
 			case 'description':
-				// promises.push(evaluateDescription(config, value));
-
-				meta[key] = evaluateDescription(config, value);
+				meta[key] = evaluateDescription(value);
 				break;
 
 			case 'canonical':
-				// promises.push(evaluateCanonical(config, value));
-
-				meta[key] = evaluateCanonical(config, value);
+				meta[key] = evaluateCanonical(value);
 				break;
 
 			case 'alternates':
-				// promises.push(evaluateAlternates(config, value));
-
-				meta[key] = evaluateAlternates(config, value);
+				meta[key] = evaluateAlternates(value);
 				break;
 
 			default:
@@ -44,8 +48,6 @@ export function checkMetaData(config, data) {
 				break;
 		}
 	}
-
-	// await Promise.all(promises);
 
 	return meta;
 }
