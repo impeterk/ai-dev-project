@@ -1,16 +1,27 @@
 import { isEmpty } from '../isEmpty';
-import { updateIssueDocument } from '../../../firebase/updateCollection';
 
-export async function evaluateDescription(config, value) {
+/**
+ * Evaluates the length of a given description and categorizes it into one of several predefined groups.
+ *
+ * This function checks the length of a description and classifies it as:
+ * - 'ok': If its length is between 50 and 200 characters, inclusive of 50 and exclusive of 200.
+ * - 'short': If its length is less than 50 characters.
+ * - 'long': If its length is 200 characters or more.
+ * - 'missing': If the description is either null, undefined, or an empty string.
+ *
+ * @param {string} value - The description to be evaluated.
+ * @returns {string} - The category into which the description's length falls ('ok', 'short', 'long', or 'missing').
+ */
+export function evaluateDescription(value) {
 	if (!isEmpty(value)) {
 		if (value.length >= 50 && value.length < 200) {
-			await updateIssueDocument(config, 'ok');
+			return 'ok';
 		} else if (value.length < 50) {
-			await updateIssueDocument(config, 'short');
-		} else if (value.length > 199) {
-			await updateIssueDocument(config, 'long');
+			return 'short';
+		} else if (value.length >= 200) {
+			return 'long';
 		}
 	} else {
-		await updateIssueDocument(config, 'missing');
+		return 'missing';
 	}
 }

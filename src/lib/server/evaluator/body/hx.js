@@ -1,45 +1,21 @@
 import { isEmpty } from '../isEmpty';
 import { isUnique } from '../isUnique';
-import { updateIssueDocument } from '../../../firebase/updateCollection';
 
 /**
- * Evaluates the content of a given headline and updates the corresponding database record.
+ * Evaluates the content of a specific type of headline (like h2, h3, etc.) and determines its status.
  *
- * The function specifically handles headlines from 'h2' to 'h6' (known as Hx). For a given headline:
- * 1. Checks if the content is not empty.
+ * Given a type of headline (referred to by index), this function:
+ * 1. Checks if the content of the headline is not empty.
  * 2. Validates if the entries within the headline are unique.
- * 3. Based on the validation, it updates the database record for the provided domain, scan date, and URL ID.
  *
- * @param {Object} config - Configuration object containing details about the domain, date of scan, and the URL ID.
- * @param {string} type - The issue type being evaluated.
- * @param {string} key - Key associated with the issue type.
  * @param {string} index - The type of headline being evaluated (e.g., 'h2', 'h3', etc.).
- * @param {Object} headline - The specific headline object being processed.
- *
- * Internal flow:
- * - If the headline is not empty, it checks its uniqueness.
- *   - If unique, the status 'ok' is set for that headline.
- *   - If not unique, the status 'duplicates' is set.
- * - If the headline is empty, an empty string is set for its status.
- * - The evaluated status is then sent to be updated in the database.
+ * @param {Object} headline - The specific headline object containing arrays of headlines for different types.
+ * @returns {string} - Returns 'ok' if the headline content is unique, 'duplicates' if there are non-unique entries, or an empty string if the headline content is empty.
  */
-export async function evaluateHx(config, index, headline) {
+export function evaluateHx(index, headline) {
 	if (!isEmpty(headline[index])) {
-		const status = isUnique(headline[index]) ? 'ok' : 'duplicates';
-		await updateIssueDocument(
-			config,
-			{
-				[index]: status
-			},
-			true
-		);
+		return isUnique(headline[index]) ? 'ok' : 'duplicates';
 	} else {
-		await updateIssueDocument(
-			config,
-			{
-				[index]: ''
-			},
-			true
-		);
+		return '';
 	}
 }
