@@ -1,11 +1,10 @@
 <script>
- import {enhance} from "$app/forms"
- export let form
-let success = false;
+	import { enhance } from '$app/forms';
+	export let form;
+	let success = false;
 
 	$: {
-		if (form && form.success) {
-			success = true;
+		if (form && form?.success) {
 			setTimeout(() => {
 				success = false;
 			}, 3000);
@@ -19,7 +18,9 @@ let success = false;
 	<div class="bg-slate-100 px-12">
 		<form class="flex gap-6 py-6" method="POST" use:enhance>
 			<div class="w-full">
-				<label for="email" class="mb-2 block text-sm font-medium text-gray-900">New Domain - add domain 'www.domain...' format</label>
+				<label for="email" class="mb-2 block text-sm font-medium text-gray-900"
+					>New Domain - add domain 'www.domain...' format</label
+				>
 				<input
 					name="newDomain"
 					type="string"
@@ -31,12 +32,12 @@ let success = false;
 			</div>
 			<button
 				type="submit"
-				class="shrink-0 mb-0.5 h-min self-end rounded-lg bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-slate-800"
-				>Add and scan
+				class="mb-0.5 h-min shrink-0 self-end rounded-lg bg-red-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-slate-800"
+				>Add new Domain
 			</button>
 		</form>
-		{#if success}
-			<p class="text-4xl text-green-400"> Domain has been added</p>
-			{/if}
+		{#if form?.status}
+			<p class="text-4xl text-green-400">{form?.message}</p>
+		{/if}
 	</div>
 </section>
