@@ -1,6 +1,6 @@
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
-import { adjustDomain } from '../scanner/adjustDomain';
+import { adjustDomain } from '../../utils/adjustDomain';
 import { updateStatus } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 
@@ -29,13 +29,13 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
  *
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
-export async function initiateScan(domain, dateOfScan, startingUrl = domain) {
-	domain = adjustDomain(domain);
+export async function initiateScan(domain, dateOfScan, startingUrl) {
 
 	// Add a new entry into the database
 	await updateStatus(domain, 'scanning');
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
-		startinguUrl: startingUrl
+		date: dateOfScan,
+		startingUrl
 	});
 
 	// Start crawling, scrapping, DB store and evaluation of URLs

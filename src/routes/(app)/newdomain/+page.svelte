@@ -12,11 +12,13 @@
 			console.error('Failed to submit form');
 		}
 	}
+
+	$: newDomainId = form?.newDomainId;
 </script>
 
 <section>
 	<div class="bg-slate-100 px-12">
-		<form class="flex gap-6 py-6" method="POST" use:enhance>
+		<form class="flex gap-6 py-6" method="POST" action="?/registernewdomain" use:enhance>
 			<div class="w-full">
 				<label for="email" class="mb-2 block text-sm font-medium text-gray-900"
 					>New Domain - add domain 'www.domain...' format</label
@@ -37,7 +39,14 @@
 			</button>
 		</form>
 		{#if form?.status}
-			<p class="text-4xl text-green-400">{form?.message}</p>
+			<p
+				class="text-4xl"
+				class:text-green-500={form?.status === 'success'}
+				class:text-red-500={form?.status === 'error'}
+			>
+				{form?.message}
+				{newDomainId}
+			</p>
 		{/if}
 	</div>
 </section>
