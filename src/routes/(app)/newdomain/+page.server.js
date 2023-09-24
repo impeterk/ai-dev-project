@@ -1,6 +1,7 @@
 import { firestore } from '$lib/firebase';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { adjustDomain } from '../../../lib/utils/adjustDomain.js';
+import { initiateScan } from '../../../lib/server/scanner/index.js';
 
 let domainRef = collection(firestore, 'domain');
 
@@ -37,6 +38,7 @@ export const actions = {
       .then((doc) => {
         return {
           newDomainId: doc.id,
+          newDomainName: domain,
           status: 'success',
           message: 'Domain has been added'
         };
@@ -47,5 +49,22 @@ export const actions = {
           message: error
         };
       });
+  },
+
+  initialscan: async ({ request }) => {
+    const dateOfScan = Date.now()
+
+    const formData = await request.formData();
+    const domainId = formData.get("newDomainId")
+    const startingUrl = formData.get("startingUrl")
+
+    initiateScan(domainId, dateOfScan, startingUrl)
+
+    return {
+      status: "started",
+      message: "initial scan has started",
+      newDomainId: domainId
+    }
+
   }
 };
