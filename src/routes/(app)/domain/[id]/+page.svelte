@@ -2,8 +2,7 @@
 	import { Collection } from 'sveltefire';
 	export let data;
 	let showDialog = false;
-	$: ({ id } = data.data);
-	$: ({ name } = data.data.data());
+	$: ({ id, name } = data);
 
 	$: startingUrl = `https://${name}`;
 </script>

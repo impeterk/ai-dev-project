@@ -5,3 +5,10 @@ export const placeholder = writable(
 )
 
 export const language = writable('en')
+
+export const currentCollection = writable({
+  firstInCollection: '',
+  firstVisible: '',
+  lastVisible: '',
+  lastInCollection: ''
+})
