@@ -1,8 +1,36 @@
 <script>
 	// imports
-	import { Collection } from 'sveltefire';
 	import { SearchOutline } from 'flowbite-svelte-icons';
-	export let form;
+	import {
+		firstInCollection,
+		firstVisible,
+		lastInCollection,
+		lastVisible,
+		currentCollection
+	} from '$lib/store';
+	import { collection, query, orderBy, limit, startAfter } from 'firebase/firestore';
+
+	import { collectionStore } from 'sveltefire';
+	import { firestore } from '$lib/firebase';
+
+	let status = 'loading';
+	export let data;
+
+	status = data.status;
+	$: ({ domains } = data);
+
+	$: $currentCollection = $domains;
+	function loadPrevios() {}
+	async function loadNext() {
+		$currentCollection = await collectionStore(
+			firestore,
+			query(collection(firestore, 'domain')),
+			orderBy('name', 'asc'),
+			limit(10),
+			startAfter($lastVisible)
+		);
+	}
+	$: console.log($currentCollection);
 </script>
 
 <section>
@@ -26,8 +54,8 @@
 	</div>
 	<ol class="w-full pt-0">
 		<!-- TODO loading state ---------------------------------------------------->
-		<Collection ref={'domain'} let:data>
-			{#each data as domain, index}
+		<!-- <Collection ref={'domain'} let:data>
+			{#each $currentCollection as domain, index}
 				<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
 					<p class="ml-4 w-8">{index + 1}.</p>
 					<p class="text-lg">{domain.name}</p>
@@ -52,7 +80,15 @@
 				</li>
 			{/each}
 			<p slot="loading" class="absolute text-4xl">Loading...</p>
-		</Collection>
+		</Collection> -->
 		<!--TODO Error state------------------------------------------------->
 	</ol>
+	<div class="flex w-full justify-center gap-12 pt-12">
+		{#if $firstInCollection == $firstVisible}
+			<button on:click={async () => loadPrevios}>Previous</button>
+		{/if}
+		{#if $lastInCollection !== $lastVisible}
+			<button on:click={loadNext}>Next</button>
+		{/if}
+	</div>
 </section>

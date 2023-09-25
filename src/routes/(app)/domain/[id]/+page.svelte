@@ -2,7 +2,7 @@
 	import { Collection } from 'sveltefire';
 	export let data;
 	let showDialog = false;
-	$: ({ id, name } = data);
+	$: ({ id, name, datesCollection } = data);
 
 	$: startingUrl = `https://${name}`;
 </script>
@@ -63,35 +63,33 @@
 		</form>
 	{/if}
 
-	<Collection ref={`domain/${id}/dateofscan`} let:data>
-		<ol>
-			{#each data as date, index}
-				<li class="flex w-full items-center p-2">
-					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">
-						{Intl.DateTimeFormat('en-us', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric',
-							hour: '2-digit',
-							minute: '2-digit'
-						}).format(new Date(parseInt(date.id)))}
-					</p>
-					<p class="ml-8 text-lg">
-						{#if date.totalPages}
-							{date.totalPages}
-						{/if}
-					</p>
-					<p class="ml-auto mr-4">
-						<a
-							href="/domain/{id}/{date.id}"
-							type="button"
-							class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-							>Continue</a
-						>
-					</p>
-				</li>
-			{/each}
-		</ol>
-	</Collection>
+	<ol>
+		{#each $datesCollection as date, index}
+			<li class="flex w-full items-center p-2">
+				<p class="ml-4 w-8">{index + 1}.</p>
+				<p class="text-lg">
+					{Intl.DateTimeFormat('en-us', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit'
+					}).format(new Date(parseInt(date.id)))}
+				</p>
+				<p class="ml-8 text-lg">
+					{#if date.totalPages}
+						{date.totalPages}
+					{/if}
+				</p>
+				<p class="ml-auto mr-4">
+					<a
+						href="/domain/{id}/{date.id}"
+						type="button"
+						class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+						>Continue</a
+					>
+				</p>
+			</li>
+		{/each}
+	</ol>
 </section>
