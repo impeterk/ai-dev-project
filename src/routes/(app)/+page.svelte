@@ -54,31 +54,31 @@
 	</div>
 	<ol class="w-full pt-0">
 		<!-- TODO loading state ---------------------------------------------------->
+		{#each $domains as domain, index}
+			<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
+				<p class="ml-4 w-8">{index + 1}.</p>
+				<p class="text-lg">{domain.name}</p>
+				<div class="ml-auto flex items-center gap-12">
+					<p
+						class="border-inherrit w-20 rounded border px-2 text-center text-sm"
+						class:bg-yellow-200={domain.status == 'added'}
+						class:bg-green-200={domain.status == 'finished'}
+						class:bg-red-200={domain.status == 'aborted'}
+						class:bg-blue-200={domain.status == 'scanning'}
+						class:bg-yellow-300={domain.status == 'evaluating'}
+					>
+						{domain.status}
+					</p>
+					<a
+						href="domain/{domain.id}"
+						type="button"
+						class=" mr-6 rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+						>Continue</a
+					>
+				</div>
+			</li>
+		{/each}
 		<!-- <Collection ref={'domain'} let:data>
-			{#each $currentCollection as domain, index}
-				<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
-					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">{domain.name}</p>
-					<div class="ml-auto flex items-center gap-12">
-						<p
-							class="border-inherrit w-20 rounded border px-2 text-center text-sm"
-							class:bg-yellow-200={domain.status == 'added'}
-							class:bg-green-200={domain.status == 'finished'}
-							class:bg-red-200={domain.status == 'aborted'}
-							class:bg-blue-200={domain.status == 'scanning'}
-							class:bg-yellow-300={domain.status == 'evaluating'}
-						>
-							{domain.status}
-						</p>
-						<a
-							href="domain/{domain.id}"
-							type="button"
-							class=" mr-6 rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-							>Continue</a
-						>
-					</div>
-				</li>
-			{/each}
 			<p slot="loading" class="absolute text-4xl">Loading...</p>
 		</Collection> -->
 		<!--TODO Error state------------------------------------------------->
