@@ -19,18 +19,16 @@
 	status = data.status;
 	$: ({ domains } = data);
 
-	$: $currentCollection = $domains;
-	function loadPrevios() {}
-	async function loadNext() {
-		$currentCollection = await collectionStore(
-			firestore,
-			query(collection(firestore, 'domain')),
-			orderBy('name', 'asc'),
-			limit(10),
-			startAfter($lastVisible)
-		);
-	}
-	$: console.log($currentCollection);
+	// function loadPrevios() {}
+	// async function loadNext() {
+	// 	$currentCollection = await collectionStore(
+	// 		firestore,
+	// 		query(collection(firestore, 'domain')),
+	// 		orderBy('name', 'asc'),
+	// 		limit(10),
+	// 		startAfter($lastVisible)
+	// 	);
+	// }
 </script>
 
 <section>
@@ -84,11 +82,7 @@
 		<!--TODO Error state------------------------------------------------->
 	</ol>
 	<div class="flex w-full justify-center gap-12 pt-12">
-		{#if $firstInCollection == $firstVisible}
-			<button on:click={async () => loadPrevios}>Previous</button>
-		{/if}
-		{#if $lastInCollection !== $lastVisible}
-			<button on:click={loadNext}>Next</button>
-		{/if}
+			 <a data-sveltekit-preload-data="tap" href="?loadbefore={$firstVisible.id}">Load Previous</a> 
+			 <a data-sveltekit-preload-data="tap" href="?loadafter={$lastVisible.id}">Load Next</a> 
 	</div>
 </section>
