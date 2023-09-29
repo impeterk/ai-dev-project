@@ -85,6 +85,7 @@ export async function writeDataInBatches(data, domain, dateOfScan) {
             body: item.scrappedData.body,
             social: item.scrappedData.social,
             schema: item.scrappedData.schema,
+            date: Date.now()
             // allData: item.allData
         });
 

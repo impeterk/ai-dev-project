@@ -23,13 +23,13 @@ export const actions = {
 	default: async ({ request }) => {
 		let formData = await request.formData();
 		let domainId = formData.get('domainid');
-		const rescanDomain = `https://${domainId}`;
+		let startingUrl = formData.get('startingUrl')
 		// creates a date when the scan started
 		const dateOfScan = Date.now();
 
 		// let startTime = Date.now();
 
-		initiateScan(rescanDomain, dateOfScan);
+		initiateScan(domainId, dateOfScan, startingUrl);
 
 		// Time Tracking
 		// let endTime = Date.now();

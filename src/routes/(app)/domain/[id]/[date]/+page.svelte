@@ -2,9 +2,11 @@
 	import { Collection } from 'sveltefire';
 	import { page } from '$app/stores';
 	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
-
+	import Pagination  from "$lib/components/pagination.svelte"
 	const { id, date } = $page.params;
 	let expanded = null;
+	export let data
+	$: ({results} = data)
 </script>
 
 <section class="">
@@ -23,9 +25,8 @@
 			</h3>
 		</div>
 	</div>
-	<Collection ref={`domain/${id}/dateofscan/${date}/scannedurls`} let:data>
 		<ol>
-			{#each data as url, index}
+			{#each $results as url, index}
 			<li class="border-b py-1">
 						<button class="w-full block mx-4" on:click={() => (expanded = expanded === index ? null : index)}>
 						<div class="w-max-content text-lg">
@@ -78,5 +79,5 @@
 				{/if}
 			{/each}
 		</ol>
-	</Collection>
+			<Pagination />
 </section>

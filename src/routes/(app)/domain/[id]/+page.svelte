@@ -1,19 +1,17 @@
 <script>
-	import { Collection, collectionStore } from 'sveltefire';
-	import { orderBy, query, collection } from 'firebase/firestore';
-	import { firestore } from '$lib/firebase';
-	import { page } from '$app/stores';
-	const { id } = $page.params;
-	let datesRef = collection(firestore, `domain/${id}/dateofscan`);
-	let ordredQuery = query(datesRef, orderBy('id', 'desc'));
-	// const dates = collectionStore(firestore, ordredQuery);
+	import { Collection } from 'sveltefire';
+	export let data;
+	let showDialog = false;
+	$: ({ id, name, datesCollection } = data);
+
+	$: startingUrl = `https://${name}`;
 </script>
 
 <section class="w-full">
 	<div class="flex flex-col bg-slate-500 p-4 text-slate-100">
 		<div class="flex items-center justify-between">
 			<h3 class="ml-10 text-3xl font-semibold">
-				{id}
+				{name}
 			</h3>
 			<label for="table-search" class="sr-only">Search</label>
 			<div class="relative mt-1">
@@ -45,43 +43,54 @@
 		<div class="flex content-center justify-between px-8 pt-4">
 			<p>date of scan</p>
 			<p>scanned pages</p>
-			<form method="POST">
-				<input hidden value={id} name="domainid" />
-				<button class="rounded bg-slate-200 px-2.5 py-1 text-slate-900 hover:bg-green-200"
-					>New scan</button
-				>
-			</form>
+			<button
+				class="rounded bg-slate-200 px-2.5 py-1 text-slate-900 hover:bg-green-200"
+				on:click={() => (showDialog = !showDialog)}>New scan</button
+			>
 		</div>
 	</div>
-	<Collection ref={`domain/${id}/dateofscan`} let:data>
-		<ol>
-			{#each data as date, index}
-				<li class="flex w-full items-center p-2">
-					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">
-						{Intl.DateTimeFormat('en-us', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric',
-							hour: '2-digit',
-							minute: '2-digit'
-						}).format(new Date(parseInt(date.id)))}
-					</p>
-					<p class="ml-8 text-lg">
-						{#if date.totalPages}
-							{date.totalPages}
-						{/if}
-					</p>
-					<p class="ml-auto mr-4">
-						<a
-							href="{$page.url.pathname}/{date.id}"
-							type="button"
-							class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-							>Continue</a
-						>
-					</p>
-				</li>
-			{/each}
-		</ol>
-	</Collection>
+	<!-- Show dialog to set up starting Url for the scan e.g. domain/procuts -->
+	{#if showDialog}
+		<form
+			method="POST"
+			class="flex w-full content-center items-center justify-end gap-4 bg-slate-100 p-4"
+		>
+			<h3 class="text-xl font-medium">Starting Url</h3>
+			<input hidden value={id} name="domainid" />
+			<input value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
+			<button type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
+				>Start New Scan</button
+			>
+		</form>
+	{/if}
+
+	<ol>
+		{#each $datesCollection as date, index}
+			<li class="flex w-full items-center p-2">
+				<p class="ml-4 w-8">{index + 1}.</p>
+				<p class="text-lg">
+					{Intl.DateTimeFormat('en-us', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit'
+					}).format(new Date(parseInt(date.id)))}
+				</p>
+				<p class="ml-8 text-lg">
+					{#if date.totalPages}
+						{date.totalPages}
+					{/if}
+				</p>
+				<p class="ml-auto mr-4">
+					<a
+						href="/domain/{id}/{date.id}"
+						type="button"
+						class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+						>Continue</a
+					>
+				</p>
+			</li>
+		{/each}
+	</ol>
 </section>
