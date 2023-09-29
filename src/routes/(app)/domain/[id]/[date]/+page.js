@@ -3,10 +3,10 @@ import { lastVisible, firstVisible } from "$lib/store"
 import {get} from "svelte/store"
 
 export async function load({url, params}) {
+    let {id, date} = params
     let lastId = url.searchParams.get("loadafter") || null
     let firstId = url.searchParams.get("loadbefore") || null
     let data
-    let {id, date} = params
 
     if (lastId) {
         let lastRef = get(lastVisible)
@@ -20,5 +20,5 @@ export async function load({url, params}) {
 
     }
 
-    return { results: data, status: "finished" }
+    return { results: data}
 }

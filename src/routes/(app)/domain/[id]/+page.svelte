@@ -49,6 +49,7 @@
 			>
 		</div>
 	</div>
+	<!-- Show dialog to set up starting Url for the scan e.g. domain/procuts -->
 	{#if showDialog}
 		<form
 			method="POST"

@@ -10,6 +10,7 @@ export async function load({ params }) {
     const docRef = doc(firestore, "domain", id);
     const domainDoc = await getDoc(docRef);
 
+    // returns last 5 scans ordered by date
     const data = collectionStore(firestore, query(collection(firestore, "domain", id, 'dateofscan'), orderBy("date", "desc"), limit(5)))
 
     return {

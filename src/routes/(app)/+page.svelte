@@ -1,34 +1,15 @@
 <script>
 	// imports
 	import { SearchOutline } from 'flowbite-svelte-icons';
-	import {
-		firstInCollection,
-		firstVisible,
-		lastInCollection,
-		lastVisible,
-		currentCollection
-	} from '$lib/store';
-	import { collection, query, orderBy, limit, startAfter } from 'firebase/firestore';
-
+	import Pagination from "$lib/components/pagination.svelte"
 	import { collectionStore } from 'sveltefire';
 	import { firestore } from '$lib/firebase';
 
-	let status = 'loading';
+	// data props
 	export let data;
 
-	status = data.status;
+	// domains returned from load function 
 	$: ({ domains } = data);
-
-	// function loadPrevios() {}
-	// async function loadNext() {
-	// 	$currentCollection = await collectionStore(
-	// 		firestore,
-	// 		query(collection(firestore, 'domain')),
-	// 		orderBy('name', 'asc'),
-	// 		limit(10),
-	// 		startAfter($lastVisible)
-	// 	);
-	// }
 </script>
 
 <section>
@@ -52,9 +33,8 @@
 	</div>
 	<ol class="w-full pt-0">
 		<!-- TODO loading state ---------------------------------------------------->
-		{#each $domains as domain, index}
+		{#each $domains as domain}
 			<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
-				<p class="ml-4 w-8">{index + 1}.</p>
 				<p class="text-lg">{domain.name}</p>
 				<div class="ml-auto flex items-center gap-12">
 					<p
@@ -76,13 +56,8 @@
 				</div>
 			</li>
 		{/each}
-		<!-- <Collection ref={'domain'} let:data>
-			<p slot="loading" class="absolute text-4xl">Loading...</p>
-		</Collection> -->
 		<!--TODO Error state------------------------------------------------->
 	</ol>
-	<div class="flex w-full justify-center gap-12 pt-12">
-			 <a data-sveltekit-preload-data="tap" href="?loadbefore={$firstVisible.id}">Load Previous</a> 
-			 <a data-sveltekit-preload-data="tap" href="?loadafter={$lastVisible.id}">Load Next</a> 
-	</div>
+	<!-- Pagination component -->
+	<Pagination />
 </section>

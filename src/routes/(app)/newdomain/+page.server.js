@@ -51,6 +51,7 @@ export const actions = {
       });
   },
 
+  // performs initial Scan 
   initialscan: async ({ request }) => {
     const dateOfScan = Date.now()
 

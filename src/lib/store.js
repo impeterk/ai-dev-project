@@ -6,6 +6,8 @@ export const placeholder = writable(
 
 export const language = writable('en')
 
+
+// tracks import entries in current collections for pagination to work
 export const firstInCollection = writable(null)
 export const firstVisible = writable(null)
 export const lastVisible = writable(null)

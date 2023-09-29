@@ -2,7 +2,7 @@
 	import { Collection } from 'sveltefire';
 	import { page } from '$app/stores';
 	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
-	import {firstVisible, lastVisible} from "$lib/store"
+	import Pagination  from "$lib/components/pagination.svelte"
 	const { id, date } = $page.params;
 	let expanded = null;
 	export let data
@@ -79,8 +79,5 @@
 				{/if}
 			{/each}
 		</ol>
-	<div class="flex w-full justify-center gap-12 pt-12">
-			 <a data-sveltekit-preload-data="tap" href="?loadbefore={$firstVisible.id}">Load Previous</a> 
-			 <a data-sveltekit-preload-data="tap" href="?loadafter={$lastVisible.id}">Load Next</a> 
-	</div>
+			<Pagination />
 </section>
