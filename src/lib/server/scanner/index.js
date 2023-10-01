@@ -6,6 +6,7 @@ import { writeDataInBatches } from '../../firebase/addCollection';
 
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { initiateSuggestions } from '../ai';
 
 /**
  * Initiates the scanning process for a given domain.
@@ -30,7 +31,6 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
 export async function initiateScan(domain, dateOfScan, startingUrl) {
-
 	// Add a new entry into the database
 	await updateStatus(domain, 'scanning');
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
@@ -54,6 +54,13 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 			await initiateEvaluation(domain, dateOfScan);
 		})
 		.then(async () => {
+			await updateStatus(domain, 'ai magic');
+		})
+		.then(async () => {
+			await initiateSuggestions(domain, dateOfScan);
+		})
+		.then(async () => {
+			console.log('Scan completely finished');
 			await updateStatus(domain, 'finished');
 		})
 		.catch(async (error) => {
