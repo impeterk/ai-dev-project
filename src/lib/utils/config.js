@@ -1,4 +1,4 @@
-import { adjustDomain } from '../../utils/adjustDomain';
+import { adjustDomain } from './adjustDomain';
 
 export function getConfig(domain, date) {
 	return {

@@ -1,4 +1,4 @@
-import { getConfig } from './config';
+import { getConfig } from '../../utils/config';
 import { checkMetaData } from './meta';
 import { checkBodyData } from './body';
 import { checkSocialData } from './social';
@@ -32,13 +32,13 @@ export async function initiateEvaluation(domain, dateOfScan) {
 			let issues = {}; // Empty the issues object for each urlId
 			config.urlId = urlId; // Get the ID of scanned url used in Firestore
 
-			// Run all evaluation checks
+			// Collect issues - run all evaluation checks
 			issues.meta = checkMetaData(urlData.meta);
 			issues.body = checkBodyData(urlData.body);
 			issues.social = checkSocialData(urlData.social);
 			issues.schema = checkSchemaData(urlData.schema);
 
-			// Collect promise in promises array
+			// Collect issues data as a promise in promises array
 			return updateIssueDocument(config, issues);
 		});
 
