@@ -2,7 +2,7 @@ import { getConfig } from '../../utils/config';
 import { getScanCollection } from '../../firebase/getCollection';
 import { updateSuggestionDocument } from '../../firebase/updateCollection';
 import { ai } from './prompts';
-import { limitChecker } from './requestsHandler';
+import { limitChecker, truncateTextToTokens } from './utils';
 
 export async function initiateSuggestions(domain, dateOfScan) {
 	let config = getConfig(domain, dateOfScan);
@@ -23,6 +23,7 @@ export async function initiateSuggestions(domain, dateOfScan) {
 
 			// Stringify the url data for AI prompt without issues object
 			let stringifiedUrlData = JSON.stringify({ ...urlData, issues: undefined });
+			stringifiedUrlData = truncateTextToTokens(stringifiedUrlData);
 
 			// Check if there's an issue and if yes, initiate AI prompt
 			if (urlData.issues.meta.title !== 'ok') {
