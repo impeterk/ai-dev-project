@@ -1,4 +1,4 @@
-import { aiRequest } from './requestsHandler';
+import { aiRequest } from './utils';
 
 export const ai = {
 	generateMetaTitle: async (data) => {
