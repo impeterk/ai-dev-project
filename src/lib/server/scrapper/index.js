@@ -1,4 +1,4 @@
-import { getAllObjects } from './objectScrapper';
+import { getAllObjects, getBodySnippet } from './objectScrapper';
 
 /**
  * Extracts comprehensive data from a given web page body.
@@ -65,6 +65,9 @@ export function scrapMetaData($) {
  *                the respective headlines' text.
  *   - images: An array of objects, each containing the 'src' (source URL) and
  *             'alt' (alt text) attributes of the images found in the page body.
+ *   - snippet: A string of objects, each containing the 'src' (source URL) and
+ *   - snippet: A string which contains 650 characters of the body text without HTML
+ * 				tags and unnecessary content such as headers, scripts, svgs, buttons, etc...
  */
 export function scrapBodyData($) {
 	return {
@@ -76,7 +79,8 @@ export function scrapBodyData($) {
 			h5: getAllObjects($, 'h5', ['text']),
 			h6: getAllObjects($, 'h6', ['text'])
 		},
-		images: getAllObjects($, 'img', ['src', 'alt'])
+		images: getAllObjects($, 'img', ['src', 'alt']),
+		snippet: getBodySnippet($)
 	};
 }
 
