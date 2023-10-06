@@ -1,12 +1,12 @@
-import { initiateCrawler } from '../crawler';
-import { initiateEvaluation } from '../evaluator';
-import { adjustDomain } from '../../utils/adjustDomain';
 import { updateStatus } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
-
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+
+import { initiateCrawler } from '../crawler';
+import { initiateEvaluation } from '../evaluator';
 import { initiateSuggestions } from '../ai';
+import { extractDataFromDataset } from '../../utils/extractData';
 
 /**
  * Initiates the scanning process for a given domain.
@@ -44,7 +44,8 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 			await writeDataInBatches(result.items, domain, dateOfScan);
 
 			await updateDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
-				totalPages: result.items.length
+				totalPages: result.items.length,
+				all: extractDataFromDataset(result.items)
 			});
 		})
 		.then(async () => {
