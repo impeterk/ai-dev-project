@@ -53,8 +53,7 @@ export async function initiateCrawler(domain) {
 				if (isValid(request, domain)) {
 					requestDataset.pushData({
 						url: request.loadedUrl,
-						scrappedData: scrapAllData($),
-						allData: $('body').html()
+						scrappedData: scrapAllData($)
 					});
 				}
 			}
