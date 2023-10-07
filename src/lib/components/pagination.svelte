@@ -7,14 +7,13 @@
 		currentPage
 	} from '$lib/store';
 	import { AngleRightSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
-	import { enhance } from '$app/forms';
 
 	// preload is set off it was causing issues
 </script>
 
 <div class="grid w-full grid-cols-3 justify-items-center pt-12">
 	<div
-		class="relative col-span-1 col-start-2 box-border flex h-12 items-center justify-center gap-6 text-primary"
+		class="relative col-span-1 col-start-2 box-border flex h-12 items-center justify-center gap-5 text-primary"
 	>
 		<!-- visible based entries, so we do not over/under flow the collection -->
 		{#if $firstVisible.id !== $firstInCollection.id}
@@ -27,9 +26,7 @@
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 			</a>
 		{/if}
-		<div
-			class="flex h-7 w-7 justify-center rounded-full bg-primary text-secondary outline outline-offset-1 outline-primary"
-		>
+		<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-secondary">
 			<p class="text-xl font-bold">
 				{$currentPage}
 			</p>

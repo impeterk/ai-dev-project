@@ -1,7 +1,9 @@
 import { firestore } from "$lib/firebase"
 import { collection, getDocs, query, orderBy, limit, startAfter, endBefore, limitToLast } from "firebase/firestore"
-import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentPage } from "$lib/store"
+import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentPage, currentLimit } from "$lib/store"
 import { collectionStore } from 'sveltefire';
+import { get } from "svelte/store";
+
 
 /**
  * function which queries first load from collection and 
@@ -11,6 +13,7 @@ import { collectionStore } from 'sveltefire';
  * @param {string} orderField - name of field, by which the collection should be ordered
  * @param {string} orderType - type of order be "acs" or "desc"
  */
+
 
 export async function initialLoad(collectionPath, orderField, orderType = "asc") {
     let last
@@ -23,7 +26,7 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
     firstVisible.update(value => first.docs[0])
 
     // get current snapshot of limited collection to set up last visible 
-    const data = query(collectionRef, orderBy(orderField, orderType), limit(10))
+    const data = query(collectionRef, orderBy(orderField, orderType), limit(get(currentLimit)))
     const dataResult = await getDocs(data)
     lastVisible.update(value => dataResult.docs.at(-1))
 
@@ -49,7 +52,7 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
 // loads next bunch of data
 export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
     // query FROM the last visible entry
-    let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limit(10), startAfter(lastRef))
+    let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limit(get(currentLimit)), startAfter(lastRef))
 
     // get snapshot of next visible collection to update first and last visible entries
     let data = await getDocs(dataQuery)
@@ -66,7 +69,7 @@ export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
 
 export async function previosLoad(collectionPath, orderField, orderType, firstRef) {
     // query TO the last visible first entry
-    let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limitToLast(10), endBefore(firstRef))
+    let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limitToLast(get(currentLimit)), endBefore(firstRef))
 
     // get snapshot of next visible collection to update first and last visible entries
     let data = await getDocs(dataQuery)

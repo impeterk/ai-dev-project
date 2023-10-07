@@ -6,6 +6,8 @@ export default {
 			colors: {
 				'primary': '#191770',
 				'secondary': '#E7E9FF',
+				'accent': '#8C00CF',
+				'link': '#0038FF',
 				'success': '#60ECA9',
 				'error': '#FF006B',
 				'warning': '#FFF500'
