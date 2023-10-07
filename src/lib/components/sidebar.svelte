@@ -4,7 +4,7 @@
 		ChartPieSolid,
 		BookSolid,
 		LifeBuoySolid,
-FilePlusSolid,
+		FilePlusSolid,
 		ArrowLeftToBracketOutline
 	} from 'flowbite-svelte-icons';
 	$: activeUrl = $page.url.pathname;
@@ -29,7 +29,7 @@ FilePlusSolid,
 				<span class="ml-3">Dashboard</span>
 			</a>
 		</li>
-		<li class='ml-8'>
+		<li class="ml-8">
 			<a
 				href="/newdomain"
 				class="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700 ${activeUrl ==

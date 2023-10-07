@@ -1,19 +1,17 @@
 <script>
 	// imports
 	import { SearchOutline } from 'flowbite-svelte-icons';
-	import Pagination from "$lib/components/pagination.svelte"
-	import { collectionStore } from 'sveltefire';
-	import { firestore } from '$lib/firebase';
-
+	import Pagination from '$lib/components/pagination.svelte';
+	import Spinner from '$lib/components/spinner.svelte';
 	// data props
 	export let data;
 
-	// domains returned from load function 
+	// domains returned from load function
 	$: ({ domains } = data);
 </script>
 
-<section>
-	<div class=" flex items-center justify-between bg-slate-500 px-8 py-4 text-slate-100">
+<section class="m-12 rounded bg-secondary p-12">
+	<div class="flex items-center justify-between rounded bg-slate-500 p-4 px-8 text-slate-100">
 		<h3 class="text-2xl font-semibold">Domains</h3>
 		<div class="flex items-center gap-4">
 			<label for="table-search" class="sr-only">Search</label>
@@ -31,18 +29,21 @@
 			<a href="/newdomain" class="rounded bg-gray-800 px-2 py-1 hover:bg-gray-600">Add Domain</a>
 		</div>
 	</div>
-	<ol class="w-full pt-0">
+	<ol class="min-h-[400px] w-full pt-0">
 		<!-- TODO loading state ---------------------------------------------------->
+		{#if $domains.length === 0}
+			<Spinner />
+		{/if}
 		{#each $domains as domain}
 			<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
 				<p class="text-lg">{domain.name}</p>
 				<div class="ml-auto flex items-center gap-12">
 					<p
 						class="border-inherrit w-20 rounded border px-2 text-center text-sm"
-						class:bg-yellow-200={domain.status == 'added'}
-						class:bg-green-200={domain.status == 'finished'}
-						class:bg-red-200={domain.status == 'aborted'}
-						class:bg-blue-200={domain.status == 'scanning'}
+						class:bg-warning={domain.status == 'added'}
+						class:bg-success={domain.status == 'finished'}
+						class:bg-error={domain.status == 'aborted'}
+						class:bg-secondary={domain.status == 'scanning'}
 						class:bg-yellow-300={domain.status == 'evaluating'}
 					>
 						{domain.status}
@@ -59,5 +60,8 @@
 		<!--TODO Error state------------------------------------------------->
 	</ol>
 	<!-- Pagination component -->
-	<Pagination />
+
+	{#if $domains.length !== 0}
+		<Pagination />
+	{/if}
 </section>

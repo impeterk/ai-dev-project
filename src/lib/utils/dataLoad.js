@@ -1,6 +1,6 @@
 import { firestore } from "$lib/firebase"
 import { collection, getDocs, query, orderBy, limit, startAfter, endBefore, limitToLast } from "firebase/firestore"
-import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentCollection } from "$lib/store"
+import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentPage } from "$lib/store"
 import { collectionStore } from 'sveltefire';
 
 /**
@@ -26,17 +26,20 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
     const data = query(collectionRef, orderBy(orderField, orderType), limit(10))
     const dataResult = await getDocs(data)
     lastVisible.update(value => dataResult.docs.at(-1))
-    
+
     // to get the last element, we have to change the order direction "asc" <==> "desc"
     if (orderType = "asc") {
         orderDirection = "desc"
     } else {
         orderDirection = "asc"
     }
-    
+
     //set up last entry in current collection
     last = await getDocs(query(collectionRef, orderBy(orderField, orderDirection), limit(1)))
     lastInCollection.update(value => last.docs[0])
+
+    //sets current Page for pagination to 1
+    currentPage.set(1)
 
     // returns real time updated data
     return collectionStore(firestore, data)
@@ -47,12 +50,15 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
 export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
     // query FROM the last visible entry
     let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limit(10), startAfter(lastRef))
-    
+
     // get snapshot of next visible collection to update first and last visible entries
     let data = await getDocs(dataQuery)
 
     firstVisible.update(value => data.docs[0])
     lastVisible.update(value => data.docs.at(-1))
+
+    // updates current Page
+    currentPage.update(value => value + 1)
 
     // returns realtime data from collection
     return collectionStore(firestore, dataQuery)
@@ -61,12 +67,15 @@ export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
 export async function previosLoad(collectionPath, orderField, orderType, firstRef) {
     // query TO the last visible first entry
     let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limitToLast(10), endBefore(firstRef))
-    
+
     // get snapshot of next visible collection to update first and last visible entries
     let data = await getDocs(dataQuery)
 
     firstVisible.update(value => data.docs[0])
     lastVisible.update(value => data.docs.at(-1))
+
+    // updates current Page
+    currentPage.update(value => value - 1)
 
     // returns realtime data from collection
     return collectionStore(firestore, dataQuery)

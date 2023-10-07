@@ -1,9 +1,9 @@
 // imports
 import { initialLoad, nextLoad, previosLoad } from "$lib/utils/dataLoad";
-import { firstVisible, lastVisible} from "$lib/store"
+import { firstVisible, lastVisible, currentPage } from "$lib/store"
 import { get } from "svelte/store";
 
-export async function load({url}) {
+export async function load({ url }) {
     // get first and last visible items from collection to provide
     // refs for next / previous load
     let lastId = url.searchParams.get("loadafter") || null
@@ -11,17 +11,16 @@ export async function load({url}) {
     let data
 
     if (lastId) {
-    // returns next results after last visible entry
+        // returns next results after last visible entry
         let lastRef = get(lastVisible)
         data = await nextLoad('domain', "name", "asc", lastRef)
     } else if (firstId) {
-    // returns previous results up to first visible entry
+        // returns previous results up to first visible entry
         let firstRef = get(firstVisible)
         data = await previosLoad('domain', "name", "asc", firstRef)
     } else {
-    // initial load of results
+        // initial load of results
         data = await initialLoad("domain", "name")
-
     }
 
     return { domains: data }
