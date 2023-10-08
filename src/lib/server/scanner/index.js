@@ -1,7 +1,7 @@
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
 import { adjustDomain } from '../../utils/adjustDomain';
-import { updateStatus } from '../../firebase/updateStatus';
+import { updateDomain } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 
 import { firestore } from '$lib/firebase';
@@ -32,7 +32,7 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
 export async function initiateScan(domain, dateOfScan, startingUrl) {
 
 	// Add a new entry into the database
-	await updateStatus(domain, 'scanning');
+	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
 		date: dateOfScan,
 		startingUrl
@@ -48,16 +48,16 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 			});
 		})
 		.then(async () => {
-			await updateStatus(domain, 'evaluating');
+			await updateDomain(domain, { status: 'evaluating' });
 		})
 		.then(async () => {
 			await initiateEvaluation(domain, dateOfScan);
 		})
 		.then(async () => {
-			await updateStatus(domain, 'finished');
+			await updateDomain(domain, { status: 'finished' });
 		})
 		.catch(async (error) => {
 			console.error('Error during initiateScan:', error);
-			await updateStatus(domain, 'aborted');
+			await updateDomain(domain, { status: 'aborted' });
 		});
 }

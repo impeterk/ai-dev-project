@@ -1,6 +1,6 @@
 import { firestore } from "$lib/firebase"
 import { collection, getDocs, query, orderBy, limit, startAfter, endBefore, limitToLast } from "firebase/firestore"
-import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentPage, currentLimit } from "$lib/store"
+import { firstInCollection, firstVisible, lastInCollection, lastVisible, currentPage, currentLimit, currentCollection } from "$lib/store"
 import { collectionStore } from 'sveltefire';
 import { get } from "svelte/store";
 
@@ -44,6 +44,7 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
     //sets current Page for pagination to 1
     currentPage.set(1)
 
+    currentCollection.update(async value => value = await collectionStore(firestore, data))
     // returns real time updated data
     return collectionStore(firestore, data)
 }

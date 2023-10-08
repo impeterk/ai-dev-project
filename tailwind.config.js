@@ -10,7 +10,8 @@ export default {
 				'link': '#0038FF',
 				'success': '#60ECA9',
 				'error': '#FF006B',
-				'warning': '#FFF500'
+				'warning': '#FFF500',
+				'base': '#f8fafc'
 			}
 		}
 	},

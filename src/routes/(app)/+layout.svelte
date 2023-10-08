@@ -3,7 +3,7 @@
 </script>
 
 <div class="flex flex-row">
-	<div class="sticky left-0 top-0 z-40 hidden h-screen w-72 shrink-0 bg-gray-800 p-4 lg:block">
+	<div class="sticky left-0 top-0 z-40 h-screen shrink-0">
 		<Sidebar />
 	</div>
 	<div class="w-full">

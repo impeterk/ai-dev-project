@@ -1,6 +1,6 @@
 // imports
 import { initialLoad, nextLoad, previosLoad } from "$lib/utils/dataLoad";
-import { firstVisible, lastVisible, currentLimit } from "$lib/store"
+import { firstVisible, lastVisible, currentLimit, currentCollection } from "$lib/store"
 import { get } from "svelte/store";
 
 export async function load({ url }) {
@@ -9,7 +9,6 @@ export async function load({ url }) {
     let lastId = url.searchParams.get("loadafter") || null
     let firstId = url.searchParams.get("loadbefore") || null
     let data
-
     //sets limit for results to fetch from database 
     currentLimit.set(7)
 
@@ -24,6 +23,7 @@ export async function load({ url }) {
     } else {
         // initial load of results
         data = await initialLoad("domain", "name")
+
     }
 
     return { domains: data }

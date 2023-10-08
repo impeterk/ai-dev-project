@@ -4,7 +4,7 @@ export const placeholder = writable(
   { url: 'https://tangit.sk' }
 )
 
-export const language = writable('en')
+export const language = writable(null)
 
 
 // tracks import entries in current collections for pagination to work

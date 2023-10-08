@@ -22,7 +22,7 @@
 				href="?loadbefore={$firstVisible.id}"
 				class="flex h-12 items-center gap-4"
 			>
-				<AngleLeftSolid />
+				<AngleLeftSolid size="sm" />
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 			</a>
 		{/if}
@@ -38,7 +38,7 @@
 				class="flex h-12 items-center gap-4"
 			>
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
-				<AngleRightSolid />
+				<AngleRightSolid size="sm" />
 			</a>
 		{/if}
 	</div>
