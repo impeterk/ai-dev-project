@@ -16,3 +16,8 @@
 export function isUnique(dataset) {
 	return new Set(dataset).size === dataset.length;
 }
+
+export function isDuplicate(property, value, data) {
+	const matchingItems = data.filter(item => item[property] === value);
+	return matchingItems.length > 1;
+  }

@@ -17,9 +17,11 @@ import { isEmpty } from '../isEmpty';
  * @param {string} value - The webpage description to be evaluated.
  * @returns {string} - A string indicating the evaluation result ('ok', 'short', 'long', or 'missing').
  */
-export function evaluateDescription(value) {
+export function evaluateDescription(value, all) {
 	if (!isEmpty(value)) {
-		if (value.length >= 150 && value.length < 160) {
+		if (isDuplicate('description', value, all)) {
+			return 'duplicate';
+		} else if (value.length >= 150 && value.length < 160) {
 			return 'ok';
 		} else if (value.length < 150) {
 			return 'short';

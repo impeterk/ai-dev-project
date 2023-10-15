@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
 
 /**
  * Assesses the length and presence of a given webpage title.
@@ -15,9 +16,11 @@ import { isEmpty } from '../isEmpty';
  * @param {string} value - The webpage title to be evaluated.
  * @returns {string} - A string indicating the assessment result ('ok', 'short', 'long', or 'missing').
  */
-export function evaluateTitle(value) {
+export function evaluateTitle(value, all) {
 	if (!isEmpty(value)) {
-		if (value.length >= 50 && value.length < 60) {
+		if (isDuplicate('title', value, all)) {
+			return 'duplicate';
+		} else if (value.length >= 50 && value.length < 60) {
 			return 'ok';
 		} else if (value.length < 50) {
 			return 'short';

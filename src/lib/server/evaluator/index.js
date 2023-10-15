@@ -3,7 +3,7 @@ import { checkMetaData } from './meta';
 import { checkBodyData } from './body';
 import { checkSocialData } from './social';
 import { checkSchemaData } from './schema';
-import { getScanCollection } from '../../firebase/getCollection';
+import { getScanCollection, getDataForDuplicateCheck } from '../../firebase/getCollection';
 import { updateIssueDocument } from '../../firebase/updateCollection';
 
 /**
@@ -27,13 +27,22 @@ export async function initiateEvaluation(domain, dateOfScan) {
 
 	try {
 		const scanResults = await getScanCollection(config.domain, config.dateOfScan);
+
+		// TODO:
+		// pass the 'all' object to the respective checks below
+		// within the check use the all object to check if there is more than 1 result - if yes we can assume it's a duplicate
+		// within the checks we change the status to 'duplicate'
+		// if checks ends with duplicate there's no need to check further for short, long, etc...
+		// the 'all' object won't change for now - no additional write into a database
+		const all = await getDataForDuplicateCheck(config.domain, config.dateOfScan);
+
 		// Run all checks for each scanned url
 		const promises = Object.entries(scanResults).map(async ([urlId, urlData]) => {
 			let issues = {}; // Empty the issues object for each urlId
 			config.urlId = urlId; // Get the ID of scanned url used in Firestore
 
 			// Collect issues - run all evaluation checks
-			issues.meta = checkMetaData(urlData.meta);
+			issues.meta = checkMetaData(urlData.meta, all);
 			issues.body = checkBodyData(urlData.body);
 			issues.social = checkSocialData(urlData.social);
 			issues.schema = checkSchemaData(urlData.schema);
