@@ -95,6 +95,8 @@ export async function limitChecker(func, ...args) {
 					await new Promise((resolve) => setTimeout(resolve, delay));
 					delay *= 2;
 					retries += 1;
+					console.log('Waiting for delay: ');
+					console.log(delay);
 				} else {
 					throw new Error('Rate limit handling: Maximum retries reached');
 				}
