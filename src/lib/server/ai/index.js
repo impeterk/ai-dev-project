@@ -55,7 +55,7 @@ export async function initiateSuggestions(domain, dateOfScan) {
 					} catch (error) {
 						reject(error);
 					}
-				}, 300 * index);
+				}, 100 * index);
 			});
 		} catch (error) {
 			console.error(`Error processing URL ${urlId}:`, error);

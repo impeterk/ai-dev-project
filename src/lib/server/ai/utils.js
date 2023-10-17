@@ -65,7 +65,7 @@ export function truncateTextToTokens(text) {
  */
 export async function limitChecker(func, ...args) {
 	const MAX_RETRIES = 5;
-	let delay = 200;
+	let delay = 150;
 	let retries = 0;
 
 	while (retries < MAX_RETRIES) {
@@ -88,7 +88,12 @@ export async function limitChecker(func, ...args) {
 						: 60;
 				// if there's only one request left before hitting the rate limit,
 				// the function waits until the rate limit resets.
+				console.log('---START OF AI API LOG---');
+				console.log('Remaining requests: ' + remainingRequests);
+				console.log('Reset Time Requests: ' + resetTimeRequests);
+				console.log('---END OF AI API LOG---');
 				if (remainingRequests <= 1) {
+					console.log('Resolving  <= 1 if statement:');
 					await new Promise((resolve) => setTimeout(resolve, resetTimeRequests * 1000));
 				}
 				if (retries < MAX_RETRIES) {
