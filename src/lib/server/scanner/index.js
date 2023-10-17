@@ -38,23 +38,19 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 		startingUrl
 	});
 
-	// Start crawling, scrapping, DB store and evaluation of URLs
 	await initiateCrawler(startingUrl)
 		.then(async (result) => {
 			await writeDataInBatches(result.items, domain, dateOfScan);
 
-			await updateDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
-				totalPages: result.items.length,
-				all: extractDataFromDataset(result.items)
-			});
-		})
-		.then(async () => {
+			// Manipulate the data for duplicity check in Evaluation phase
+			const all = extractDataFromDataset(result.items);
+
 			await updateStatus(domain, 'evaluating');
+
+			return all;
 		})
-		.then(async () => {
-			await initiateEvaluation(domain, dateOfScan);
-		})
-		.then(async () => {
+		.then(async (all) => {
+			await initiateEvaluation(domain, dateOfScan, all);
 			await updateStatus(domain, 'ai magic');
 		})
 		.then(async () => {
