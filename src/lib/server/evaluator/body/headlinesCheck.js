@@ -24,7 +24,7 @@ import { evaluateHx } from './hx';
  * 3. Any unexpected headline type will trigger a warning in the console.
  * 4. All evaluations are run concurrently using promises, and the function awaits their completion.
  */
-export function evaluateHeadlines(data) {
+export function evaluateHeadlines(data, all) {
 	const headlines = adjustHeadlinesData(data);
 	let hxIssues = {};
 
@@ -33,7 +33,7 @@ export function evaluateHeadlines(data) {
 
 		if (index == 'h1') {
 			// run checks for h1
-			hxIssues.h1 = evaluateH1(headline[index]);
+			hxIssues.h1 = evaluateH1(headline[index], all);
 		} else {
 			// run checks for rest of the headlines
 			if (['h2', 'h3', 'h4', 'h5', 'h6'].includes(index)) {

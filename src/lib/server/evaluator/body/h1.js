@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
 
 /**
  * Evaluates the H1 header(s) of a webpage to determine their status.
@@ -12,12 +13,16 @@ import { isEmpty } from '../isEmpty';
  * @param {Array<string>} data - An array containing the H1 header(s) data.
  * @returns {string} - Returns the determined status for the H1 headers.
  */
-export function evaluateH1(data) {
+export function evaluateH1(data, all) {
 	let h1Status = 'missing'; // default value
 
 	if (!isEmpty(data) && !isEmpty(data[0])) {
 		if (data.length === 1) {
-			h1Status = 'ok';
+			if (isDuplicate('h1', data[0], all)) {
+				h1Status = 'duplicate';
+			} else {
+				h1Status = 'ok';
+			}
 		} else if (data.length > 1) {
 			h1Status = 'multiple';
 		} else if (h1Length === 0 || data.length < 1) {

@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
 
 /**
  * Evaluates the length of a given description and categorizes it into one of several predefined groups.
@@ -12,9 +13,11 @@ import { isEmpty } from '../isEmpty';
  * @param {string} value - The description to be evaluated.
  * @returns {string} - The category into which the description's length falls ('ok', 'short', 'long', or 'missing').
  */
-export function evaluateDescription(value) {
+export function evaluateDescription(value, all) {
 	if (!isEmpty(value)) {
-		if (value.length >= 50 && value.length < 200) {
+		if (isDuplicate('OGtitle', value, all)) {
+			return 'duplicate';
+		} else if (value.length >= 50 && value.length < 200) {
 			return 'ok';
 		} else if (value.length < 50) {
 			return 'short';

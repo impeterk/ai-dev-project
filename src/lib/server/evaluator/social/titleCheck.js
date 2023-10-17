@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
 
 /**
  * Evaluates the length of a given title and categorizes it as 'ok', 'short', 'long', or 'missing'.
@@ -12,9 +13,11 @@ import { isEmpty } from '../isEmpty';
  * @param {string} value - The title string to be evaluated.
  * @returns {string} - The evaluation result based on the title's length and presence.
  */
-export function evaluateTitle(value) {
+export function evaluateTitle(value, all) {
 	if (!isEmpty(value)) {
-		if (value.length >= 60 && value.length < 89) {
+		if (isDuplicate('OGtitle', value, all)) {
+			return 'duplicate';
+		} else if (value.length >= 60 && value.length < 89) {
 			return 'ok';
 		} else if (value.length < 60) {
 			return 'short';

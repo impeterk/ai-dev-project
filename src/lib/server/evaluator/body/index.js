@@ -16,10 +16,10 @@ import { evaluateImages } from './imagesCheck';
  *    @property {Object} headlines - The assessed data for the provided headlines.
  *    @property {Object} images - The assessed data for the provided images.
  */
-export function checkBodyData(data) {
+export function checkBodyData(data, all) {
 	let body = {};
 
-	body.headlines = evaluateHeadlines(data.headlines);
+	body.headlines = evaluateHeadlines(data.headlines, all);
 	body.images = evaluateImages(data.images);
 
 	return body;

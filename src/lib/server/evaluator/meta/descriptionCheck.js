@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
 
 /**
  * Evaluates the length and presence of a given webpage description.
