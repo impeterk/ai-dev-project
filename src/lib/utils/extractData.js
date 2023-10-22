@@ -12,7 +12,7 @@
  *
  * For each dataset in the data array, this function will:
  * 1. Always extract the `url` property.
- * 2. Navigate to and extract the `meta.description`, `meta.title`, and `body.headlines.h1` properties
+ * 2. Navigate to and extract the `meta.description`, `meta.title`, `body.headlines.h1`, 'body.images.alt', 'social.title', 'social.description' properties
  *    from the `scrappedData` object.
  * 3. Return the extracted data in a new structure:
  * {
@@ -32,6 +32,7 @@ export function extractDataFromDataset(data) {
 			'meta.description',
 			'meta.title',
 			'body.headlines.h1',
+			'body.images.alt',
 			'social.title',
 			'social.description'
 		]) {
@@ -55,6 +56,9 @@ export function extractDataFromDataset(data) {
 					break;
 				case 'body.headlines.h1':
 					extracted.h1 = value;
+					break;
+				case 'body.images.alt':
+					extracted.alt = value;
 					break;
 
 				default:

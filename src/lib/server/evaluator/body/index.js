@@ -20,7 +20,7 @@ export function checkBodyData(data, all) {
 	let body = {};
 
 	body.headlines = evaluateHeadlines(data.headlines, all);
-	body.images = evaluateImages(data.images);
+	body.images = evaluateImages(data.images, all);
 
 	return body;
 }

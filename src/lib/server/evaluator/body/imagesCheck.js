@@ -1,4 +1,4 @@
-import { isEmpty } from '../isEmpty';
+import { evaluateAlts } from './altTextsCheck';
 
 /**
  * Evaluates the images in the provided data based on their 'alt' attribute values.
@@ -19,11 +19,11 @@ import { isEmpty } from '../isEmpty';
  * @param {Array} data - Array of image objects to evaluate. Each object contains properties like 'alt' and 'src'.
  * @returns {Array<Object>} An array containing evaluation results for each image.
  */
-export function evaluateImages(data) {
+export function evaluateImages(data, all) {
 	try {
 		const imgIssues = data.map((image) => ({
-			alt: isEmpty(image.alt) ? 'missing' : 'ok',
-			src: image.src ? image.src : ''
+			alt: evaluateAlts(image.alt, all),
+			src: image.src ? image.src : 'missing'
 		}));
 
 		if (imgIssues.length) {
