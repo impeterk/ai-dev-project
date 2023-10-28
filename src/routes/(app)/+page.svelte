@@ -12,11 +12,22 @@
 	import Main from '$lib/components/main.svelte';
 	import { currentCollection } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import { onMount } from 'svelte';
 	// data props
 	export let data;
 
 	// domains returned from load function
 	$: ({ domains } = data);
+
+	// locales for dates
+	let userLocales;
+	onMount(() => {
+		let tmp = window.navigator.language;
+		if (window.navigator.language.includes('-')) {
+			return (userLocales = tmp);
+		}
+		return (userLocales = `${tmp}-${tmp}`);
+	});
 </script>
 
 <Main>
@@ -65,10 +76,10 @@
 							{#if domain.lastScan}
 								<div class="p-1">
 									<p class="text-lg font-semibold">
-										{dateFormatter(domain.lastScan, 'sk')}
+										{dateFormatter(domain.lastScan, userLocales)}
 									</p>
 									<p>
-										{timeFormatter(domain.lastScan, 'sk')}
+										{timeFormatter(domain.lastScan, userLocales)}
 									</p>
 								</div>
 							{/if}</td
