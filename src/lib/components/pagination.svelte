@@ -4,10 +4,13 @@
 		firstVisible,
 		lastInCollection,
 		lastVisible,
-		currentPage
+		currentPage,
+		collectionPath,
+		orderField,
+		orderDirection
 	} from '$lib/store';
+	import { nextLoad, previosLoad } from '$lib/utils/dataLoad.js';
 	import { AngleRightSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
-
 	// preload is set off it was causing issues
 </script>
 
@@ -17,14 +20,22 @@
 	>
 		<!-- visible based entries, so we do not over/under flow the collection -->
 		{#if $firstVisible.id !== $firstInCollection.id}
-			<a
+			<!-- <a
 				data-sveltekit-preload-data="off"
 				href="?loadbefore={$firstVisible.id}"
 				class="flex h-12 items-center gap-4"
 			>
 				<AngleLeftSolid size="sm" />
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
-			</a>
+			</a> -->
+			<button
+				data-sveltekit-preload-data="off"
+				on:click={previosLoad($collectionPath, $orderField, $orderDirection, $firstVisible)}
+				class="flex h-12 items-center gap-4"
+			>
+				<AngleLeftSolid size="sm" />
+				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
+			</button>
 		{/if}
 		<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-secondary">
 			<p class="text-xl font-bold">
@@ -32,14 +43,14 @@
 			</p>
 		</div>
 		{#if $lastVisible.id !== $lastInCollection.id}
-			<a
+			<button
 				data-sveltekit-preload-data="off"
-				href="?loadafter={$lastVisible.id}"
+				on:click={nextLoad($collectionPath, $orderField, $orderDirection, $lastVisible)}
 				class="flex h-12 items-center gap-4"
 			>
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 				<AngleRightSolid size="sm" />
-			</a>
+			</button>
 		{/if}
 	</div>
 </div>

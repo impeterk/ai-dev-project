@@ -5,10 +5,12 @@
 	import { page } from '$app/stores';
 	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
 	import Pagination from '$lib/components/pagination.svelte';
+	import Spinner from '$lib/components/spinner.svelte';
+	import { currentCollection, userLocale } from '$lib/store';
 	const { id, date } = $page.params;
 	let expanded = null;
-	export let data;
-	$: ({ results } = data);
+
+	$: results = $currentCollection;
 </script>
 
 <Main>
@@ -86,6 +88,10 @@
 				{/if}
 			{/each}
 		</ol>
+		{#if $results.length === 0}
+			<Spinner />
+		{/if}
+
 		<Pagination />
 	</section>
 </Main>

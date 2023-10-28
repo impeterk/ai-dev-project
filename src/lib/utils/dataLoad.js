@@ -44,7 +44,8 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
     //sets current Page for pagination to 1
     currentPage.set(1)
 
-    currentCollection.update(async value => value = await collectionStore(firestore, data))
+    // currentCollection.update(async value => value = await collectionStore(firestore, data))
+    currentCollection.set(collectionStore(firestore, data))
     // returns real time updated data
     return collectionStore(firestore, data)
 }
@@ -64,6 +65,7 @@ export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
     // updates current Page
     currentPage.update(value => value + 1)
 
+    currentCollection.set(collectionStore(firestore, dataQuery))
     // returns realtime data from collection
     return collectionStore(firestore, dataQuery)
 }
@@ -80,6 +82,7 @@ export async function previosLoad(collectionPath, orderField, orderType, firstRe
 
     // updates current Page
     currentPage.update(value => value - 1)
+    currentCollection.set(collectionStore(firestore, dataQuery))
 
     // returns realtime data from collection
     return collectionStore(firestore, dataQuery)

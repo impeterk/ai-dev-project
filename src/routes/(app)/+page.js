@@ -1,6 +1,7 @@
 // imports
-import { initialLoad, nextLoad, previosLoad } from "$lib/utils/dataLoad";
-import { firstVisible, lastVisible, currentLimit, currentCollection } from "$lib/store"
+import { currentLimit, userLocale, collectionPath, orderField, orderDirection } from "$lib/store"
+import { browser } from "$app/environment";
+import { initialLoad } from "$lib/utils/dataLoad.js";
 import { get } from "svelte/store";
 
 export async function load({ url }) {
@@ -11,20 +12,18 @@ export async function load({ url }) {
     let data
     //sets limit for results to fetch from database 
     currentLimit.set(7)
+    collectionPath.set('domain')
+    orderField.set('name')
+    orderDirection.set('asc')
 
-    if (lastId) {
-        // returns next results after last visible entry
-        let lastRef = get(lastVisible)
-        data = await nextLoad('domain', "name", "asc", lastRef)
-    } else if (firstId) {
-        // returns previous results up to first visible entry
-        let firstRef = get(firstVisible)
-        data = await previosLoad('domain', "name", "asc", firstRef)
-    } else {
-        // initial load of results
-        data = await initialLoad("domain", "name")
+    await initialLoad("domain", "name")
 
+    if (browser && !get(userLocale)) {
+        let tmp = window.navigator.language;
+        if (window.navigator.language.includes('-')) {
+            userLocale.set(tmp)
+        } else {
+            userLocale.set(`${tmp}-${tmp}`)
+        }
     }
-
-    return { domains: data }
 }

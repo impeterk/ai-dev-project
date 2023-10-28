@@ -10,24 +10,15 @@
 	import Pagination from '$lib/components/pagination.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
 	import Main from '$lib/components/main.svelte';
-	import { currentCollection } from '$lib/store';
+	import { currentCollection, userLocale } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
 	import { onMount } from 'svelte';
-	// data props
-	export let data;
+	import { get } from 'svelte/store';
 
 	// domains returned from load function
-	$: ({ domains } = data);
+	// $: ({ domains } = data);
 
-	// locales for dates
-	let userLocales;
-	onMount(() => {
-		let tmp = window.navigator.language;
-		if (window.navigator.language.includes('-')) {
-			return (userLocales = tmp);
-		}
-		return (userLocales = `${tmp}-${tmp}`);
-	});
+	$: domains = $currentCollection;
 </script>
 
 <Main>
@@ -40,8 +31,8 @@
 			<CirclePlusSolid size="sm" />
 		</a>
 	</div>
-	<section>
-		<table class="min-h-[400px] w-full table-auto">
+	<section class="flex min-h-[750px] flex-col">
+		<table class=" w-full table-auto">
 			<thead class="w-full rounded-xl bg-gradient-to-r from-primary to-accent text-slate-100">
 				<tr>
 					<th scope="col" class="rounded-l-xl text-left"><p class="ml-12">Name</p></th>
@@ -76,10 +67,10 @@
 							{#if domain.lastScan}
 								<div class="p-1">
 									<p class="text-lg font-semibold">
-										{dateFormatter(domain.lastScan, userLocales)}
+										{dateFormatter(domain.lastScan, $userLocale)}
 									</p>
 									<p>
-										{timeFormatter(domain.lastScan, userLocales)}
+										{timeFormatter(domain.lastScan, $userLocale)}
 									</p>
 								</div>
 							{/if}</td
@@ -127,7 +118,9 @@
 		<!-- Pagination component -->
 
 		{#if $domains.length !== 0}
-			<Pagination />
+			<div class="mt-auto">
+				<Pagination />
+			</div>
 		{/if}
 	</section>
 </Main>
