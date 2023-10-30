@@ -5,7 +5,6 @@
 	import { browser } from '$app/environment';
 	import { userLocale } from '$lib/store';
 	import { get } from 'svelte/store';
-
 	// userLocales
 	// TODO: rework to get userLocales from request to client
 	if (browser && !get(userLocale)) {

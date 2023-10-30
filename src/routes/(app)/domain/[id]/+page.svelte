@@ -5,9 +5,18 @@
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter.js';
 	import { enhance } from '$app/forms';
 	import Spinner from '$lib/components/spinner.svelte';
-	$: ({ id, name, datesCollection } = data);
+	import { breadcrumbs } from '$lib/store';
 
+	import { page } from '$app/stores';
+	import { beforeUpdate } from 'svelte';
+	$: ({ id, name, datesCollection } = data);
 	$: startingUrl = `https://${name}`;
+
+	// breadcrumbs
+	// TODO: rework to generate from server
+	$: beforeUpdate(async () => {
+		await $breadcrumbs.set(name, { id, link: $page.url.pathname });
+	});
 </script>
 
 <Main>

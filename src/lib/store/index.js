@@ -18,3 +18,7 @@ export const currentLimit = writable(0)
 export const collectionPath = writable(null)
 export const orderField = writable(null)
 export const orderDirection = writable(null)
+
+
+// breadcrumbs
+export const breadcrumbs = writable(new Map())

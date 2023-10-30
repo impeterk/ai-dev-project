@@ -12,11 +12,14 @@
 	import Main from '$lib/components/main.svelte';
 	import { currentCollection } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import { breadcrumbs } from '$lib/store';
 
 	// domains returned from load function
 	// $: ({ domains } = data);
 
 	$: domains = $currentCollection;
+
+	$breadcrumbs.clear();
 </script>
 
 <Main>

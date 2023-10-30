@@ -6,11 +6,22 @@
 	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
-	import { currentCollection, userLocale } from '$lib/store';
+	import { currentCollection, breadcrumbs } from '$lib/store';
+	import { onDestroy, beforeUpdate } from 'svelte';
+
 	const { id, date } = $page.params;
 	let expanded = null;
 
 	$: results = $currentCollection;
+
+	// breadcrumbs
+	// TODO: rework to generate from server
+	$: beforeUpdate(async () => {
+		await $breadcrumbs.set(date, { id: date, link: $page.url.pathname });
+	});
+	$: onDestroy(async () => {
+		await $breadcrumbs.delete(date);
+	});
 </script>
 
 <Main>

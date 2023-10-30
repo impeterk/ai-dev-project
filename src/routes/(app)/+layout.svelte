@@ -6,7 +6,7 @@
 	<div class="sticky left-0 top-0 z-40 h-screen shrink-0">
 		<Sidebar />
 	</div>
-	<div class="w-full">
+	<div class="mx-auto w-full max-w-7xl">
 		<slot />
 	</div>
 </div>
