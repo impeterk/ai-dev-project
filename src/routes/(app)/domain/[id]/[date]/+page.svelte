@@ -31,6 +31,9 @@
 				</h3>
 			</div>
 		</div>
+		{#if $results.length === 0}
+			<Spinner />
+		{/if}
 		<ol class="h-[650px]">
 			{#each $results as url, index}
 				<li class="border-b py-1">
@@ -88,9 +91,6 @@
 				{/if}
 			{/each}
 		</ol>
-		{#if $results.length === 0}
-			<Spinner />
-		{/if}
 
 		<Pagination />
 	</section>

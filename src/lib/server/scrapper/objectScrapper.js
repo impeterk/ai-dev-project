@@ -13,9 +13,8 @@ export function getAllObjects($, selector, attributes) {
 			attributes.forEach((attr) => {
 				// image source fix for RAQN lazy loading
 				if (attr === 'src' && element.attr(attr).includes('base64')) {
-					// TODO: Based on DOM, we check multiple options, which could contain src for image 
+					// Based on DOM, we check multiple options, which could contain src for image 
 					result[attr] = element.parent().parent().next().attr('src') || element.parent().next().attr('src') || element.attr('srcset')?.split('?').at(0).replace('\n', '').trim() || `src missing for ${element}`
-
 				} else if (attr === 'text') {
 					result[attr] = element.text() || ''; // get the actual value of the HTML tag
 				} else {

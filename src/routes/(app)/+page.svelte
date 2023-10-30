@@ -10,10 +10,8 @@
 	import Pagination from '$lib/components/pagination.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
 	import Main from '$lib/components/main.svelte';
-	import { currentCollection, userLocale } from '$lib/store';
+	import { currentCollection } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
-	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 
 	// domains returned from load function
 	// $: ({ domains } = data);
@@ -67,10 +65,10 @@
 							{#if domain.lastScan}
 								<div class="p-1">
 									<p class="text-lg font-semibold">
-										{dateFormatter(domain.lastScan, $userLocale)}
+										{dateFormatter(domain.lastScan)}
 									</p>
 									<p>
-										{timeFormatter(domain.lastScan, $userLocale)}
+										{timeFormatter(domain.lastScan)}
 									</p>
 								</div>
 							{/if}</td
@@ -97,12 +95,13 @@
 						</td>
 						<td class="rounded-r-xl">
 							<div class="flex w-full justify-center">
-								<button
+								<a
+									href="/domain/{domain.id}"
 									class="mx-auto flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-secondary"
 								>
 									<p class="font-medium">Inspect</p>
 									<AngleRightSolid size="sm" />
-								</button>
+								</a>
 							</div>
 						</td>
 					</tr>

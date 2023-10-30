@@ -2,7 +2,9 @@
 	export let data;
 	let showDialog = false;
 	import Main from '$lib/components/main.svelte';
-
+	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter.js';
+	import { enhance } from '$app/forms';
+	import Spinner from '$lib/components/spinner.svelte';
 	$: ({ id, name, datesCollection } = data);
 
 	$: startingUrl = `https://${name}`;
@@ -57,10 +59,16 @@
 			<form
 				method="POST"
 				class="flex w-full content-center items-center justify-end gap-4 bg-slate-100 p-4"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update();
+						showDialog = false;
+					};
+				}}
 			>
 				<h3 class="text-xl font-medium">Starting Url</h3>
 				<input hidden value={id} name="domainid" />
-				<input value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
+				<input bind:value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
 				<button type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
 					>Start New Scan</button
 				>
@@ -72,18 +80,11 @@
 				<li class="flex w-full items-center p-2">
 					<p class="ml-4 w-8">{index + 1}.</p>
 					<p class="text-lg">
-						{Intl.DateTimeFormat('en-us', {
-							year: 'numeric',
-							month: 'short',
-							day: 'numeric',
-							hour: '2-digit',
-							minute: '2-digit'
-						}).format(new Date(parseInt(date.id)))}
+						<span>{dateFormatter(date.id)}</span>
+						<span>{timeFormatter(date.id) || ''}</span>
 					</p>
 					<p class="ml-8 text-lg">
-						{#if date.totalPages}
-							{date.totalPages}
-						{/if}
+						{date.totalPages || 'In progress '}
 					</p>
 					<p class="ml-auto mr-4">
 						<a
@@ -96,5 +97,8 @@
 				</li>
 			{/each}
 		</ol>
+		{#if $datesCollection.length === 0}
+			<Spinner />
+		{/if}
 	</section>
 </Main>

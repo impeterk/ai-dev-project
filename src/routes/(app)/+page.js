@@ -1,8 +1,6 @@
 // imports
-import { currentLimit, userLocale, collectionPath, orderField, orderDirection } from "$lib/store"
-import { browser } from "$app/environment";
+import { currentLimit, collectionPath, orderField, orderDirection } from "$lib/store"
 import { initialLoad } from "$lib/utils/dataLoad.js";
-import { get } from "svelte/store";
 
 export async function load({ url }) {
     // get first and last visible items from collection to provide
@@ -18,12 +16,4 @@ export async function load({ url }) {
 
     await initialLoad("domain", "name")
 
-    if (browser && !get(userLocale)) {
-        let tmp = window.navigator.language;
-        if (window.navigator.language.includes('-')) {
-            userLocale.set(tmp)
-        } else {
-            userLocale.set(`${tmp}-${tmp}`)
-        }
-    }
 }
