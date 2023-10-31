@@ -20,7 +20,7 @@ import { evaluateAlternates } from './alternatesCheck';
  * @param {Object} data - Object containing metadata items to be evaluated.
  * @returns {Object} - An object with keys being metadata types and values being their respective evaluation results.
  */
-export function checkMetaData(data) {
+export function checkMetaData(data, all) {
 	const metaData = Object.entries(data);
 
 	let meta = {};
@@ -28,11 +28,11 @@ export function checkMetaData(data) {
 	for (const [key, value] of metaData) {
 		switch (key) {
 			case 'title':
-				meta[key] = evaluateTitle(value);
+				meta[key] = evaluateTitle(value, all);
 				break;
 
 			case 'description':
-				meta[key] = evaluateDescription(value);
+				meta[key] = evaluateDescription(value, all);
 				break;
 
 			case 'canonical':

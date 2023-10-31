@@ -97,6 +97,10 @@
 							{#if url.issues.schema}
 								<div class="block">Schema: {url.issues.schema}</div>
 							{/if}
+							{#if url.suggestions}
+								<div class="block">Suggestions title: {url.suggestions.meta.title}</div>
+								<div class="block">Suggestions description: {url.suggestions.meta.description}</div>
+							{/if}
 						{/if}
 					</div>
 				{/if}

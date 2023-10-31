@@ -14,7 +14,7 @@ import { evaluateImage } from './imageCheck';
  * @param {Object} data - The social metadata object containing properties like title, description, and image.
  * @returns {Object} - An object with the same keys as the input, but values representing the evaluation of each property.
  */
-export function checkSocialData(data) {
+export function checkSocialData(data, all) {
 	const socialData = Object.entries(data);
 
 	let social = {};
@@ -22,10 +22,10 @@ export function checkSocialData(data) {
 	for (const [key, value] of socialData) {
 		switch (key) {
 			case 'title':
-				social[key] = evaluateTitle(value);
+				social[key] = evaluateTitle(value, all);
 				break;
 			case 'description':
-				social[key] = evaluateDescription(value);
+				social[key] = evaluateDescription(value, all);
 				break;
 			case 'image':
 				social[key] = evaluateImage(value);

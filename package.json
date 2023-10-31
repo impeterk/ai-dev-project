@@ -35,6 +35,9 @@
 		"apify": "^3.1.8",
 		"crawlee": "^3.5.0",
 		"firebase": "^9.23.0",
+		"he": "^1.2.0",
+		"js-tiktoken": "^1.0.7",
+		"openai": "^4.11.1",
 		"sveltefire": "^0.4.2"
 	}
 }

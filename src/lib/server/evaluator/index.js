@@ -1,4 +1,4 @@
-import { getConfig } from './config';
+import { getConfig } from '../../utils/config';
 import { checkMetaData } from './meta';
 import { checkBodyData } from './body';
 import { checkSocialData } from './social';
@@ -22,23 +22,24 @@ import { updateIssueDocument } from '../../firebase/updateCollection';
  * @returns {Promise<void>} - Resolves when all evaluations and updates are completed.
  * @throws Will throw an error if there's an issue in fetching the scan collection or during evaluation.
  */
-export async function initiateEvaluation(domain, dateOfScan) {
+export async function initiateEvaluation(domain, dateOfScan, all) {
 	let config = getConfig(domain, dateOfScan);
 
 	try {
 		const scanResults = await getScanCollection(config.domain, config.dateOfScan);
+
 		// Run all checks for each scanned url
 		const promises = Object.entries(scanResults).map(async ([urlId, urlData]) => {
 			let issues = {}; // Empty the issues object for each urlId
 			config.urlId = urlId; // Get the ID of scanned url used in Firestore
 
-			// Run all evaluation checks
-			issues.meta = checkMetaData(urlData.meta);
-			issues.body = checkBodyData(urlData.body);
-			issues.social = checkSocialData(urlData.social);
+			// Collect issues - run all evaluation checks
+			issues.meta = checkMetaData(urlData.meta, all);
+			issues.body = checkBodyData(urlData.body, all);
+			issues.social = checkSocialData(urlData.social, all);
 			issues.schema = checkSchemaData(urlData.schema);
 
-			// Collect promise in promises array
+			// Collect issues data as a promise in promises array
 			return updateIssueDocument(config, issues);
 		});
 

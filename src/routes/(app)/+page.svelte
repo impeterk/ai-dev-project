@@ -84,6 +84,7 @@
 								class:bg-error={domain.status == 'aborted'}
 								class:bg-secondary={domain.status == 'scanning'}
 								class:bg-yellow-300={domain.status == 'evaluating'}
+						    class:bg-purple-200={domain.status == 'ai magic'}
 							>
 								{domain.status}
 							</p>

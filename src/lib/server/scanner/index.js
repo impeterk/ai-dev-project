@@ -1,11 +1,16 @@
+
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
 import { adjustDomain } from '../../utils/adjustDomain';
 import { updateDomain } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
-
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+
+import { initiateCrawler } from '../crawler';
+import { initiateEvaluation } from '../evaluator';
+import { initiateSuggestions } from '../ai';
+import { extractDataFromDataset } from '../../utils/extractData';
 
 /**
  * Initiates the scanning process for a given domain.
@@ -30,7 +35,6 @@ import { doc, setDoc, updateDoc } from 'firebase/firestore';
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
 export async function initiateScan(domain, dateOfScan, startingUrl) {
-
 	// Add a new entry into the database
 	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
@@ -38,22 +42,27 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 		startingUrl
 	});
 
-	// Start crawling, scrapping, DB store and evaluation of URLs
 	await initiateCrawler(startingUrl)
 		.then(async (result) => {
 			await writeDataInBatches(result.items, domain, dateOfScan);
 
-			await updateDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
-				totalPages: result.items.length
-			});
-		})
-		.then(async () => {
+			// Manipulate the data for duplicity check in Evaluation phase
+			const all = extractDataFromDataset(result.items);
+
 			await updateDomain(domain, { status: 'evaluating' });
+
+			return all;
+		})
+		.then(async (all) => {
+			await initiateEvaluation(domain, dateOfScan, all);
+			await updateDomain(domain, { status: 'ai magic' });
+
 		})
 		.then(async () => {
-			await initiateEvaluation(domain, dateOfScan);
+			await initiateSuggestions(domain, dateOfScan);
 		})
 		.then(async () => {
+			console.log('Scan completely finished');
 			await updateDomain(domain, { status: 'finished' });
 		})
 		.catch(async (error) => {
