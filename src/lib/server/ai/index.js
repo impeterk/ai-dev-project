@@ -15,6 +15,10 @@ export async function initiateSuggestions(domain, dateOfScan) {
 				meta: {
 					title: '',
 					description: ''
+				},
+				social: {
+					title: '',
+					description: ''
 				}
 			};
 
@@ -26,16 +30,32 @@ export async function initiateSuggestions(domain, dateOfScan) {
 			stringifiedUrlData = truncateTextToTokens(stringifiedUrlData);
 
 			// Check if there's an issue and if yes, initiate AI prompt
+			// META TITLE
 			if (urlData.issues.meta.title !== 'ok') {
 				let metaTitle = await limitChecker(() => ai.generateMetaTitle(stringifiedUrlData));
 				suggestions.meta.title = metaTitle ? metaTitle : '';
 			}
 
+			// META DESCRIPTION
 			if (urlData.issues.meta.description !== 'ok') {
 				let metaDescription = await limitChecker(() =>
 					ai.generateMetaDescription(stringifiedUrlData)
 				);
 				suggestions.meta.description = metaDescription ? metaDescription : '';
+			}
+
+			// SOCIAL TITLE
+			if (urlData.issues.social.title !== 'ok') {
+				let socialTitle = await limitChecker(() => ai.generateSocialTitle(stringifiedUrlData));
+				suggestions.social.title = socialTitle ? socialTitle : '';
+			}
+
+			// SOCIAL DESCRIPTION
+			if (urlData.issues.social.description !== 'ok') {
+				let socialDescription = await limitChecker(() =>
+					ai.generateSocialDescription(stringifiedUrlData)
+				);
+				suggestions.social.description = socialDescription ? socialDescription : '';
 			}
 
 			console.log(urlData.url);
@@ -48,6 +68,9 @@ export async function initiateSuggestions(domain, dateOfScan) {
 			// For example, the first URL will have a delay of 0ms, the second will have 300ms,
 			// the third will have 600ms, and so on.
 			return await new Promise((resolve, reject) => {
+				console.log('Waiting for DB write in 350ms');
+				// console.log(60 * index + 'ms');
+
 				setTimeout(async () => {
 					try {
 						let result = await updateSuggestionDocument(localConfig, suggestions);
@@ -55,7 +78,16 @@ export async function initiateSuggestions(domain, dateOfScan) {
 					} catch (error) {
 						reject(error);
 					}
-				}, 100 * index);
+				}, 350);
+				// setTimeout(async () => {
+				// 	try {
+				// 		let result = await updateSuggestionDocument(localConfig, suggestions);
+				// 		resolve(result);
+				// 	} catch (error) {
+				// 		reject(error);
+				// 	}
+				// }, 60 * index);
+
 			});
 		} catch (error) {
 			console.error(`Error processing URL ${urlId}:`, error);
