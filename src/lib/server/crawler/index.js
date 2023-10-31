@@ -43,7 +43,7 @@ export async function initiateCrawler(domain) {
 				// Extract links from the current page and add them to the crawling queue if they match the pattern
 				await enqueueLinks({
 					globs: config.domainPattern,
-					exclude: ['*?*'],
+					exclude: ['*?*', '*/content/heliux/*'],
 					transformRequestFunction(req) {
 						return isValid(req, domain); // Passing domain as an argument
 					}
