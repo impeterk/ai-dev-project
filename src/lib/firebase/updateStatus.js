@@ -14,15 +14,15 @@ import { doc, updateDoc } from 'firebase/firestore';
  * 
  * @returns {boolean} - Returns true if the status update was successful, false otherwise.
  */
-export async function updateStatus(domain, status) {
+export async function updateDomain(domain, options) {
     const docRef = doc(firestore, `domain/${domain}`);
-    
+
     try {
-        await updateDoc(docRef, { status: status });
+        await updateDoc(docRef, options);
         return true;
     } catch (e) {
         console.log(`Error updating status for domain ${domain}:`, e);
-        
+
         try {
             await updateDoc(docRef, { status: 'aborted' });
         } catch (nestedError) {

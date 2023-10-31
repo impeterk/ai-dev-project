@@ -1,63 +1,128 @@
 <script>
 	// imports
-	import { SearchOutline } from 'flowbite-svelte-icons';
-	import Pagination from "$lib/components/pagination.svelte"
-	import { collectionStore } from 'sveltefire';
-	import { firestore } from '$lib/firebase';
+	import {
+		SearchOutline,
+		CirclePlusSolid,
+		AngleDownSolid,
+		AngleRightSolid
+	} from 'flowbite-svelte-icons';
+	import { TableSearch } from 'flowbite-svelte';
+	import Pagination from '$lib/components/pagination.svelte';
+	import Spinner from '$lib/components/spinner.svelte';
+	import Main from '$lib/components/main.svelte';
+	import { currentCollection } from '$lib/store';
+	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import { breadcrumbs } from '$lib/store';
 
-	// data props
-	export let data;
+	// domains returned from load function
+	// $: ({ domains } = data);
 
-	// domains returned from load function 
-	$: ({ domains } = data);
+	$: domains = $currentCollection;
+
+	$breadcrumbs.clear();
 </script>
 
-<section>
-	<div class=" flex items-center justify-between bg-slate-500 px-8 py-4 text-slate-100">
-		<h3 class="text-2xl font-semibold">Domains</h3>
-		<div class="flex items-center gap-4">
-			<label for="table-search" class="sr-only">Search</label>
-			<div class="relative">
-				<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-					<SearchOutline class="text-gray-400" />
-				</div>
-				<input
-					type="text"
-					id="table-search"
-					class="block w-80 rounded-lg border border-gray-300 bg-slate-200 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400"
-					placeholder="Search for items"
-				/>
-			</div>
-			<a href="/newdomain" class="rounded bg-gray-800 px-2 py-1 hover:bg-gray-600">Add Domain</a>
-		</div>
+<Main>
+	<svelte:fragment slot="title">Domain Overview</svelte:fragment>
+	<div class="flex w-full justify-end" slot="header">
+		<a
+			href="/newdomain"
+			class="mr-20 flex items-center gap-2 rounded-t-xl bg-primary px-4 py-2 text-xl font-bold text-secondary outline-offset-2 transition delay-100 duration-300 ease-in-out hover:bg-gradient-to-r hover:from-primary hover:to-accent hover:outline"
+			>Add Domain
+			<CirclePlusSolid size="sm" />
+		</a>
 	</div>
-	<ol class="w-full pt-0">
+	<section class="flex min-h-[750px] flex-col">
+		<table class=" w-full table-auto">
+			<thead class="w-full rounded-xl bg-gradient-to-r from-primary to-accent text-slate-100">
+				<tr>
+					<th scope="col" class="rounded-l-xl text-left"><p class="ml-12">Name</p></th>
+					<th scope="col" class="text-left">Last Scan</th>
+					<th scope="col">Status</th>
+					<th scope="col" colspan="2" class="rounded-r-xl">
+						<div class="relative ml-auto flex w-full items-center justify-end">
+							<TableSearch
+								innerDivClass="p-4"
+								searchClass="relative"
+								inputClass="bg-secondary text-primary p-1 pr-2 rounded-lg text-right"
+								placeholder="Search for items"
+							/>
+						</div>
+					</th>
+				</tr>
+			</thead>
+			<div class="pt-12" />
+			<tbody>
+				{#each $domains as domain}
+					<div class="p-2" />
+					<tr
+						class="group overflow-hidden rounded-xl bg-base outline-1 outline-accent/50 hover:bg-accent/10 hover:outline"
+					>
+						<th scope="row" class=" rounded-l-xl p-4 text-left text-xl">
+							<a href="/domain/{domain.id}" class="ml-4 underline-offset-4 hover:underline">
+								{domain.name}
+							</a></th
+						>
+
+						<td class="text-left text-primary">
+							{#if domain.lastScan}
+								<div class="p-1">
+									<p class="text-lg font-semibold">
+										{dateFormatter(domain.lastScan)}
+									</p>
+									<p>
+										{timeFormatter(domain.lastScan)}
+									</p>
+								</div>
+							{/if}</td
+						>
+						<td>
+							<p
+								class="rounded-lg px-2 py-1 text-center"
+								class:bg-warning={domain.status == 'added'}
+								class:bg-success={domain.status == 'finished'}
+								class:bg-error={domain.status == 'aborted'}
+								class:bg-secondary={domain.status == 'scanning'}
+								class:bg-yellow-300={domain.status == 'evaluating'}
+							>
+								{domain.status}
+							</p>
+						</td>
+						<td>
+							<button
+								class="ml-auto flex items-center gap-2 rounded-xl px-4 py-2 outline-1 outline-primary hover:bg-secondary active:bg-secondary active:outline"
+							>
+								<p>See more</p>
+								<AngleDownSolid size="sm" />
+							</button>
+						</td>
+						<td class="rounded-r-xl">
+							<div class="flex w-full justify-center">
+								<a
+									href="/domain/{domain.id}"
+									class="mx-auto flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-secondary"
+								>
+									<p class="font-medium">Inspect</p>
+									<AngleRightSolid size="sm" />
+								</a>
+							</div>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+
 		<!-- TODO loading state ---------------------------------------------------->
-		{#each $domains as domain}
-			<li class="group flex w-full items-center border-y bg-white py-1 hover:border-slate-400">
-				<p class="text-lg">{domain.name}</p>
-				<div class="ml-auto flex items-center gap-12">
-					<p
-						class="border-inherrit w-20 rounded border px-2 text-center text-sm"
-						class:bg-yellow-200={domain.status == 'added'}
-						class:bg-green-200={domain.status == 'finished'}
-						class:bg-red-200={domain.status == 'aborted'}
-						class:bg-blue-200={domain.status == 'scanning'}
-						class:bg-yellow-300={domain.status == 'evaluating'}
-					>
-						{domain.status}
-					</p>
-					<a
-						href="domain/{domain.id}"
-						type="button"
-						class=" mr-6 rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-						>Continue</a
-					>
-				</div>
-			</li>
-		{/each}
-		<!--TODO Error state------------------------------------------------->
-	</ol>
-	<!-- Pagination component -->
-	<Pagination />
-</section>
+		{#if $domains.length === 0}
+			<Spinner />
+		{/if}
+
+		<!-- Pagination component -->
+
+		{#if $domains.length !== 0}
+			<div class="mt-auto">
+				<Pagination />
+			</div>
+		{/if}
+	</section>
+</Main>
