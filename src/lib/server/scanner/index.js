@@ -1,7 +1,4 @@
 
-import { initiateCrawler } from '../crawler';
-import { initiateEvaluation } from '../evaluator';
-import { adjustDomain } from '../../utils/adjustDomain';
 import { updateDomain } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
