@@ -13,7 +13,11 @@ export function getAllObjects($, selector, attributes) {
 			const element = $(this);
 			const result = {};
 			attributes.forEach((attr) => {
-				if (attr === 'text') {
+				// image source fix for RAQN lazy loading
+				if (attr === 'src' && element.attr(attr).includes('base64')) {
+					// Based on DOM, we check multiple options, which could contain src for image 
+					result[attr] = element.parent().parent().next().attr('src') || element.parent().next().attr('src') || element.attr('srcset')?.split('?').at(0).replace('\n', '').trim() || `src missing for ${element}`
+				} else if (attr === 'text') {
 					result[attr] = element.text() || ''; // get the actual value of the HTML tag
 				} else {
 					result[attr] = element.attr(attr) || ''; // get the value of HTML tag's attribute
@@ -23,7 +27,6 @@ export function getAllObjects($, selector, attributes) {
 		})
 		.get();
 }
-
 /**
  * Extracts a clean snippet of content from the body of a webpage.
  *

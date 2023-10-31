@@ -1,4 +1,8 @@
-import { updateStatus } from '../../firebase/updateStatus';
+
+import { initiateCrawler } from '../crawler';
+import { initiateEvaluation } from '../evaluator';
+import { adjustDomain } from '../../utils/adjustDomain';
+import { updateDomain } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
@@ -32,7 +36,7 @@ import { extractDataFromDataset } from '../../utils/extractData';
  */
 export async function initiateScan(domain, dateOfScan, startingUrl) {
 	// Add a new entry into the database
-	await updateStatus(domain, 'scanning');
+	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
 		date: dateOfScan,
 		startingUrl
@@ -45,23 +49,24 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 			// Manipulate the data for duplicity check in Evaluation phase
 			const all = extractDataFromDataset(result.items);
 
-			await updateStatus(domain, 'evaluating');
+			await updateDomain(domain, { status: 'evaluating' });
 
 			return all;
 		})
 		.then(async (all) => {
 			await initiateEvaluation(domain, dateOfScan, all);
-			await updateStatus(domain, 'ai magic');
+			await updateDomain(domain, { status: 'ai magic' });
+
 		})
 		.then(async () => {
 			await initiateSuggestions(domain, dateOfScan);
 		})
 		.then(async () => {
 			console.log('Scan completely finished');
-			await updateStatus(domain, 'finished');
+			await updateDomain(domain, { status: 'finished' });
 		})
 		.catch(async (error) => {
 			console.error('Error during initiateScan:', error);
-			await updateStatus(domain, 'aborted');
+			await updateDomain(domain, { status: 'aborted' });
 		});
 }
