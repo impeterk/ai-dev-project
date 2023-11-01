@@ -71,6 +71,24 @@ export const ai = {
 			}
 		];
 		return aiRequest(messages, 160);
+	},
+
+	generateH1: async (data) => {
+		const userMessage = `Given the stringified object as data "${data}", generate a H1 title for this webpage, because the current one is either missin or is not unique within the evaluated domain. Make sure to output direct suggestion which captures the context of the website and nothing else.`;
+		const messages = [
+			{
+				role: 'system',
+				content:
+					'You are a skilled SEO consultant. Based on the input I give you, consider the topic, context, and language of the input data. Make sure to output direct suggestion of H1 Title and nothing else, written in the same language as the input data. As a consultant you also make sure that the suggested H1 title is unique amongst the other H1s on the website.'
+			},
+			{ role: 'user', content: userMessage }
+			// {
+			// 	role: 'system',
+			// 	content:
+			// 		'Remember, the H1 title should be STRICTLY between 50 and 199 characters long. Please re-count it and if needed adjust it accordingly.'
+			// }
+		];
+		return aiRequest(messages, 65);
 	}
 
 	// ... other functions ...

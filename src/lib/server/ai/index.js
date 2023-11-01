@@ -19,6 +19,11 @@ export async function initiateSuggestions(domain, dateOfScan) {
 				social: {
 					title: '',
 					description: ''
+				},
+				body: {
+					headlines: {
+						h1: ''
+					}
 				}
 			};
 
@@ -58,6 +63,13 @@ export async function initiateSuggestions(domain, dateOfScan) {
 				suggestions.social.description = socialDescription ? socialDescription : '';
 			}
 
+			// H1s - triggered only for 'missing' or 'duplicate' status
+			// Nothing to be generated for H1 status of 'multiple'
+			if (!['ok', 'multiple'].includes(urlData.issues.body.headlines.h1)) {
+				let socialDescription = await limitChecker(() => ai.generateH1(stringifiedUrlData));
+				suggestions.body.headlines.h1 = socialDescription ? socialDescription : '';
+			}
+
 			console.log(urlData.url);
 			console.log(suggestions);
 
@@ -87,7 +99,6 @@ export async function initiateSuggestions(domain, dateOfScan) {
 				// 		reject(error);
 				// 	}
 				// }, 60 * index);
-
 			});
 		} catch (error) {
 			console.error(`Error processing URL ${urlId}:`, error);
