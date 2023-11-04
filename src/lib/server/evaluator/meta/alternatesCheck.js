@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the presence of alternate tags (often used for specifying alternate languages) for a webpage.
@@ -15,8 +16,8 @@ import { isEmpty } from '../isEmpty';
  */
 export function evaluateAlternates(value) {
 	if (!isEmpty(value)) {
-		return 'ok';
+		return STATUS.OK;
 	} else {
-		return 'missing';
+		return STATUS.MISSING;
 	}
 }

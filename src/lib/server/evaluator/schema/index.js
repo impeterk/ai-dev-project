@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the presence of schema data on a webpage.
@@ -12,8 +13,8 @@ import { isEmpty } from '../isEmpty';
  */
 export function checkSchemaData(data) {
 	if (isEmpty(data)) {
-		return 'missing';
-	} else {
-		return 'ok';
+		return STATUS.MISSING;
 	}
+
+	return STATUS.OK;
 }

@@ -1,5 +1,6 @@
 import { isEmpty } from '../isEmpty';
 import { isDuplicate } from '../isUnique';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the H1 header(s) of a webpage to determine their status.
@@ -9,26 +10,21 @@ import { isDuplicate } from '../isUnique';
  * - If there are multiple H1 headers, it sets the status to 'multiple'.
  * - If the H1 is empty or not provided (empty array), it sets the status to 'missing'.
  *
- * @param {Object} config - The configuration object containing domain, date of scan, and URL ID.
  * @param {Array<string>} data - An array containing the H1 header(s) data.
+ * @param {Array} all - Data set used for duplication check.
  * @returns {string} - Returns the determined status for the H1 headers.
  */
 export function evaluateH1(data, all) {
-	let h1Status = 'missing'; // default value
-
-	if (!isEmpty(data) && !isEmpty(data[0])) {
-		if (data.length === 1) {
-			if (isDuplicate('h1', data[0], all)) {
-				h1Status = 'duplicate';
-			} else {
-				h1Status = 'ok';
-			}
-		} else if (data.length > 1) {
-			h1Status = 'multiple';
-		} else if (h1Length === 0 || data.length < 1) {
-			h1Status = 'missing';
-		}
+	// Handle missing values upfront
+	if (isEmpty(data) || isEmpty(data[0])) {
+		return STATUS.MISSING;
 	}
 
-	return h1Status;
+	// Check for multiple H1s
+	if (data.length > 1) {
+		return STATUS.MULTIPLE;
+	}
+
+	// Lastly check for duplicates
+	return isDuplicate('h1', data[0], all) ? STATUS.DUPLICATE : STATUS.OK;
 }

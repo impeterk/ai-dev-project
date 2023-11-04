@@ -1,5 +1,6 @@
 import { isEmpty } from '../isEmpty';
 import { isDuplicate } from '../isUnique';
+import { STATUS } from '../config';
 
 /**
  * Assesses the length and presence of a given webpage title.
@@ -14,20 +15,25 @@ import { isDuplicate } from '../isUnique';
  * where titles between 50-60 characters are generally considered optimal for most search engines.
  *
  * @param {string} value - The webpage title to be evaluated.
+ * @param {Array} all - Data set used for duplication check.
  * @returns {string} - A string indicating the assessment result ('ok', 'short', 'long', or 'missing').
  */
 export function evaluateTitle(value, all) {
-	if (!isEmpty(value)) {
-		if (isDuplicate('title', value, all)) {
-			return 'duplicate';
-		} else if (value.length >= 50 && value.length < 60) {
-			return 'ok';
-		} else if (value.length < 50) {
-			return 'short';
-		} else if (value.length >= 60) {
-			return 'long';
-		}
-	} else {
-		return 'missing';
+	if (isEmpty(value)) {
+		return STATUS.MISSING;
 	}
+
+	if (isDuplicate('title', value, all)) {
+		return STATUS.DUPLICATE;
+	}
+
+	if (value.length >= 50 && value.length < 60) {
+		return STATUS.OK;
+	}
+
+	if (value.length < 50) {
+		return STATUS.SHORT;
+	}
+
+	return STATUS.LONG; // If none of the above conditions, return status 'long'
 }
