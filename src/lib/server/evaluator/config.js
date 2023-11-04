@@ -3,5 +3,6 @@ export const STATUS = {
 	MISSING: 'missing',
 	SHORT: 'short',
 	LONG: 'long',
-	DUPLICATE: 'duplicate'
+	DUPLICATE: 'duplicate',
+	MULTIPLE: 'multiple'
 };
