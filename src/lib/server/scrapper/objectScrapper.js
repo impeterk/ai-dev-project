@@ -14,9 +14,13 @@ export function getAllObjects($, selector, attributes) {
 			const result = {};
 			attributes.forEach((attr) => {
 				// image source fix for RAQN lazy loading
-				if (attr === 'src' && element.attr(attr).includes('base64')) {
-					// Based on DOM, we check multiple options, which could contain src for image 
-					result[attr] = element.parent().parent().next().attr('src') || element.parent().next().attr('src') || element.attr('srcset')?.split('?').at(0).replace('\n', '').trim() || `src missing for ${element}`
+				if (attr === 'src' && element.attr(attr) && element.attr(attr).includes('base64')) {
+					// Based on DOM, we check multiple options, which could contain src for image
+					result[attr] =
+						element.parent().parent().next().attr('src') ||
+						element.parent().next().attr('src') ||
+						element.attr('srcset')?.split('?').at(0).replace('\n', '').trim() ||
+						`src missing for ${element}`;
 				} else if (attr === 'text') {
 					result[attr] = element.text() || ''; // get the actual value of the HTML tag
 				} else {
@@ -32,7 +36,7 @@ export function getAllObjects($, selector, attributes) {
  *
  * This function processes the content by performing the following steps:
  * 1. Fetches the entire content within the <body> tag.
- * 2. Removes unnecessary tags and the content they're wrapping, including but not limited to scripts, 
+ * 2. Removes unnecessary tags and the content they're wrapping, including but not limited to scripts,
  *    styles, navigation elements, headers, footers, and various UI components.
  * 3. Converts the processed body content into a plain string.
  * 4. Strips off all the HTML tags from the string to retain pure textual content.
@@ -68,4 +72,23 @@ export function getBodySnippet($) {
 
 	// Finally, removed the 650 characters of the body as a snippet
 	return snippet.slice(0, 650);
+}
+
+/**
+ * Retrieves the content attribute value of the 'robots' meta tag from the provided website body.
+ *
+ * This function searches for the meta tag with the attribute `name="robots"` and returns its content value.
+ * If the tag is not present or the body is not provided, it returns false.
+ *
+ * @param {Object} $ - The website body instance, typically parsed by a library like Cheerio.
+ * @returns {string|boolean} - The content value of the 'robots' meta tag, or false if not found or body is not provided.
+ */
+export function getMetaRobots($) {
+	if ($) {
+		if ($('meta[name="robots"]')) {
+			return $('meta[name="robots"]').attr('content');
+		} else {
+			return false;
+		}
+	}
 }
