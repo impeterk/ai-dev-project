@@ -42,10 +42,12 @@
 				</h3>
 			</div>
 		</div>
-		{#if $results.length === 0}
-			<Spinner />
-		{/if}
 		<ol class="h-[650px]">
+			{#if $results.length === 0}
+				<div class="pt-12">
+					<Spinner />
+				</div>
+			{/if}
 			{#each $results as url, index}
 				<li class="border-b py-1">
 					<button
@@ -106,7 +108,6 @@
 				{/if}
 			{/each}
 		</ol>
-
 		<Pagination />
 	</section>
 </Main>

@@ -11,6 +11,22 @@
 	} from '$lib/store';
 	import { nextLoad, previosLoad } from '$lib/utils/dataLoad.js';
 	import { AngleRightSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
+	import { spring } from 'svelte/motion';
+
+	const pageIndicator = spring();
+
+	$: pageIndicator.set($currentPage);
+
+	$: offset = modulo($pageIndicator, 1);
+
+	/**
+	 * @param {number} n
+	 * @param {number} m
+	 */
+	function modulo(n, m) {
+		// handle negative numbers
+		return ((n % m) + m) % m;
+	}
 	// preload is set off it was causing issues
 </script>
 
@@ -37,10 +53,17 @@
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 			</button>
 		{/if}
-		<div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-secondary">
-			<p class="text-xl font-bold">
-				{$currentPage}
-			</p>
+		<div class="relative h-8 w-8 overflow-hidden text-center">
+			<div class="absolute h-full w-full" style="transform: translate(-{100 * offset}%, 0 )">
+				<strong
+					class="select-nonne absolute -right-full flex h-full w-full items-center justify-center rounded-full bg-primary text-2xl font-normal text-secondary"
+					aria-hidden="true">{Math.floor($pageIndicator + 1)}</strong
+				>
+				<strong
+					class="absolute flex h-full w-full items-center justify-center rounded-full bg-primary text-2xl font-normal text-secondary"
+					>{Math.floor($pageIndicator)}</strong
+				>
+			</div>
 		</div>
 		{#if $lastVisible.id !== $lastInCollection.id}
 			<button
