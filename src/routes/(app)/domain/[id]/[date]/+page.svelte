@@ -44,9 +44,7 @@
 		</div>
 		<ol class="h-[650px]">
 			{#if $results.length === 0}
-				<div class="pt-12">
-					<Spinner />
-				</div>
+				<Spinner />
 			{/if}
 			{#each $results as url, index}
 				<li class="border-b py-1">

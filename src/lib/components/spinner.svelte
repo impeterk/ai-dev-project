@@ -1,4 +1,4 @@
-<div role="status">
+<div role="status" class=" pt-20">
 	<svg
 		aria-hidden="true"
 		class="mx-auto h-32 w-32 animate-spin fill-primary text-slate-200"
