@@ -16,6 +16,9 @@ import { get } from "svelte/store";
 
 
 export async function initialLoad(collectionPath, orderField, orderType = "asc") {
+    //sets current Page for pagination to 1
+    currentPage.set(1)
+
     let last
     let orderDirection
     let collectionRef = collection(firestore, collectionPath)
@@ -41,8 +44,7 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
     last = await getDocs(query(collectionRef, orderBy(orderField, orderDirection), limit(1)))
     lastInCollection.update(value => last.docs[0])
 
-    //sets current Page for pagination to 1
-    currentPage.set(1)
+
 
     // currentCollection.update(async value => value = await collectionStore(firestore, data))
     currentCollection.set(collectionStore(firestore, data))
@@ -53,6 +55,9 @@ export async function initialLoad(collectionPath, orderField, orderType = "asc")
 
 // loads next bunch of data
 export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
+    // updates current Page
+    currentPage.update(value => value + 1)
+
     // query FROM the last visible entry
     let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limit(get(currentLimit)), startAfter(lastRef))
 
@@ -62,8 +67,6 @@ export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
     firstVisible.update(value => data.docs[0])
     lastVisible.update(value => data.docs.at(-1))
 
-    // updates current Page
-    currentPage.update(value => value + 1)
 
     currentCollection.set(collectionStore(firestore, dataQuery))
     // returns realtime data from collection
@@ -71,6 +74,9 @@ export async function nextLoad(collectionPath, orderField, orderType, lastRef) {
 }
 
 export async function previosLoad(collectionPath, orderField, orderType, firstRef) {
+    // updates current Page
+    currentPage.update(value => value - 1)
+
     // query TO the last visible first entry
     let dataQuery = query(collection(firestore, collectionPath), orderBy(orderField, orderType), limitToLast(get(currentLimit)), endBefore(firstRef))
 
@@ -80,8 +86,6 @@ export async function previosLoad(collectionPath, orderField, orderType, firstRe
     firstVisible.update(value => data.docs[0])
     lastVisible.update(value => data.docs.at(-1))
 
-    // updates current Page
-    currentPage.update(value => value - 1)
     currentCollection.set(collectionStore(firestore, dataQuery))
 
     // returns realtime data from collection

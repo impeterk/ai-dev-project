@@ -20,20 +20,14 @@ import { initiateScan } from '../../../../lib/server/scanner';
  * @returns {Promise} - Resolves once the initiation of scanning process is complete, or rejects if there's an error.
  */
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ fetch, request }) => {
 		let formData = await request.formData();
 		let domainId = formData.get('domainid');
 		let startingUrl = formData.get('startingUrl')
-		// creates a date when the scan started
-		const dateOfScan = Date.now();
 
-		// let startTime = Date.now();
-
-		initiateScan(domainId, dateOfScan, startingUrl);
-
-		// Time Tracking
-		// let endTime = Date.now();
-		// console.log('Elapsed time: ');
-		// console.log(((endTime - startTime) / 1000).toFixed(2));
+		await fetch('/api/scan', {
+			method: 'POST',
+			body: JSON.stringify({ domainId, startingUrl })
+		})
 	}
 };

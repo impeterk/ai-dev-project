@@ -1,13 +1,14 @@
 
-import { updateDomain } from '../../firebase/updateStatus';
+import { updateDomain, updateQueue } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, deleteDoc } from 'firebase/firestore';
 
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
 import { initiateSuggestions } from '../ai';
 import { extractDataFromDataset } from '../../utils/extractData';
+import { checkQueue } from '../scanQueue';
 
 /**
  * Initiates the scanning process for a given domain.
@@ -32,6 +33,9 @@ import { extractDataFromDataset } from '../../utils/extractData';
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
 export async function initiateScan(domain, dateOfScan, startingUrl) {
+	// updates scanner queue
+	let queueItemId = await updateQueue(dateOfScan)
+
 	// Add a new entry into the database
 	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
@@ -66,4 +70,9 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 			console.error('Error during initiateScan:', error);
 			await updateDomain(domain, { status: 'aborted' });
 		});
+
+	// removes entry from queue and checks queue again
+	return await deleteDoc(doc(firestore, 'queue', queueItemId)).then(() => {
+		checkQueue()
+	})
 }
