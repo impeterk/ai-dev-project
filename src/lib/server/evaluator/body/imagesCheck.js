@@ -1,4 +1,5 @@
 import { evaluateAlts } from './altTextsCheck';
+import {STATUS} from '../config';
 
 /**
  * Evaluates the images in the provided data based on their 'alt' attribute values.
@@ -23,7 +24,7 @@ export function evaluateImages(data, all) {
 	try {
 		const imgIssues = data.map((image) => ({
 			alt: evaluateAlts(image.alt, all),
-			src: image.src ? image.src : 'missing'
+			src: image.src ? image.src : STATUS.MISSING
 		}));
 
 		if (imgIssues.length) {

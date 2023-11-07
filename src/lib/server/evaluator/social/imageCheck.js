@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the presence of an image value and categorizes it as 'ok' or 'missing'.
@@ -12,8 +13,7 @@ import { isEmpty } from '../isEmpty';
  */
 export function evaluateImage(value) {
 	if (!isEmpty(value)) {
-		return 'ok';
-	} else {
-		return 'missing';
+		return STATUS.OK;
 	}
+	return STATUS.MISSING;
 }

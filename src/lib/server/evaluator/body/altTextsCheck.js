@@ -1,3 +1,7 @@
+import { STATUS } from '../config';
+import { isEmpty } from '../isEmpty';
+import { isDuplicate } from '../isUnique';
+
 /**
  * Evaluates the alt attribute of an image based on its presence and uniqueness.
  *
@@ -16,18 +20,17 @@
  *
  * @returns {string} Returns one of the following strings based on evaluation: 'duplicate', 'ok', or 'missing'.
  */
-
-import { isEmpty } from '../isEmpty';
-import { isDuplicate } from '../isUnique';
-
 export function evaluateAlts(value, all) {
-	if (!isEmpty(value)) {
-		if (isDuplicate('alt', value, all)) {
-			return 'duplicate';
-		} else {
-			return 'ok';
-		}
-	} else {
-		return 'missing';
+	// Handle missing values upfront
+	if (isEmpty(value)) {
+		return STATUS.MISSING;
 	}
+
+	// Check for duplicates
+	if (isDuplicate('alt', value, all)) {
+		return STATUS.DUPLICATE;
+	}
+
+	// If none of the above, return OK
+	return STATUS.OK;
 }
