@@ -2,7 +2,7 @@
 import { updateDomain, updateQueue } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
-import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
@@ -36,41 +36,48 @@ export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
 	let queueItemId = await updateQueue(dateOfScan)
 	// Add a new entry into the database
 	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
-	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
+	const docRef = doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`)
+	await setDoc(docRef, {
 		date: dateOfScan,
 		startingUrl
 	});
 
-	await initiateCrawler(startingUrl)
-		.then(async (result) => {
-			await writeDataInBatches(result.items, domain, dateOfScan);
+	try {
+		await initiateCrawler(startingUrl)
+			.then(async (result) => {
+				await writeDataInBatches(result.items, domain, dateOfScan);
 
-			// Manipulate the data for duplicity check in Evaluation phase
-			const all = extractDataFromDataset(result.items);
+				// Manipulate the data for duplicity check in Evaluation phase
+				const all = extractDataFromDataset(result.items);
 
-			await updateDomain(domain, { status: 'evaluating' });
+				await updateDomain(domain, { status: 'evaluating' });
+				// updates total pages scanned to the database
+				await updateDoc(docRef, {
+					totalPages: result.items.length
+				})
+				return all;
+			})
+			.then(async (all) => {
+				await initiateEvaluation(domain, dateOfScan, all);
+				await updateDomain(domain, { status: 'ai magic' });
 
-			return all;
+			})
+			.then(async () => {
+				await initiateSuggestions(domain, dateOfScan, aiToggle);
+			})
+			.then(async () => {
+				console.log('Scan completely finished');
+				await updateDomain(domain, { status: 'finished' });
+			})
+	} catch (error) {
+		console.error('Error during initiateScan:', error);
+		await updateDomain(domain, { status: 'aborted' });
+	} finally {
+		// removes entry from queue and checks queue again
+		return await deleteDoc(doc(firestore, 'queue', queueItemId)).then(() => {
+			checkQueue()
 		})
-		.then(async (all) => {
-			await initiateEvaluation(domain, dateOfScan, all);
-			await updateDomain(domain, { status: 'ai magic' });
+	}
 
-		})
-		.then(async () => {
-			await initiateSuggestions(domain, dateOfScan, aiToggle);
-		})
-		.then(async () => {
-			console.log('Scan completely finished');
-			await updateDomain(domain, { status: 'finished' });
-		})
-		.catch(async (error) => {
-			console.error('Error during initiateScan:', error);
-			await updateDomain(domain, { status: 'aborted' });
-		});
 
-	// removes entry from queue and checks queue again
-	return await deleteDoc(doc(firestore, 'queue', queueItemId)).then(() => {
-		checkQueue()
-	})
 }

@@ -6,9 +6,9 @@ import { addToQueue } from '$lib/server/scanQueue';
  * @type {import('./$types').RequestHandler} */
 export async function POST(event) {
     const dateOfScan = Date.now()
-    let { domainId, startingUrl } = await event.request.json()
+    let { domainId, startingUrl, aiToggle } = await event.request.json()
 
-    await addToQueue({ domainId, startingUrl, dateOfScan })
+    await addToQueue({ domainId, startingUrl, dateOfScan, aiToggle })
 
     return new Response(JSON.stringify({ success: true }),
         {

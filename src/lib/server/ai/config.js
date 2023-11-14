@@ -1,7 +1,8 @@
 import OpenAI from 'openai';
+import { SECRET_AI_TOKEN } from "$env/static/private"
 
 const openai = new OpenAI({
-	apiKey: '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'
+	apiKey: SECRET_AI_TOKEN
 });
 
 function defaultConfig(messages, tokens) {

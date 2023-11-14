@@ -30,13 +30,14 @@ export const actions = {
 			meta: formData.get('aiMeta'),
 			social: formData.get('aiSocial'),
 		}
-		// creates a date when the scan started
-		const dateOfScan = Date.now();
 
-		await fetch('/api/scan', {
+		let response = await fetch('/api/scan/enqueue', {
 			method: 'POST',
 			body: JSON.stringify({ domainId, startingUrl, aiToggle })
 		})
 
+		if (response.status === 200) {
+			await fetch('/api/scan/start')
+		}
 	}
 };

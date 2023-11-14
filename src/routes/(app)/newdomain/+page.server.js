@@ -43,7 +43,7 @@ export const actions = {
     const startingUrl = formData.get("startingUrl")
 
     // post request to queue API endpoint
-    await fetch('/api/scan/queue', {
+    await fetch('/api/scan/enqueue', {
       method: 'POST',
       body: JSON.stringify({ domainId, startingUrl })
     }).then(async (resp) => {

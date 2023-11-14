@@ -13,7 +13,7 @@ export async function checkQueue() {
     if (itemRef.docs.length == 0) {
         return
     }
-    const { domainId, startingUrl, dateOfScan, status } = itemRef.docs[0].data()
+    const { domainId, startingUrl, dateOfScan, status, aiToggle } = itemRef.docs[0].data()
 
     if (status === 'running') {
         return {
@@ -21,5 +21,5 @@ export async function checkQueue() {
         }
     }
 
-    return initiateScan(domainId, dateOfScan, startingUrl)
+    return initiateScan(domainId, dateOfScan, startingUrl, aiToggle)
 }
