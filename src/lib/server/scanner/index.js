@@ -32,10 +32,8 @@ import { checkQueue } from '../scanQueue';
  *
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
-export async function initiateScan(domain, dateOfScan, startingUrl) {
-	// updates scanner queue
+export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
 	let queueItemId = await updateQueue(dateOfScan)
-
 	// Add a new entry into the database
 	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
@@ -60,7 +58,7 @@ export async function initiateScan(domain, dateOfScan, startingUrl) {
 
 		})
 		.then(async () => {
-			await initiateSuggestions(domain, dateOfScan);
+			await initiateSuggestions(domain, dateOfScan, aiToggle);
 		})
 		.then(async () => {
 			console.log('Scan completely finished');

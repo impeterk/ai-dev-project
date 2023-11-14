@@ -5,12 +5,30 @@
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter.js';
 	import { enhance } from '$app/forms';
 	import Spinner from '$lib/components/spinner.svelte';
+	import Toggle from '$lib/components/toggle.svelte';
 	import { breadcrumbs } from '$lib/store';
 
 	import { page } from '$app/stores';
 	import { beforeUpdate } from 'svelte';
 	$: ({ id, name, datesCollection } = data);
 	$: startingUrl = `https://${name}`;
+	$: aiToggle = {
+		all: false,
+		body: false,
+		meta: false,
+		social: false
+	};
+
+	$: {
+		if (aiToggle.all) {
+			aiToggle.body = aiToggle.meta = aiToggle.social = true;
+		} 
+	}
+
+	// Function to set 'aiToggle.all' based on the other checkboxes' state
+	const updateAllState = () => {
+		aiToggle.all = aiToggle.body && aiToggle.meta && aiToggle.social;
+	};
 
 	// breadcrumbs
 	// TODO: rework to generate from server
@@ -78,6 +96,12 @@
 				<h3 class="text-xl font-medium">Starting Url</h3>
 				<input hidden value={id} name="domainid" />
 				<input bind:value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
+				<!-- Start of toggles for AI suggestions -->
+				<Toggle toggleName='aiAll' bind:toggleState={aiToggle.all} updateFn={null} label="All" />
+				<Toggle toggleName='aiBody' bind:toggleState={aiToggle.body} updateFn={updateAllState} label="Body" />
+				<Toggle toggleName='aiMeta' bind:toggleState={aiToggle.meta} updateFn={updateAllState} label="Meta" />
+				<Toggle toggleName='aiSocial' bind:toggleState={aiToggle.social} updateFn={updateAllState} label="Social" />
+				<!-- End of toggles for AI suggestions -->
 				<button type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
 					>Start New Scan</button
 				>

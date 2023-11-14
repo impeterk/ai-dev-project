@@ -1,5 +1,6 @@
 import { isEmpty } from '../isEmpty';
 import { isDuplicate } from '../isUnique';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the length and presence of a given webpage description.
@@ -16,20 +17,25 @@ import { isDuplicate } from '../isUnique';
  * ensuring that the description isn't truncated in search results.
  *
  * @param {string} value - The webpage description to be evaluated.
+ * @param {Array} all - Data set used for duplication check.
  * @returns {string} - A string indicating the evaluation result ('ok', 'short', 'long', or 'missing').
  */
 export function evaluateDescription(value, all) {
-	if (!isEmpty(value)) {
-		if (isDuplicate('description', value, all)) {
-			return 'duplicate';
-		} else if (value.length >= 150 && value.length < 160) {
-			return 'ok';
-		} else if (value.length < 150) {
-			return 'short';
-		} else if (value.length >= 160) {
-			return 'long';
-		}
-	} else {
-		return 'missing';
+	if (isEmpty(value)) {
+		return STATUS.MISSING;
 	}
+
+	if (isDuplicate('description', value, all)) {
+		return STATUS.DUPLICATE;
+	}
+
+	if (value.length >= 150 && value.length < 160) {
+		return STATUS.OK;
+	}
+
+	if (value.length < 150) {
+		return STATUS.SHORT;
+	}
+
+	return STATUS.LONG; // If none of the above conditions, it must be long.
 }

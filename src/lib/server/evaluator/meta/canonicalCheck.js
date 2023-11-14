@@ -1,4 +1,5 @@
 import { isEmpty } from '../isEmpty';
+import { STATUS } from '../config';
 
 /**
  * Evaluates the presence of a canonical tag value for a webpage.
@@ -15,8 +16,8 @@ import { isEmpty } from '../isEmpty';
  */
 export function evaluateCanonical(value) {
 	if (isEmpty(value)) {
-		return 'missing';
+		return STATUS.MISSING;
 	} else {
-		return 'ok';
+		return STATUS.OK;
 	}
 }

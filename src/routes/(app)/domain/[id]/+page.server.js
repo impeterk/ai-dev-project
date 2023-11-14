@@ -24,10 +24,19 @@ export const actions = {
 		let formData = await request.formData();
 		let domainId = formData.get('domainid');
 		let startingUrl = formData.get('startingUrl')
+		let aiToggle = {
+			all: formData.get('aiAll'),
+			body: formData.get('aiBody'),
+			meta: formData.get('aiMeta'),
+			social: formData.get('aiSocial'),
+		}
+		// creates a date when the scan started
+		const dateOfScan = Date.now();
 
 		await fetch('/api/scan', {
 			method: 'POST',
-			body: JSON.stringify({ domainId, startingUrl })
+			body: JSON.stringify({ domainId, startingUrl, aiToggle })
 		})
+
 	}
 };

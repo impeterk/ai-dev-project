@@ -50,7 +50,7 @@ export async function initiateCrawler(domain) {
 				});
 
 				// Only push the data to dataset if the URL is valid
-				if (isValid(request, domain)) {
+				if (isValid(request, domain, $)) {
 					requestDataset.pushData({
 						url: request.loadedUrl,
 						scrappedData: scrapAllData($)
