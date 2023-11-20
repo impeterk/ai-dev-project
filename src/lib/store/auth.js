@@ -18,6 +18,7 @@ const userStore = writable({
  * @param {Object} user - The user object containing the new user data.
  * @param {string} user.uid - The user's unique ID.
  * @param {string} user.email - The user's email address.
+ * @param {string} user.organization - The user's organization id.
  */
 const updateUser = (user) => {
 	const { uid, email, organization } = user;
