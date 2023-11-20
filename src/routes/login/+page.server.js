@@ -35,11 +35,11 @@ export const actions = {
 		const data = {
 			email: formData.get('email'),
 			password: formData.get('password'),
-			action: formData.get('action')
+			organization: formData.get('organization')
 		};
 
 		try {
-			const user = await register(data.email, data.password);
+			const user = await register(data.email, data.password, data.organization);
 
 			return {
 				success: true,

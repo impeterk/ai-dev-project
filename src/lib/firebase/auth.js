@@ -1,4 +1,5 @@
-import { auth } from './index.js';
+import { auth, firestore } from './index.js';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -13,11 +14,18 @@ import {
  * @returns {Promise<object>} - A promise that resolves to the registered user object.
  * @throws {Error} - If the registration fails.
  */
-export async function register(email, password) {
+export async function register(email, password, organization) {
 	try {
 		const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+		// Create a new user in Firebase's AUTH db
 		const user = userCredential.user;
-		console.log('Registration successful');
+		// Create a new user in Firebase's FIRESTORE db
+		await setDoc(doc(firestore, 'users', user.uid), {
+            email: email,
+            organization: organization,
+            created_at: serverTimestamp()
+        });
+
 		return user;
 	} catch (error) {
 		console.log('Registration failed:', error);
@@ -34,18 +42,18 @@ export async function register(email, password) {
  * @throws {Error} - If the login fails.
  */
 export async function login(email, password) {
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        console.log('Login successful');
-        return {
-            uid: user.uid,
-            email: user.email
-        };
-    } catch (error) {
-        console.log('Sign-in failed:', error);
-        throw error;
-    }
+	try {
+		const userCredential = await signInWithEmailAndPassword(auth, email, password);
+		const user = userCredential.user;
+
+		return {
+			uid: user.uid,
+			email: user.email
+		};
+	} catch (error) {
+		console.log('Sign-in failed:', error);
+		throw error;
+	}
 }
 
 /**
@@ -58,7 +66,6 @@ export async function login(email, password) {
 export async function resetPassword(email) {
 	try {
 		await sendPasswordResetEmail(auth, email);
-		console.log('Password reset email sent successfully');
 	} catch (error) {
 		console.log('Password reset failed:', error);
 		throw error;

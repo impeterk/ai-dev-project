@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	let email;
 	let password;
+	let organization;
 	let activeTab = 'login';
 	export let form;
 
@@ -67,6 +68,7 @@
 				type="text"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your e-mail"
+				required
 			/>
 
 			<input
@@ -75,6 +77,7 @@
 				type="password"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your password"
+				required
 			/>
 
 			{#if form?.error}
@@ -107,6 +110,7 @@
 				type="text"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your e-mail"
+				required
 			/>
 
 			<input
@@ -115,6 +119,16 @@
 				type="password"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your password"
+				required
+			/>
+
+			<input
+				bind:value={organization}
+				name="organization"
+				type="text"
+				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
+				placeholder="Your organization ID"
+				required
 			/>
 
 			{#if form?.error}
@@ -145,6 +159,7 @@
 				type="text"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your email for resetting the password"
+				required
 			/>
 
 			{#if form?.error}
