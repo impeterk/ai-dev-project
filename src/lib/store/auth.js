@@ -1,11 +1,10 @@
-
 import { writable } from 'svelte/store';
 
 // Create a writable store to manage user data
 const userStore = writable({
-  isLogged: false,
-  uid: null,
-  email: null
+	isLogged: false,
+	uid: null,
+	email: null
 });
 
 /**
@@ -20,26 +19,25 @@ const userStore = writable({
  * @param {string} user.email - The user's email address.
  */
 const updateUser = (user) => {
-    const { uid, email } = user;
-    
-    userStore.update((userData) => {
-        return {
-            ...userData,
-            isLogged: !!uid && !!email,
-            uid,
-            email
-        };
-    });
+	const { uid, email } = user;
+
+	// Updating store object
+	userStore.update((userData) => {
+		return {
+			...userData,
+			isLogged: !!uid && !!email,
+			uid,
+			email
+		};
+	});
 };
 
 function reset() {
-    userStore.set({
-        isLogged: false,
-        uid: null,
-        email: null
-    });
-
-    console.log('User store was re-set');
+	userStore.set({
+		isLogged: false,
+		uid: null,
+		email: null
+	});
 }
 
 // Export the store and the update function
