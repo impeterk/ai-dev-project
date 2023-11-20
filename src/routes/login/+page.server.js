@@ -40,6 +40,11 @@ export const actions = {
 
 		try {
 			const user = await register(data.email, data.password);
+
+			return {
+				success: true,
+				message: `Registration was succesfull, please log-in to continue.`
+			};
 		} catch (err) {
 			console.error('Registration error:', err);
 			return fail(400, { error: true, message: JSON.stringify(err.code) });

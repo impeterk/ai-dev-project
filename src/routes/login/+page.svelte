@@ -120,6 +120,9 @@
 			{#if form?.error}
 				<p class="text-red-500">Error: {form?.message.slice(1, -1)}</p>
 			{/if}
+			{#if form?.success}
+				<p class="text-green-500">{form?.message}</p>
+			{/if}
 
 			<button
 				class="text-md ml-auto mt-2 w-1/2 rounded-md bg-primary p-2 font-semibold text-slate-100"
