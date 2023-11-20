@@ -4,7 +4,8 @@ import { writable } from 'svelte/store';
 const userStore = writable({
 	isLogged: false,
 	uid: null,
-	email: null
+	email: null,
+	organization: null
 });
 
 /**
@@ -19,7 +20,7 @@ const userStore = writable({
  * @param {string} user.email - The user's email address.
  */
 const updateUser = (user) => {
-	const { uid, email } = user;
+	const { uid, email, organization } = user;
 
 	// Updating store object
 	userStore.update((userData) => {
@@ -27,7 +28,8 @@ const updateUser = (user) => {
 			...userData,
 			isLogged: !!uid && !!email,
 			uid,
-			email
+			email,
+			organization
 		};
 	});
 };
@@ -36,7 +38,8 @@ function reset() {
 	userStore.set({
 		isLogged: false,
 		uid: null,
-		email: null
+		email: null,
+		organization: null
 	});
 }
 
