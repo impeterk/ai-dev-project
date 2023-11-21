@@ -7,7 +7,7 @@
 	$: activeUrl = $page.url.pathname;
 </script>
 
-<li class="h-24 p-3">
+<li class="h-24 p-3 list-none">
 	<a
 		{href}
 		class="group flex h-full w-full items-center justify-center rounded-xl border-primary p-4 hover:bg-secondary hover:text-primary ${activeUrl ==
