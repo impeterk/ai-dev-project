@@ -1,10 +1,8 @@
-import { get } from 'svelte/store';
 import { redirect, fail } from '@sveltejs/kit';
-import { updateUser, userStore } from '../../lib/store/auth.js';
 import { login, register, resetPassword } from '../../lib/firebase/auth.js';
 
 export const actions = {
-	login: async ({ request, url }) => {
+	login: async ({ request, cookies }) => {
 		let formData = await request.formData();
 
 		const data = {
@@ -15,17 +13,31 @@ export const actions = {
 		try {
 			const user = await login(data.email, data.password);
 
-			// Update the store with the logged-in user
+			// Save the User's info session to the cookies
 			if (user) {
-				updateUser(user);
+				cookies.set(
+					'user',
+					JSON.stringify({
+						// uid: user.uid,
+						isLogged: user.uid ? true : false,
+						email: user.email,
+						organization: user.organization
+					}),
+					{
+						path: '/',
+						httpOnly: true,
+						sameSite: 'strict',
+						maxAge: 60 * 60 * 24 * 7 // one week
+					}
+				);
 			}
 		} catch (err) {
 			console.error('Login error:', err);
 			return fail(400, { error: true, message: JSON.stringify(err.code) });
 		}
 
-		// If the login was succesful - redirect user to the root
-		if (get(userStore).isLogged) {
+		// If the login was successful - redirect user to the root
+		if (cookies.get('user') && cookies.get('user').isLogged) {
 			throw redirect(302, '/');
 		}
 	},

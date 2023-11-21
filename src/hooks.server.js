@@ -1,9 +1,11 @@
-import { userStore } from './lib/store/auth.js';
-import { get } from 'svelte/store';
-
 export async function handle({ event, resolve }) {
-	// Get the user from the store every time the hook is resolved
-	const isLogged = get(userStore).isLogged;
+	// Get the user from the cookies every time the hook is resolved
+	const isLogged = event.cookies.get('user')
+		? JSON.parse(event.cookies.get('user')).isLogged
+		: false;
+		
+	console.log('hook:');
+	console.dir(isLogged);
 
 	// Non logged users trying to access a page other than /login will be redirected to /login page
 	if (!isLogged && event.route.id !== '/login') {
