@@ -24,18 +24,18 @@
 	<svelte:fragment slot="title">Domain Dashboard</svelte:fragment>
 	<section class="w-full">
 		<section class="flex min-h-[1000px] flex-col">
-			<table class="min-h-[50px] w-full table-auto">
-				<thead class="w-full rounded-xl bg-gradient-to-r from-primary to-accent text-slate-100">
-					<tr>
-						<th scope="col" class="rounded-l-xl text-left"><p class="ml-12">domain_name.com</p></th>
-						<th scope="col" class="text-left"
-							>9/25/2023 <span class="ml-3 text-sm font-normal">7:42 AM</span></th
-						>
-						<th scope="col">Scanned URLs: 279</th>
-						<th scope="col" class="rounded-r-xl">Status</th>
-					</tr>
-				</thead>
-			</table>
+			<!-- top header -->
+			<ul class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
+				<li
+					class="flex w-full justify-between rounded-xl bg-gradient-to-r from-primary to-accent p-3 text-slate-100"
+				>
+					<span class="ml-2">domain_name.com</span>
+					<span>9/25/2023<span>7:42 AM</span></span>
+					<span>Scanned URLs:<span>279</span></span>
+					<span>Status:<span>sign</span></span>
+				</li>
+			</ul>
+			<!-- 3 cards at the top -->
 			<section class="grid min-h-[220px] grid-cols-3 grid-rows-1">
 				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl bg-white p-5">
 					<h3 class="text-xl font-bold">Summary</h3>
@@ -45,7 +45,7 @@
 						<li class="list-inside list-disc">third thing</li>
 					</ul>
 				</div>
-				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-red-700 bg-white p-5">
+				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-red-700 bg-white p-5 hover:shadow">
 					<h3 class="text-xl font-bold">High Priority</h3>
 					<ul class="ml-2 mt-2">
 						<li class="list-inside list-disc">first thing</li>
@@ -53,7 +53,7 @@
 						<li class="list-inside list-disc">third thing</li>
 					</ul>
 				</div>
-				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-blue-400 bg-white p-5">
+				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-blue-400 bg-white p-5 hover:shadow">
 					<h3 class="text-xl font-bold">AI Magic</h3>
 					<ul class="ml-2 mt-2">
 						<li class="list-inside list-disc">first thing</li>
@@ -62,6 +62,7 @@
 					</ul>
 				</div>
 			</section>
+			<!-- graph section = Graph.js to be used -->
 			<section class="grid min-h-[350px] grid-cols-3 grid-rows-1">
 				<div class="col-span-2 mb-5 ml-3 mt-2 rounded-l-xl bg-white p-5">
 					<h3 class="text-xl font-bold">Crawling History</h3>
@@ -74,49 +75,30 @@
 			</section>
 			<section class="ml-3 mt-5">
 				<h2 class="text-3xl font-bold">Scan Overview</h2>
-				<div class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
-					<ul
+				<!-- scan table header -->
+				<ul class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
+					<li
 						class="flex w-full justify-between rounded-xl bg-gradient-to-r from-primary to-accent p-3 text-slate-100"
 					>
-						<li class="ml-2">Date:</li>
-						<li>Crawled URLs:</li>
-						<li>URL:</li>
-						<li>Status</li>
-						<li>Impediments</li>
-						<li />
-					</ul>
-				</div>
+						<span class="ml-2">Date:</span>
+						<span>Crawled URLs:</span>
+						<span>URL:</span>
+						<span>Status</span>
+						<span>Impediments</span>
+				</li>
+				</ul>
 				<div class="p-4 bg-white">
-					<div>
-						<ul class="flex justify-between rounded-xl bg-white p-3">
-							<li class="ml-2">9/25/2023</li>
-							<li>279</li>
-							<li>/products</li>
-							<li>-icon-</li>
-							<li>13</li>
-							<li>CSV</li>
-						</ul>
-					</div>
-					<div>
-						<ul class="flex justify-between rounded-xl bg-white p-3">
-							<li class="ml-2">9/25/2023</li>
-							<li>279</li>
-							<li>/products</li>
-							<li>-icon-</li>
-							<li>13</li>
-							<li>CSV</li>
-						</ul>
-					</div>
-					<div>
-						<ul class="flex justify-between rounded-xl bg-white p-3">
-							<li class="ml-2">9/25/2023</li>
-							<li>279</li>
-							<li>/products</li>
-							<li>-icon-</li>
-							<li>13</li>
-							<li>CSV</li>
-						</ul>
-					</div>
+					<!-- scan table line component -->
+					<ul> 
+						<li class="flex justify-between rounded-xl bg-white p-3">
+							<span class="ml-2">9/25/2023</span>
+							<span>279</span>
+							<span>/products</span>
+							<span>-icon-</span>
+							<span>13</span>
+							<span>CSV</span>
+						</li>
+					</ul>					
 				</div>
 			</section>
 		</section>
