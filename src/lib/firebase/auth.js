@@ -87,43 +87,11 @@ export async function login(email, password) {
  * Asynchronously logs out the currently authenticated user.
  *
  * This function uses Firebase's `signOut` method to log out the user.
- * If the sign-out is successful, it returns an object with the current user (which should be null) 
+ * If the sign-out is successful, it returns an object with the current user (which should be null)
  * and a boolean indicating that the user is logged out.
  * If there's an error during the sign-out process, it returns an object with the current user (which should be null),
  *  a boolean indicating that the user is logged out, and the error.
  */
-export async function logout() {
-	try {
-		await signOut(auth);
-
-		return {
-			user: auth.currentUser,
-			isLoggedOut: auth.currentUser == null ? true : false
-		};
-	} catch (error) {
-		console.log('Error:', error);
-		return {
-			user: auth.currentUser,
-			isLoggedOut: auth.currentUser == null ? true : false,
-			error: error
-		};
-	}
-}
-
-/**
- * Resets the password for a user with the provided email.
- *
- * @param {string} email - The email of the user.
- * @returns {Promise<void>} - A promise that resolves when the password reset email is sent.
- * @throws {Error} - If the password reset fails.
- */
-export async function resetPassword(email) {
-	try {
-		await sendPasswordResetEmail(auth, email);
-	} catch (error) {
-		// Handle error
-	}
-}
 export async function logout() {
 	try {
 		await signOut(auth);
