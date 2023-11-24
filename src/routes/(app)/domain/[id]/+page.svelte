@@ -10,6 +10,7 @@
 
 	import { page } from '$app/stores';
 	import { beforeUpdate } from 'svelte';
+	import { TableSearch } from 'flowbite-svelte';
 	$: ({ id, name, datesCollection } = data);
 	$: startingUrl = `https://${name}`;
 	$: aiToggle = {
@@ -22,7 +23,7 @@
 	$: {
 		if (aiToggle.all) {
 			aiToggle.body = aiToggle.meta = aiToggle.social = true;
-		} 
+		}
 	}
 
 	// Function to set 'aiToggle.all' based on the other checkboxes' state
@@ -40,98 +41,88 @@
 <Main>
 	<svelte:fragment slot="title">Domain Dashboard</svelte:fragment>
 	<section class="w-full">
-		<div class="flex flex-col bg-slate-500 p-4 text-slate-100">
-			<div class="flex items-center justify-between">
-				<h3 class="ml-10 text-3xl font-semibold">
-					{name}
-				</h3>
-				<label for="table-search" class="sr-only">Search</label>
-				<div class="relative mt-1">
-					<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-						<svg
-							class="h-4 w-4 text-gray-500 dark:text-gray-400"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 20 20"
-						>
-							<path
-								stroke="currentColor"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-							/>
-						</svg>
-					</div>
-					<input
-						type="text"
-						id="table-search"
-						class="block w-80 rounded-lg border border-gray-300 bg-slate-200 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:placeholder-gray-400"
-						placeholder="Search for items"
-					/>
-				</div>
-			</div>
-			<div class="flex content-center justify-between px-8 pt-4">
-				<p>date of scan</p>
-				<p>scanned pages</p>
-				<button
-					class="rounded bg-slate-200 px-2.5 py-1 text-slate-900 hover:bg-green-200"
-					on:click={() => (showDialog = !showDialog)}>New scan</button
+		<section class="flex min-h-[1000px] flex-col">
+			<!-- top header -->
+			<ul class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
+				<li
+					class="flex w-full justify-between rounded-xl bg-gradient-to-r from-primary to-accent p-3 text-slate-100"
 				>
-			</div>
-		</div>
-		<!-- Show dialog to set up starting Url for the scan e.g. domain/procuts -->
-		{#if showDialog}
-			<form
-				method="POST"
-				class="flex w-full content-center items-center justify-end gap-4 bg-slate-100 p-4"
-				use:enhance={() => {
-					return async ({ update }) => {
-						await update();
-						showDialog = false;
-					};
-				}}
-			>
-				<h3 class="text-xl font-medium">Starting Url</h3>
-				<input hidden value={id} name="domainid" />
-				<input bind:value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
-				<!-- Start of toggles for AI suggestions -->
-				<Toggle toggleName='aiAll' bind:toggleState={aiToggle.all} updateFn={null} label="All" />
-				<Toggle toggleName='aiBody' bind:toggleState={aiToggle.body} updateFn={updateAllState} label="Body" />
-				<Toggle toggleName='aiMeta' bind:toggleState={aiToggle.meta} updateFn={updateAllState} label="Meta" />
-				<Toggle toggleName='aiSocial' bind:toggleState={aiToggle.social} updateFn={updateAllState} label="Social" />
-				<!-- End of toggles for AI suggestions -->
-				<button type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
-					>Start New Scan</button
-				>
-			</form>
-		{/if}
-
-		<ol>
-			{#each $datesCollection as date, index}
-				<li class="flex w-full items-center p-2">
-					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">
-						<span>{dateFormatter(date.id)}</span>
-						<span>{timeFormatter(date.id) || ''}</span>
-					</p>
-					<p class="ml-8 text-lg">
-						{date.totalPages || 'In progress '}
-					</p>
-					<p class="ml-auto mr-4">
-						<a
-							href="/domain/{id}/{date.id}"
-							type="button"
-							class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-							>Continue</a
-						>
-					</p>
+					<span class="ml-2">domain_name.com</span>
+					<span>9/25/2023<span>7:42 AM</span></span>
+					<span>Scanned URLs:<span>279</span></span>
+					<span>Status:<span>sign</span></span>
 				</li>
-			{/each}
-		</ol>
-		{#if $datesCollection.length === 0}
-			<Spinner />
-		{/if}
+			</ul>
+			<!-- 3 cards at the top -->
+			<section class="grid min-h-[220px] grid-cols-3 grid-rows-1">
+				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl bg-white p-5">
+					<h3 class="text-xl font-bold">Summary</h3>
+					<ul class="ml-2 mt-2">
+						<li class="list-inside list-disc">first thing</li>
+						<li class="list-inside list-disc">second thing</li>
+						<li class="list-inside list-disc">third thing</li>
+					</ul>
+				</div>
+				<div
+					class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-red-700 bg-white p-5 hover:shadow"
+				>
+					<h3 class="text-xl font-bold">High Priority</h3>
+					<ul class="ml-2 mt-2">
+						<li class="list-inside list-disc">first thing</li>
+						<li class="list-inside list-disc">second thing</li>
+						<li class="list-inside list-disc">third thing</li>
+					</ul>
+				</div>
+				<div
+					class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-blue-400 bg-white p-5 hover:shadow"
+				>
+					<h3 class="text-xl font-bold">AI Magic</h3>
+					<ul class="ml-2 mt-2">
+						<li class="list-inside list-disc">first thing</li>
+						<li class="list-inside list-disc">second thing</li>
+						<li class="list-inside list-disc">third thing</li>
+					</ul>
+				</div>
+			</section>
+			<!-- graph section = Graph.js to be used -->
+			<section class="grid min-h-[350px] grid-cols-3 grid-rows-1">
+				<div class="col-span-2 mb-5 ml-3 mt-2 rounded-l-xl bg-white p-5">
+					<h3 class="text-xl font-bold">Crawling History</h3>
+					<graph class="m-5">Graph inserted here</graph>
+				</div>
+				<div class="col-span-1 mb-5 mt-2 rounded-r-xl bg-white p-5">
+					<h3 class="text-xl font-bold">Details</h3>
+					<graph class="m-5">upon hover</graph>
+				</div>
+			</section>
+			<section class="ml-3 mt-5">
+				<h2 class="text-3xl font-bold">Scan Overview</h2>
+				<!-- scan table header -->
+				<ul class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
+					<li
+						class="flex w-full justify-between rounded-xl bg-gradient-to-r from-primary to-accent p-3 text-slate-100"
+					>
+						<span class="ml-2">Date:</span>
+						<span>Crawled URLs:</span>
+						<span>URL:</span>
+						<span>Status</span>
+						<span>Impediments</span>
+					</li>
+				</ul>
+				<div class="bg-white p-4">
+					<!-- scan table line component -->
+					<ul>
+						<li class="flex justify-between rounded-xl bg-white p-3">
+							<span class="ml-2">9/25/2023</span>
+							<span>279</span>
+							<span>/products</span>
+							<span>-icon-</span>
+							<span>13</span>
+							<span>CSV</span>
+						</li>
+					</ul>
+				</div>
+			</section>
+		</section>
 	</section>
 </Main>
