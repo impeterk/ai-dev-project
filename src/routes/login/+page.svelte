@@ -6,11 +6,6 @@
 	let activeTab = 'login';
 	export let form;
 
-	/**
-	 * Function to switch the active tab.
-	 *
-	 * @param {string} tab - The tab to switch to.
-	 */
 	function switchTab(tab) {
 		activeTab = tab;
 		if ((form !== undefined) & form.error) {

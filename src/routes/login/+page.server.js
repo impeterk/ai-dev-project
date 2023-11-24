@@ -2,17 +2,18 @@ import { redirect, fail } from '@sveltejs/kit';
 import { login, register, resetPassword } from '../../lib/firebase/auth.js';
 
 export const actions = {
+	
 	login: async ({ request, cookies }) => {
+		
 		let formData = await request.formData();
-
 		const data = {
 			email: formData.get('email'),
 			password: formData.get('password')
 		};
-
+		
 		try {
 			const user = await login(data.email, data.password);
-
+			
 			// Save the User's info session to the cookies
 			if (user) {
 				cookies.set(
@@ -21,7 +22,8 @@ export const actions = {
 						// uid: user.uid,
 						isLogged: user.uid ? true : false,
 						email: user.email,
-						organization: user.organization
+						organization: user.organization,
+						jwt: user.jwt
 					}),
 					{
 						path: '/',
@@ -41,7 +43,7 @@ export const actions = {
 			throw redirect(302, '/');
 		}
 	},
-	register: async ({ request, url }) => {
+	register: async ({ request }) => {
 		let formData = await request.formData();
 
 		const data = {
@@ -51,7 +53,7 @@ export const actions = {
 		};
 
 		try {
-			const user = await register(data.email, data.password, data.organization);
+			await register(data.email, data.password, data.organization);
 
 			return {
 				success: true,
@@ -62,7 +64,7 @@ export const actions = {
 			return fail(400, { error: true, message: JSON.stringify(err.code) });
 		}
 	},
-	resetPassword: async ({ request, url }) => {
+	resetPassword: async ({ request }) => {
 		let formData = await request.formData();
 
 		const data = {
