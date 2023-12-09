@@ -1,4 +1,5 @@
 import { verifyUser } from './lib/firebase/auth.js';
+import { currentUserOrgId } from '$lib/store';
 
 /**
  * Handles the request by verifying the user's JWT token and performing redirection if necessary.
@@ -10,6 +11,14 @@ import { verifyUser } from './lib/firebase/auth.js';
 export async function handle({ event, resolve }) {
 	// Get the JWT token from the cookies
 	let jwt = event.cookies.get('user') ? JSON.parse(event.cookies.get('user')).jwt : false;
+
+	// Get the user's organization ID and put in the store
+	let orgId = event.cookies.get('user')
+		? JSON.parse(event.cookies.get('user')).organization
+		: 'n/a';
+
+	currentUserOrgId.set(orgId);
+
 
 	// Verify the token /w Firebase Authentication and tap into body of the response
 	const isLogged = (await verifyUser(jwt)).body.isLogged;
