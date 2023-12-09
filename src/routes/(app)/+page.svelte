@@ -61,6 +61,7 @@
 						<th scope="row" class=" rounded-l-xl p-4 text-left text-xl">
 							<a href="/domain/{domain.id}" class="ml-4 underline-offset-4 hover:underline">
 								{domain.name}
+								<span class="text-xs block font-thin text-left ml-4">{domain.organization}</span>
 							</a></th
 						>
 
@@ -84,7 +85,7 @@
 								class:bg-error={domain.status == 'aborted'}
 								class:bg-secondary={domain.status == 'scanning'}
 								class:bg-yellow-300={domain.status == 'evaluating'}
-						    class:bg-purple-200={domain.status == 'ai magic'}
+								class:bg-purple-200={domain.status == 'ai magic'}
 							>
 								{domain.status}
 							</p>
