@@ -2,18 +2,16 @@ import { redirect, fail } from '@sveltejs/kit';
 import { login, register, resetPassword } from '../../lib/firebase/auth.js';
 
 export const actions = {
-	
 	login: async ({ request, cookies }) => {
-		
 		let formData = await request.formData();
 		const data = {
 			email: formData.get('email'),
 			password: formData.get('password')
 		};
-		
+
 		try {
 			const user = await login(data.email, data.password);
-			
+
 			// Save the User's info session to the cookies
 			if (user) {
 				cookies.set(
@@ -37,12 +35,8 @@ export const actions = {
 			console.error('Login error:', err);
 			return fail(400, { error: true, message: JSON.stringify(err.code) });
 		}
-
-		// If the login was successful - redirect user to the root
-		if (cookies.get('user') && cookies.get('user').isLogged) {
-			throw redirect(302, '/');
-		}
 	},
+	
 	register: async ({ request }) => {
 		let formData = await request.formData();
 
