@@ -9,12 +9,13 @@
 	import { currentCollection, breadcrumbs } from '$lib/store';
 	import { onDestroy, beforeUpdate } from 'svelte';
 	import { TableSearch } from 'flowbite-svelte';
+	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
 
 	const { id, date } = $page.params;
 	let expanded = null;
 
 	$: results = $currentCollection;
-
+	$: activeTab = 'body';
 	// breadcrumbs
 	// TODO: rework to generate from server
 	$: beforeUpdate(async () => {
@@ -23,6 +24,11 @@
 	$: onDestroy(async () => {
 		await $breadcrumbs.delete(date);
 	});
+
+	$: handleExpandUrl = (index) => {
+		activeTab = 'body';
+		expanded = expanded === index ? null : index;
+	};
 </script>
 
 <Main>
@@ -31,8 +37,8 @@
 		<header
 			class="grid grid-cols-3 items-center rounded-xl bg-gradient-to-r from-primary to-accent px-4 text-slate-100"
 		>
-			<h3 class="text-3xl font-semibold">
-				{id}
+			<h3 class="text-2xl font-semibold">
+				<span>{dateFormatter(date)} : {timeFormatter(date)}</span>
 			</h3>
 			<div class="flex w-1/2 items-center justify-between justify-self-center">
 				<h3>Impediments</h3>
@@ -51,82 +57,263 @@
 				<Spinner />
 			{/if}
 			{#each $results as url, index}
-				<li
-					class="flex w-full items-center justify-between rounded-lg bg-white p-4 text-xl text-primary shadow-lg"
-				>
-					<p>{url.url.replace('https://', '')}</p>
-					<div class="inline w-fit space-x-12">
-						<button class="" on:click={() => (expanded = expanded === index ? null : index)}>
+				<li class="grid grid-cols-3 rounded-lg bg-white p-4 text-xl text-primary shadow-lg">
+					<p class="col-span-2 col-start-1 break-words pr-2">{url.url.replace('https://', '')}</p>
+					<div class="col-span-1 flex flex-wrap content-center gap-4">
+						<button class="" on:click={handleExpandUrl(index)}>
 							<div class="flex items-center gap-2">
 								See more
 								<AngleDownSolid class="float-left my-auto h-4 w-4" />
 							</div>
 						</button>
-						<button class="rounded-xl bg-primary px-3 py-1 text-secondary"> Inspect </button>
+						<button class="h-fit rounded-xl bg-primary px-3 py-1 text-secondary"> Inspect </button>
 					</div>
 				</li>
 				{#if expanded === index}
 					<div class="w-full">
-						<header class=" mx-4 flex w-full px-2 text-2xl font-bold text-white">
-							<button class="-mx-1 rounded-t-lg bg-body px-6 py-2 hover:z-50">Body</button>
-							<button class="-mx-1 rounded-t-lg bg-meta px-6 py-2 hover:z-50">Meta</button>
-							<button class="-mx-1 rounded-t-lg bg-social px-6 py-2 hover:z-50">Social</button>
-							<button class="-mx-1 rounded-t-lg bg-schema px-6 py-2 hover:z-50">Schema</button>
+						<header
+							class=" mx-4 flex w-full px-2 text-2xl font-bold text-white transition-all duration-200 ease-linear"
+						>
+							<button
+								class="-mx-1 rounded-t-lg bg-body px-6 py-2 underline-offset-8 transition-all duration-200 ease-linear hover:z-50"
+								on:click={() => (activeTab = 'body')}
+								class:z-50={activeTab == 'body'}
+								class:underline={activeTab == 'body'}
+								class:px-8={activeTab == 'body'}>Body</button
+							>
+
+							<button
+								class="-mx-1 rounded-t-lg bg-meta px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								on:click={() => (activeTab = 'meta')}
+								class:z-50={activeTab == 'meta'}
+								class:underline={activeTab == 'meta'}
+								class:px-8={activeTab == 'meta'}>Meta</button
+							>
+							<button
+								class="-mx-1 rounded-t-lg bg-social px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								on:click={() => (activeTab = 'social')}
+								class:z-50={activeTab == 'social'}
+								class:underline={activeTab == 'social'}
+								class:px-8={activeTab == 'social'}>Social</button
+							>
+							<button
+								class="-mx-1 rounded-t-lg bg-schema px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								on:click={() => (activeTab = 'schema')}
+								class:z-50={activeTab == 'schema'}
+								class:underline={activeTab == 'schema'}
+								class:px-8={activeTab == 'schema'}>Schema</button
+							>
 						</header>
-						<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
-							<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
-								<p>Headlines</p>
-								<p>Evaluation</p>
-								<p>AI Magic</p>
-							</header>
-							<div class="mx-4 grid grid-cols-3 gap-4">
-								<ul class="col-span-1 col-start-1 my-4 rounded-xl bg-secondary p-4">
-									{#if url.issues}
-										{#if url.issues.meta.title}
-											<li class="block">
-												Title: {url.issues.meta.title}
-											</li>
-										{/if}
-										{#if url.issues.meta.description}
-											<li class="block">
-												Description: {url.issues.meta.description}
-											</li>
-										{/if}
-										{#if url.issues.meta.canonical}
-											<li class="block">
-												Canonical: {url.issues.meta.canonical}
-											</li>
-										{/if}
-										{#if url.issues.social.title}
-											<li class="block">
-												OG title: {url.issues.social.title}
-											</li>
-										{/if}
-										{#if url.issues.social.description}
-											<li class="block">
-												OG description: {url.issues.social.description}
-											</li>
-										{/if}
-										{#if url.issues.social.image}
-											<li class="block">
-												OG image: {url.issues.social.image}
-											</li>
-										{/if}
-										{#if url.issues.schema}
-											<div class="block">Schema: {url.issues.schema}</div>
-										{/if}
-										{#if url.suggestions}
-											<div class="block">Suggestions title: {url.suggestions.meta.title}</div>
-											<div class="block">
-												Suggestions description: {url.suggestions.meta.description}
-											</div>
-										{/if}
-									{/if}
-								</ul>
-								<ul class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4" />
-								<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+
+						<!-- body related -->
+						{#if activeTab === 'body'}
+							<!-- headlines -->
+							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
+								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
+									<p>Headlines</p>
+									<p>Evaluation</p>
+									<p>AI Magic</p>
+								</header>
+								<div class="mx-4 grid grid-cols-3 gap-4">
+									<ul class="col-span-1 col-start-1 my-4 rounded-xl bg-secondary p-4">
+										{#each Object.entries(url.body.headlines) as [key, value]}
+											<header class="text-xl font-semibold uppercase">{key}</header>
+											<ol class="space-y-2">
+												{#each value as value, index}
+													<li class="pl-2">
+														<span class="font-medium">
+															{index + 1}.
+														</span>
+														{value.text}
+													</li>
+												{:else}
+													<li class="pl-2">empty</li>
+												{/each}
+											</ol>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4">
+										{#each Object.entries(url.issues.body.headlines) as [key, value]}
+											<header class="text-xl font-semibold uppercase">{key}</header>
+											<ol class="space-y-2">
+												{#if value == 'missing' || !value}
+													<li class="rounded-xl bg-error pl-2 font-medium text-secondary">
+														Missing
+													</li>
+												{:else}
+													<li class="pl-2">{value}</li>
+												{/if}
+											</ol>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+								</div>
+								<!-- images -->
+
+								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
+									<p>Images</p>
+									<p>Evaluation</p>
+									<p>AI Magic</p>
+								</header>
+								<div class="mx-4 grid grid-cols-3 gap-4">
+									<ul class="col-span-1 col-start-1 my-4 rounded-xl bg-secondary p-4">
+										{#each url.body.images as image, index (index)}
+											<ol class="space-y-2">
+												{#if !image}
+													<li class="pl-2">No Images</li>
+												{:else}
+													<li
+														class="flex shrink-0 content-center items-center gap-2 break-words pl-2"
+													>
+														<span class="font-medium">
+															{index + 1}.
+														</span>
+														<a
+															href={image.src}
+															target="_blank"
+															class="text-link underline underline-offset-2 hover:text-primary"
+															>image src</a
+														>
+														{#if image.alt}
+															<span>alt text: {image.alt}</span>
+														{/if}
+													</li>
+												{/if}
+											</ol>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4">
+										{#each url.issues.body.images as image, index (index)}
+											<ol class="space-y-2">
+												<li
+													class="flex shrink-0 content-center items-center gap-2 break-words pl-2"
+												>
+													<span class="font-medium">
+														{index + 1}.
+													</span>
+													<span>alt text: {image.alt}</span>
+												</li>
+											</ol>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+								</div>
 							</div>
-						</div>
+						{/if}
+
+						<!-- meta -->
+
+						{#if activeTab === 'meta'}
+							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
+								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
+									<p>Meta</p>
+									<p>Evaluation</p>
+									<p>AI Magic</p>
+								</header>
+								<div class="mx-4 grid grid-cols-3 gap-4">
+									<ul class="col-span-1 col-start-1 my-4 rounded-xl bg-secondary p-4">
+										{#each Object.entries(url.meta) as [key, value]}
+											<div class="w-full space-y-2">
+												<header class="text-xl font-semibold uppercase">{key}</header>
+												{#if value.length === 0}
+													<span class="pl-2">empty</span>
+												{:else if key === 'alternates'}
+													<ul>
+														{#each value as value, index}
+															<li class="pl-2">
+																<span class="font-medium">
+																	{index + 1}.
+																</span>
+																<span class="break-words">{value.href}</span> |
+																<span>{value.hreflang}</span>
+															</li>
+														{/each}
+													</ul>
+												{:else}
+													<span class="pl-2">value</span>
+												{/if}
+											</div>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4">
+										{#each Object.entries(url.issues.meta) as [key, value]}
+											<header class="text-xl font-semibold uppercase">{key}</header>
+											<ol class="space-y-2">
+												<li class="pl-2">{value}</li>
+												{#if !value}
+													<li class="rounded-xl bg-error pl-2 font-medium text-secondary">
+														Missing
+													</li>
+												{/if}
+											</ol>
+										{/each}
+									</ul>
+									<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+								</div>
+							</div>
+						{/if}
+
+						<!-- social -->
+
+						{#if activeTab === 'social'}
+							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
+								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
+									<p>Social</p>
+									<p>Evaluation</p>
+									<p>AI Magic</p>
+								</header>
+								<div class="mx-4 grid grid-cols-3 gap-4">
+									<div class="col-span-1 col-start-1 my-4 break-words rounded-xl bg-secondary p-4">
+										<h4 class="text-xl font-semibold uppercase">Description</h4>
+										<p>{url.social.descrition || 'empty'}</p>
+										<h4 class="text-xl font-semibold uppercase">Image</h4>
+										{#if !url.social.image}
+											<p>{'empty'}</p>
+										{:else}
+											<a
+												href={url.social.image}
+												target="_blank"
+												rel="noopener noreferrer"
+												class="text-link underline underline-offset-2 hover:text-primary"
+												>Open Image</a
+											>
+										{/if}
+										<h4 class="text-xl font-semibold uppercase">title</h4>
+										<p>{url.social.title || 'empty'}</p>
+									</div>
+									<div class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4">
+										<h4 class="text-xl font-semibold uppercase">Description</h4>
+										<p>{url.issues.social.descrition || 'empty'}</p>
+										<h4 class="text-xl font-semibold uppercase">Image</h4>
+										<p>{url.issues.social.image}</p>
+
+										<h4 class="text-xl font-semibold uppercase">title</h4>
+										<p>{url.issues.social.title}</p>
+									</div>
+									<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+								</div>
+							</div>
+						{/if}
+
+						<!-- schema -->
+						{#if activeTab === 'schema'}
+							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
+								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
+									<p>Schema</p>
+									<p>Evaluation</p>
+									<p>AI Magic</p>
+								</header>
+								<div class="mx-4 grid grid-cols-3 gap-4">
+									<div class="col-span-1 col-start-1 my-4 break-words rounded-xl bg-secondary p-4">
+										<p>{url.schema}</p>
+									</div>
+									<div class="col-span-1 col-start-2 my-4 rounded-xl bg-[#FAD4EF] p-4">
+										<p>{url.issues.schema}</p>
+									</div>
+									<ul class="col-span-1 col-start-3 my-4 rounded-xl bg-[#E0F4FF] p-4" />
+								</div>
+							</div>
+						{/if}
 					</div>
 				{/if}
 			{/each}
