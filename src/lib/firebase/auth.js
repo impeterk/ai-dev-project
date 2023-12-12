@@ -18,21 +18,31 @@ import {
 
 /**
  * Registers a new user with the provided email, password, and organization.
- * It creates a new user in Firebase's AUTH database and also creates a corresponding document in Firebase's FIRESTORE database.
- * The document in the FIRESTORE database has the same ID as the user's UID and contains the user's email, organization, and the timestamp of creation.
+ * It checks if the organization exists in the Firestore database, creates a new user in the Firebase AUTH database,
+ * and adds a corresponding document in the Firestore database with user details.
  *
  * @param {string} email - The email of the user.
  * @param {string} password - The password of the user.
  * @param {string} organization - The organization of the user.
  * @returns {Promise<object>} - A promise that resolves to the registered user object.
- * @throws {Error} - If the registration fails.
+ * @throws {Error} - If the registration fails or the organization does not exist.
  */
 export async function register(email, password, organization) {
 	try {
+		// Get the organizations from Firebase
+		const orgSnapshot = await getDocs(collection(firestore, 'organizations'));
+		const orgIds = orgSnapshot.docs.map((doc) => doc.id);
+
+		// Check if organization exists, throw an error if not
+		if (!orgIds.includes(organization)) {
+			// throw new Error('Organization does not exist');
+			throw ('Organization does not exist');
+		}
+
+		// Create user if organization exists
 		const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-		// Create a new user in Firebase's AUTH db
 		const user = userCredential.user;
-		// Create a new user in Firebase's FIRESTORE db
+
 		await setDoc(doc(firestore, 'users', user.uid), {
 			email: email,
 			organization: organization,
@@ -41,7 +51,6 @@ export async function register(email, password, organization) {
 
 		return user;
 	} catch (error) {
-		console.log('Registration failed:', error);
 		throw error;
 	}
 }

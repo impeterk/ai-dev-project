@@ -3,12 +3,15 @@ import { login, register, resetPassword } from '../../lib/firebase/auth.js';
 
 export const actions = {
 	login: async ({ request, cookies }) => {
+		// Process data coming from form
 		let formData = await request.formData();
+
 		const data = {
 			email: formData.get('email'),
 			password: formData.get('password')
 		};
 
+		// Try to login the user
 		try {
 			const user = await login(data.email, data.password);
 
@@ -33,11 +36,15 @@ export const actions = {
 			}
 		} catch (err) {
 			console.error('Login error:', err);
-			return fail(400, { error: true, message: JSON.stringify(err.code) });
+			return fail(400, {
+				error: true,
+				message: err && err.code ? JSON.stringify(err.code) : JSON.stringify(err)
+			});
 		}
 	},
-	
+
 	register: async ({ request }) => {
+		// Process data coming from form
 		let formData = await request.formData();
 
 		const data = {
@@ -46,6 +53,7 @@ export const actions = {
 			organization: formData.get('organization')
 		};
 
+		// Try to login the user
 		try {
 			await register(data.email, data.password, data.organization);
 
@@ -54,10 +62,16 @@ export const actions = {
 				message: `Registration was succesfull, please log-in to continue.`
 			};
 		} catch (err) {
-			console.error('Registration error:', err);
-			return fail(400, { error: true, message: JSON.stringify(err.code) });
+			console.log('--------------------------------');
+			console.error('Page servers Registration error:', err);
+			console.log('--------------------------------');
+			return fail(400, {
+				error: true,
+				message: err && err.code ? JSON.stringify(err.code) : JSON.stringify(err)
+			});
 		}
 	},
+
 	resetPassword: async ({ request }) => {
 		let formData = await request.formData();
 

@@ -102,7 +102,7 @@
 			<input
 				bind:value={email}
 				name="email"
-				type="text"
+				type="email"
 				class="mb-2 w-full rounded border p-1 text-lg font-bold placeholder-secondary"
 				placeholder="Your e-mail"
 				required
