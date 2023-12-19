@@ -1,7 +1,7 @@
 <script>
 	import '../app.css';
 	import { FirebaseApp } from 'sveltefire';
-	import { firestore, auth } from '$lib/firebase';
+	import { firestore, auth } from '../lib/firebase/index.js';
 	import { browser } from '$app/environment';
 	import { userLocale } from '$lib/store';
 	import { get } from 'svelte/store';
