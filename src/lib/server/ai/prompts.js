@@ -89,6 +89,24 @@ export const ai = {
 			// }
 		];
 		return aiRequest(messages, 65);
+	},
+
+	generateSchema: async (data) => {
+		const userMessage = `Given the stringified object as data "${data}", generate a suitable schema markup for this webpage. Make sure to output direct suggestion and nothing else.`;
+		const messages = [
+			{
+				role: 'system',
+				content:
+					'You are a skilled SEO consultant. Based on the input I give you, consider the topic, context, and language of the input data. Make sure to output ONLY stringified version of new schema markup and nothing else, written in the same language as the input data.'
+			},
+			{ role: 'user', content: userMessage },
+			{
+				role: 'system',
+				content:
+					'Remember, the schema follows specific rules defined on schema.org website. Please consider that while creating the new schema mark-up.'
+			}
+		];
+		return aiRequest(messages, 300);
 	}
 
 	// ... other functions ...
