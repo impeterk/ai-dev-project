@@ -10,14 +10,14 @@
 <li class="h-24 p-3">
 	<a
 		{href}
-		class="group flex h-full w-full items-center justify-center rounded-xl border-primary p-4 hover:bg-secondary hover:text-primary ${activeUrl ==
+		class="group flex items-center justify-center rounded-xl border-primary p-4 hover:bg-secondary hover:text-primary ${activeUrl ==
 		href
 			? ' border-y  bg-secondary text-primary '
 			: ' text-secondary '}"
 	>
-		<div class="h-3/4 w-3/4">
+		<span class="text-4xl">
 			<slot />
-		</div>
+		</span>
 	</a>
 	<Tooltip
 		arrow={false}

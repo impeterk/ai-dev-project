@@ -13,6 +13,7 @@
 	import { currentCollection } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
 	import { breadcrumbs } from '$lib/store';
+	import Icon from '@iconify/svelte';
 
 	// domains returned from load function
 	// $: ({ domains } = data);
@@ -29,7 +30,7 @@
 			href="/newdomain"
 			class="mr-20 flex items-center gap-2 rounded-t-xl bg-primary px-4 py-2 text-xl font-bold text-secondary outline-offset-2 transition delay-100 duration-300 ease-in-out hover:bg-gradient-to-r hover:from-primary hover:to-accent hover:outline"
 			>Add Domain
-			<CirclePlusSolid size="sm" />
+			<Icon icon="mdi:plus-circle-outline" width="32" />
 		</a>
 	</div>
 	<section class="flex min-h-[750px] w-full flex-col">
@@ -86,7 +87,7 @@
 						class="ml-auto flex items-center gap-2 rounded-xl px-4 py-2 outline-1 outline-primary hover:bg-secondary active:bg-secondary active:outline"
 					>
 						<p>See more</p>
-						<AngleDownSolid size="sm" />
+						<Icon icon="mdi:chevron-down" class="text-3xl" />
 					</button>
 					<div class="flex w-full justify-center">
 						<a
@@ -94,7 +95,7 @@
 							class="mx-auto flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-secondary"
 						>
 							<p class="font-medium">Inspect</p>
-							<AngleRightSolid size="sm" />
+							<Icon icon="mdi:chevron-right" class="text-3xl" />
 						</a>
 					</div>
 				</li>

@@ -14,9 +14,9 @@ export async function load({ params, url }) {
     // returns last 5 scans ordered by date
     const data = collectionStore(firestore, query(collection(firestore, "domain", id, 'dateofscan'), orderBy("date", "desc"), limit(5)))
 
-
     return {
         id: domainDoc.id,
+        status: domainDoc.data().status,
         name: domainDoc.data().name,
         datesCollection: data
     }

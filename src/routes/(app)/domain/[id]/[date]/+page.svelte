@@ -3,13 +3,14 @@
 	// set main title(h1) on the page
 
 	import { page } from '$app/stores';
-	import { AngleDownSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
+	import Icon from '@iconify/svelte';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
 	import { currentCollection, breadcrumbs } from '$lib/store';
 	import { onDestroy, beforeUpdate } from 'svelte';
 	import { TableSearch } from 'flowbite-svelte';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import { fade, fly } from 'svelte/transition';
 
 	const { id, date } = $page.params;
 	let expanded = null;
@@ -19,7 +20,10 @@
 	// breadcrumbs
 	// TODO: rework to generate from server
 	$: beforeUpdate(async () => {
-		await $breadcrumbs.set(date, { id: date, link: $page.url.pathname });
+		await $breadcrumbs.set(date, {
+			id: `${dateFormatter(Number(date))} ${timeFormatter(Number(date))}`,
+			link: $page.url.pathname
+		});
 	});
 	$: onDestroy(async () => {
 		await $breadcrumbs.delete(date);
@@ -58,24 +62,30 @@
 			{/if}
 			{#each $results as url, index}
 				<li class="grid grid-cols-3 rounded-lg bg-white p-4 text-xl text-primary shadow-lg">
-					<p class="col-span-2 col-start-1 break-words pr-2">{url.url.replace('https://', '')}</p>
+					<p class="col-span-2 col-start-1 break-words pr-2">
+						{url.url?.replace('https://', '') || url.url}
+					</p>
 					<div class="col-span-1 flex flex-wrap content-center gap-4">
 						<button class="" on:click={handleExpandUrl(index)}>
-							<div class="flex items-center gap-2">
+							<div class="flex items-center gap-2 overflow-hidden">
 								See more
-								<AngleDownSolid class="float-left my-auto h-4 w-4" />
+								<Icon
+									icon={expanded === index ? 'mdi:chevron-up' : 'mdi:chevron-down'}
+									width="32px"
+									height="32px"
+								/>
 							</div>
 						</button>
 						<button class="h-fit rounded-xl bg-primary px-3 py-1 text-secondary"> Inspect </button>
 					</div>
 				</li>
 				{#if expanded === index}
-					<div class="w-full">
+					<div class="w-full" transition:fade={{ duration: 300 }}>
 						<header
 							class=" mx-4 flex w-full px-2 text-2xl font-bold text-white transition-all duration-200 ease-linear"
 						>
 							<button
-								class="-mx-1 rounded-t-lg bg-body px-6 py-2 underline-offset-8 transition-all duration-200 ease-linear hover:z-50"
+								class="-mx-1 rounded-t-lg bg-body px-6 py-2 shadow-lg transition-all duration-200 ease-linear hover:z-50"
 								on:click={() => (activeTab = 'body')}
 								class:z-50={activeTab == 'body'}
 								class:underline={activeTab == 'body'}
@@ -83,21 +93,21 @@
 							>
 
 							<button
-								class="-mx-1 rounded-t-lg bg-meta px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								class="-mx-1 rounded-t-lg bg-meta px-6 py-2 shadow-lg transition-all duration-200 ease-linear hover:z-50"
 								on:click={() => (activeTab = 'meta')}
 								class:z-50={activeTab == 'meta'}
 								class:underline={activeTab == 'meta'}
 								class:px-8={activeTab == 'meta'}>Meta</button
 							>
 							<button
-								class="-mx-1 rounded-t-lg bg-social px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								class="-mx-1 rounded-t-lg bg-social px-6 py-2 shadow-lg transition-all duration-200 ease-linear hover:z-50"
 								on:click={() => (activeTab = 'social')}
 								class:z-50={activeTab == 'social'}
 								class:underline={activeTab == 'social'}
 								class:px-8={activeTab == 'social'}>Social</button
 							>
 							<button
-								class="-mx-1 rounded-t-lg bg-schema px-6 py-2 transition-all duration-200 ease-linear hover:z-50"
+								class="-mx-1 rounded-t-lg bg-schema px-6 py-2 shadow-lg transition-all duration-200 ease-linear hover:z-50"
 								on:click={() => (activeTab = 'schema')}
 								class:z-50={activeTab == 'schema'}
 								class:underline={activeTab == 'schema'}
@@ -108,7 +118,9 @@
 						<!-- body related -->
 						{#if activeTab === 'body'}
 							<!-- headlines -->
-							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
+							<div
+								class="h-[50vh] overflow-x-clip overflow-y-scroll rounded-xl bg-white px-2 py-4 shadow-lg scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-primary"
+							>
 								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
 									<p>Headlines</p>
 									<p>Evaluation</p>
@@ -202,7 +214,6 @@
 						{/if}
 
 						<!-- meta -->
-
 						{#if activeTab === 'meta'}
 							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
 								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">
@@ -254,7 +265,6 @@
 						{/if}
 
 						<!-- social -->
-
 						{#if activeTab === 'social'}
 							<div class="rounded-xl bg-white px-2 py-4 shadow-lg">
 								<header class="mx-4 grid grid-cols-3 gap-4 border-b pt-4 text-xl font-bold">

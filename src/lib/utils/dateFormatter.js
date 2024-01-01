@@ -3,7 +3,7 @@ import { get } from "svelte/store"
 
 export function dateFormatter(date, locals = (get(userLocale) || 'en-US')) {
 
-    return Intl.DateTimeFormat(locals, { dateStyle: "long" }).format(new Date(parseInt(date)))
+    return Intl.DateTimeFormat(locals, { dateStyle: "short" }).format(new Date(parseInt(date)))
 
 }
 
