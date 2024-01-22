@@ -30,7 +30,7 @@
 	// preload is set off it was causing issues
 </script>
 
-<div class="relative w-full pt-12">
+<div class="pagination relative w-full pt-12">
 	<div class="relativebox-border mx-auto flex h-12 items-center justify-center gap-5 text-primary">
 		<!-- visible based entries, so we do not over/under flow the collection -->
 		{#if $firstVisible.id !== $firstInCollection.id}
@@ -44,7 +44,10 @@
 			</button>
 		{/if}
 		<div class="absolute h-8 w-8 overflow-hidden text-center">
-			<div class="absolute h-full w-full" style="transform: translate(-{100 * offset}%, 0 )">
+			<div
+				class="pagination absolute h-full w-full"
+				style="transform: translate(-{100 * offset}%, 0 )"
+			>
 				<strong
 					class="select-nonne absolute -right-full flex h-full w-full items-center justify-center rounded-full bg-primary text-2xl font-normal text-secondary"
 					aria-hidden="true">{Math.floor($pageIndicator + 1)}</strong

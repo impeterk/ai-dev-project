@@ -11,7 +11,7 @@
 	import Spinner from '$lib/components/spinner.svelte';
 	import Main from '$lib/components/main.svelte';
 	import { currentCollection } from '$lib/store';
-	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import { dateTimeFormatter } from '$lib/utils/dateFormatter';
 	import { breadcrumbs } from '$lib/store';
 	import Icon from '@iconify/svelte';
 
@@ -51,9 +51,7 @@
 		</header>
 		<ul class="devide-y w-full space-y-4 pt-12" role="list">
 			{#each $domains as domain}
-				<li
-					class="group grid grid-cols-6 items-center justify-items-center overflow-hidden rounded-xl bg-base p-2 outline-1 outline-accent/50 hover:bg-accent/10 hover:outline"
-				>
+				<li class="list__item group grid grid-cols-6">
 					<a
 						href="/domain/{domain.id}"
 						class="col-span-2 col-start-1 ml-4 justify-self-start p-4 text-left text-xl font-bold underline-offset-4 hover:underline"
@@ -63,17 +61,19 @@
 
 					<div class="p-1 text-left text-primary">
 						{#if domain.lastScan}
+							{@const { date, time } = dateTimeFormatter(domain.lastScan)}
 							<p class="text-lg font-semibold">
-								{dateFormatter(domain.lastScan)}
+								{date}
 							</p>
+
 							<p>
-								{timeFormatter(domain.lastScan)}
+								{time}
 							</p>
 						{/if}
 					</div>
 
 					<p
-						class="w-1/2 shrink-0 rounded-lg px-2 py-1 text-center"
+						class="button w-1/2 shrink-0"
 						class:bg-warning={domain.status == 'added'}
 						class:bg-success={domain.status == 'finished'}
 						class:bg-error={domain.status == 'aborted'}

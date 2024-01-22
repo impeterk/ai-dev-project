@@ -2,7 +2,7 @@
 	export let data;
 	let showDialog = false;
 	import Main from '$lib/components/main.svelte';
-	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter.js';
+	import { dateTimeFormatter } from '$lib/utils/dateFormatter.js';
 	import { enhance } from '$app/forms';
 	import Spinner from '$lib/components/spinner.svelte';
 	import Toggle from '$lib/components/toggle.svelte';
@@ -12,6 +12,7 @@
 	import { TableSearch } from 'flowbite-svelte';
 	import { Doc } from 'sveltefire';
 	import Icon from '@iconify/svelte';
+	import Card from './Card.svelte';
 	$: ({ id, name, datesCollection } = data);
 	$: startingUrl = `https://${name}`;
 	$: aiToggle = {
@@ -40,9 +41,8 @@
 
 	let lastScanDate;
 	$: if ($datesCollection[0]?.date) {
-		lastScanDate = `${dateFormatter($datesCollection[0]?.date)} ${timeFormatter(
-			$datesCollection[0]?.date
-		)}`;
+		const { date, time } = dateTimeFormatter($datesCollection[0]?.date);
+		lastScanDate = `${date} ${time}`;
 	}
 	$: console.log($datesCollection);
 </script>
@@ -71,34 +71,9 @@
 			</ul>
 			<!-- 3 cards at the top -->
 			<section class="grid min-h-[220px] grid-cols-3 grid-rows-1">
-				<div class="mb-5 ml-3 mr-3 mt-5 rounded-xl bg-white p-5">
-					<h3 class="text-xl font-bold">Summary</h3>
-					<ul class="ml-2 mt-2">
-						<li class="list-inside list-disc">first thing</li>
-						<li class="list-inside list-disc">second thing</li>
-						<li class="list-inside list-disc">third thing</li>
-					</ul>
-				</div>
-				<div
-					class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-red-700 bg-white p-5 hover:shadow-lg"
-				>
-					<h3 class="text-xl font-bold">High Priority</h3>
-					<ul class="ml-2 mt-2">
-						<li class="list-inside list-disc">first thing</li>
-						<li class="list-inside list-disc">second thing</li>
-						<li class="list-inside list-disc">third thing</li>
-					</ul>
-				</div>
-				<div
-					class="mb-5 ml-3 mr-3 mt-5 rounded-xl border-4 border-blue-400 bg-white p-5 hover:shadow-lg"
-				>
-					<h3 class="text-xl font-bold">AI Magic</h3>
-					<ul class="ml-2 mt-2">
-						<li class="list-inside list-disc">first thing</li>
-						<li class="list-inside list-disc">second thing</li>
-						<li class="list-inside list-disc">third thing</li>
-					</ul>
-				</div>
+				<Card heading="Summary" />
+				<Card heading="High Priority" borderColor="border-red-500" />
+				<Card heading="AI Magic" borderColor="border-blue-400" />
 			</section>
 			<!-- graph section = Graph.js to be used -->
 			<section class="grid min-h-[350px] grid-cols-3 grid-rows-1">
@@ -126,18 +101,19 @@
 					</header>
 					<!-- scan table line component -->
 					<ul class="devide-y">
-						{#each $datesCollection as date, index (index)}
-							<li
-								class="border-primarylast:border-0 group grid w-full grid-cols-6 items-center justify-items-center rounded-xl border-b p-3 py-4 outline-1 outline-primary/50 hover:bg-secondary/70 hover:outline"
-							>
-								<span class="ml-2">{dateFormatter(date.date)} {timeFormatter(date.date)}</span>
-								<span>{date?.totalPages ?? 0}</span>
-								<span>{date.startingUrl?.replace('https://', '') || date.startingUrl}</span>
+						{#each $datesCollection as dateOfScan, index (index)}
+							{@const { date, time } = dateTimeFormatter(dateOfScan.date)}
+							<li class="border-primarylast:border-0 list__item group grid grid-cols-6 border-b">
+								<span class="ml-2">{date} {time}</span>
+								<span>{dateOfScan?.totalPages ?? 0}</span>
+								<span
+									>{dateOfScan.startingUrl?.replace('https://', '') || dateOfScan.startingUrl}</span
+								>
 								<span>-icon-</span>
 								<span>13</span>
 								<span class="flex w-full items-center justify-center px-4"
 									><Icon icon="fa6-solid:file-csv" width="32" height="32" class="ml-auto" />
-									<a href="/domain/{id}/{date.id}" class="ml-auto hover:text-accent">
+									<a href="/domain/{id}/{dateOfScan.id}" class="ml-auto hover:text-accent">
 										<Icon icon="mdi:chevron-right" width="48" height="48" /></a
 									>
 								</span>
