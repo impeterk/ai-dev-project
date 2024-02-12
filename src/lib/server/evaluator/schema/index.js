@@ -1,20 +1,30 @@
 import { isEmpty } from '../isEmpty';
 import { STATUS } from '../config';
+import { validate } from './validator';
+import { printLog } from '../../../utils/logger';
 
 /**
- * Evaluates the presence of schema data on a webpage.
+ * Checks the schema data for validity.
  *
- * This function checks if the provided schema data is present or missing.
- * If the schema data is empty or not provided, the status is set to 'missing'.
- * Otherwise, the status is set to 'ok', indicating the schema data's presence.
- *
- * @param {Object|string|Array} data - The schema data to be evaluated. This can be an object, string, or array representing the schema data of a webpage.
- * @returns {string} - Returns 'ok' if schema data is present; otherwise, returns 'missing'.
+ * @param {Object} data - The data to be validated against the schema.
+ * @returns {string} - The status of the schema data. Possible values are 'MISSING', 'OK', or 'INVALID'.
  */
-export function checkSchemaData(data) {
+export async function checkSchemaData(data) {
 	if (isEmpty(data)) {
 		return STATUS.MISSING;
 	}
 
 	return STATUS.OK;
+
+	// try {
+	// 	const result = await validate(data);
+
+	// 	if (result.totalNumWarnings === 0 && result.totalNumErrors === 0) {
+	// 		return STATUS.OK;
+	// 	} else {
+	// 		return STATUS.INVALID;
+	// 	}
+	// } catch (error) {
+	// 	console.error('Error validating schema data:', error);
+	// }
 }

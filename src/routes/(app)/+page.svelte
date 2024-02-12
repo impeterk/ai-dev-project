@@ -13,6 +13,7 @@
 	import { currentCollection } from '$lib/store';
 	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
 	import { breadcrumbs } from '$lib/store';
+	import { enhance } from '$app/forms';
 
 	// domains returned from load function
 	// $: ({ domains } = data);
@@ -61,7 +62,7 @@
 						<th scope="row" class=" rounded-l-xl p-4 text-left text-xl">
 							<a href="/domain/{domain.id}" class="ml-4 underline-offset-4 hover:underline">
 								{domain.name}
-								<span class="text-xs block font-thin text-left ml-4">{domain.organization}</span>
+								<span class="ml-4 block text-left text-xs font-thin">{domain.organization}</span>
 							</a></th
 						>
 
@@ -98,7 +99,7 @@
 								<AngleDownSolid size="sm" />
 							</button>
 						</td>
-						<td class="rounded-r-xl">
+						<td>
 							<div class="flex w-full justify-center">
 								<a
 									href="/domain/{domain.id}"

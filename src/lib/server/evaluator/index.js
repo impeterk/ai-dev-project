@@ -37,7 +37,8 @@ export async function initiateEvaluation(domain, dateOfScan, all) {
 			issues.meta = checkMetaData(urlData.meta, all);
 			issues.body = checkBodyData(urlData.body, all);
 			issues.social = checkSocialData(urlData.social, all);
-			issues.schema = checkSchemaData(urlData.schema);
+			// issues.schema = checkSchemaData(urlData.schema);
+			issues.schema = await checkSchemaData(urlData.schema);
 
 			// Collect issues data as a promise in promises array
 			return updateIssueDocument(config, issues);

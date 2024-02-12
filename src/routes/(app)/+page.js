@@ -1,5 +1,11 @@
 // imports
-import { currentLimit, collectionPath, orderField, orderDirection } from '$lib/store';
+import {
+	currentLimit,
+	collectionPath,
+	orderField,
+	orderDirection,
+	currentUserOrgId
+} from '$lib/store';
 import { initialLoad } from '$lib/utils/dataLoad.js';
 
 export async function load({ fetch }) {
@@ -14,6 +20,7 @@ export async function load({ fetch }) {
 		const response = await fetch('/api/organization');
 		const data = await response.json();
 		const orgId = data.message;
+		currentUserOrgId.set(orgId);
 
 		// Load the Firebase collection of domains relevant for the
 		// currently logged user's organization ID

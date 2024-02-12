@@ -26,7 +26,8 @@ export async function initiateSuggestions(domain, dateOfScan, aiToggle) {
 						headlines: {
 							h1: ''
 						}
-					}
+					},
+					schema: ''
 				};
 
 				// Declare local config
@@ -50,6 +51,12 @@ export async function initiateSuggestions(domain, dateOfScan, aiToggle) {
 							ai.generateMetaDescription(stringifiedUrlData)
 						);
 						suggestions.meta.description = metaDescription ? metaDescription : '';
+					}
+
+					// SCHEMA (handled as part of meta but having it's own property )
+					if (urlData.issues.schema !== 'ok') {
+						let schema = await limitChecker(() => ai.generateSchema(stringifiedUrlData));
+						suggestions.schema = schema ? schema : '';
 					}
 				}
 

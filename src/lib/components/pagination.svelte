@@ -7,7 +7,8 @@
 		currentPage,
 		collectionPath,
 		orderField,
-		orderDirection
+		orderDirection,
+		currentUserOrgId
 	} from '$lib/store';
 	import { nextLoad, previosLoad } from '$lib/utils/dataLoad.js';
 	import { AngleRightSolid, AngleLeftSolid } from 'flowbite-svelte-icons';
@@ -30,7 +31,13 @@
 			</a> -->
 			<button
 				data-sveltekit-preload-data="off"
-				on:click={previosLoad($collectionPath, $orderField, $orderDirection, $firstVisible)}
+				on:click={previosLoad(
+					$collectionPath,
+					$orderField,
+					$orderDirection,
+					$firstVisible,
+					$currentUserOrgId
+				)}
 				class="flex h-12 items-center gap-4"
 			>
 				<AngleLeftSolid size="sm" />
@@ -45,7 +52,13 @@
 		{#if $lastVisible.id !== $lastInCollection.id}
 			<button
 				data-sveltekit-preload-data="off"
-				on:click={nextLoad($collectionPath, $orderField, $orderDirection, $lastVisible)}
+				on:click={nextLoad(
+					$collectionPath,
+					$orderField,
+					$orderDirection,
+					$lastVisible,
+					$currentUserOrgId
+				)}
 				class="flex h-12 items-center gap-4"
 			>
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
