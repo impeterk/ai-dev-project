@@ -45,3 +45,23 @@ export async function updateSuggestionDocument(config, data) {
 		suggestions: data
 	});
 }
+
+/**
+ * Asynchronously updates the 'gscData' field of a specific document in a Firestore collection based on the provided configuration.
+ *
+ * @param {Object} config - Configuration object with the following properties:
+ *    @property {string} domain - The domain of the website.
+ * @param {Object|string|Array} data - The data intended to update the 'gscData' field in the Firestore document. This can be a string, array, or object.
+ * Note: Ensure the format of 'data' aligns with the structure expected in the 'gscData' field.
+ *
+ * The function constructs a Firestore document path in the format:
+ * `domain/{domain}/`
+ * and updates the specified document's 'gscData' field with the provided data, using the 'dateOfScan' as the key.
+ */
+export async function updateSearchConsoleDocument(config, data) {
+	const pathToUrlUpdate = `domain/${config.domain}/`;
+
+	await updateDoc(doc(firestore, pathToUrlUpdate), {
+		gscData: data
+	});
+}

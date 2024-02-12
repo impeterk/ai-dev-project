@@ -1,8 +1,9 @@
-
 import { updateDomain } from '../../firebase/updateStatus';
 import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
+
+import { hasAccess } from '../../gapi/utils';
 
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
@@ -31,9 +32,11 @@ import { extractDataFromDataset } from '../../utils/extractData';
  *
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
-export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
+export async function initiateScan(domain, dateOfScan, startingUrl, domainName, aiToggle) {
+	// Check if the application has acces to Google Search Console Data
+	const gsc = await hasAccess('https://' + domainName);
 	// Add a new entry into the database
-	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
+	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan, gscAccess: gsc });
 	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
 		date: dateOfScan,
 		startingUrl
@@ -53,7 +56,6 @@ export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
 		.then(async (all) => {
 			await initiateEvaluation(domain, dateOfScan, all);
 			await updateDomain(domain, { status: 'ai magic' });
-
 		})
 		.then(async () => {
 			await initiateSuggestions(domain, dateOfScan, aiToggle);

@@ -2,6 +2,7 @@ import { firestore } from '$lib/firebase';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { adjustDomain } from '../../../lib/utils/adjustDomain.js';
 import { initiateScan } from '../../../lib/server/scanner/index.js';
+import { hasAccess } from '../../../lib/gapi/utils.js';
 
 let domainRef = collection(firestore, 'domain');
 
@@ -37,6 +38,7 @@ export const actions = {
 			name: domain,
 			date: Date.now(),
 			status: 'added',
+			gsc: await hasAccess('https://' + domain),
 			organization: currentUser && currentUser.isLogged ? currentUser.organization : 'undefined'
 		})
 			.then((doc) => {

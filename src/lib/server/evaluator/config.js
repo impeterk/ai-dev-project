@@ -4,5 +4,6 @@ export const STATUS = {
 	SHORT: 'short',
 	LONG: 'long',
 	DUPLICATE: 'duplicate',
-	MULTIPLE: 'multiple'
+	MULTIPLE: 'multiple',
+	INVALID: 'invalid',
 };
