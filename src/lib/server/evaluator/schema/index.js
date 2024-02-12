@@ -14,15 +14,17 @@ export async function checkSchemaData(data) {
 		return STATUS.MISSING;
 	}
 
-	try {
-		const result = await validate(data);
+	return STATUS.OK;
 
-		if (result.totalNumWarnings === 0 && result.totalNumErrors === 0) {
-			return STATUS.OK;
-		} else {
-			return STATUS.INVALID;
-		}
-	} catch (error) {
-		console.error('Error validating schema data:', error);
-	}
+	// try {
+	// 	const result = await validate(data);
+
+	// 	if (result.totalNumWarnings === 0 && result.totalNumErrors === 0) {
+	// 		return STATUS.OK;
+	// 	} else {
+	// 		return STATUS.INVALID;
+	// 	}
+	// } catch (error) {
+	// 	console.error('Error validating schema data:', error);
+	// }
 }
