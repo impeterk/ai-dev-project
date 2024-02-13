@@ -4,6 +4,8 @@ import { writeDataInBatches } from '../../firebase/addCollection';
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
+import { hasAccess } from '../../gapi/utils';
+
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
 import { initiateSuggestions } from '../ai';
@@ -32,12 +34,15 @@ import { checkQueue } from '../scanQueue';
  *
  * @returns {Promise<void>} Resolves once all scanning, scraping, storing, and evaluation processes are done or an error occurs.
  */
-export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
+export async function initiateScan(domain, dateOfScan, startingUrl, domainName, aiToggle) {
+	const gsc = await hasAccess('https://' + domainName);
 	let queueItemId = await updateQueue(dateOfScan)
 	// Add a new entry into the database
-	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan });
+	await updateDomain(domain, { status: 'scanning', lastScan: dateOfScan, gscAccess: gsc });
 	const docRef = doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`)
-	await setDoc(docRef, {
+	// Check if the application has acces to Google Search Console Data
+	// Add a new entry into the database
+	await setDoc(doc(firestore, `domain/${domain}/dateofscan/${dateOfScan}`), {
 		date: dateOfScan,
 		startingUrl
 	});
@@ -77,7 +82,19 @@ export async function initiateScan(domain, dateOfScan, startingUrl, aiToggle) {
 		return await deleteDoc(doc(firestore, 'queue', queueItemId)).then(() => {
 			checkQueue()
 		})
-	}
-
-
+		.then(async (all) => {
+			await initiateEvaluation(domain, dateOfScan, all);
+			await updateDomain(domain, { status: 'ai magic' });
+		})
+		.then(async () => {
+			await initiateSuggestions(domain, dateOfScan, aiToggle);
+		})
+		.then(async () => {
+			console.log('Scan completely finished');
+			await updateDomain(domain, { status: 'finished' });
+		})
+		.catch(async (error) => {
+			console.error('Error during initiateScan:', error);
+			await updateDomain(domain, { status: 'aborted' });
+		});
 }

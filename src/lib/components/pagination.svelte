@@ -7,7 +7,8 @@
 		currentPage,
 		collectionPath,
 		orderField,
-		orderDirection
+		orderDirection,
+		currentUserOrgId
 	} from '$lib/store';
 	import { nextLoad, previosLoad } from '$lib/utils/dataLoad.js';
 	import Icon from '@iconify/svelte';
@@ -36,8 +37,14 @@
 		{#if $firstVisible.id !== $firstInCollection.id}
 			<button
 				data-sveltekit-preload-data="off"
-				on:click={previosLoad($collectionPath, $orderField, $orderDirection, $firstVisible)}
-				class="absolute right-1/2 flex h-12 -translate-x-1/2 items-center gap-4"
+				on:click={previosLoad(
+					$collectionPath,
+					$orderField,
+					$orderDirection,
+					$firstVisible,
+					$currentUserOrgId
+				)}
+				class="flex h-12 items-center gap-4"
 			>
 				<Icon icon="mdi:chevron-left" class="text-3xl" />
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
@@ -61,8 +68,14 @@
 		{#if $lastVisible.id !== $lastInCollection.id}
 			<button
 				data-sveltekit-preload-data="off"
-				on:click={nextLoad($collectionPath, $orderField, $orderDirection, $lastVisible)}
-				class="absolute left-1/2 flex h-12 translate-x-1/2 items-center gap-4"
+				on:click={nextLoad(
+					$collectionPath,
+					$orderField,
+					$orderDirection,
+					$lastVisible,
+					$currentUserOrgId
+				)}
+				class="flex h-12 items-center gap-4"
 			>
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 				<Icon icon="mdi:chevron-right" class="text-3xl" />
