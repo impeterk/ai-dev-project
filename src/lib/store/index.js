@@ -18,5 +18,7 @@ export const orderDirection = writable(null);
 
 export const currentUserOrgId = writable(null);
 
+export const gscData = writable(new Array());
+
 // breadcrumbs
 export const breadcrumbs = writable(new Map());
