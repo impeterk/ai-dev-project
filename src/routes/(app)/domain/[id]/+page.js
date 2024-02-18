@@ -1,7 +1,7 @@
 import { firestore } from '$lib/firebase';
 import { collectionStore, docStore } from 'sveltefire';
 import { getDoc, doc, orderBy, query, limit, collection } from 'firebase/firestore';
-import { breadcrumbs } from '$lib/store';
+import { breadcrumbs, gscData } from '$lib/store';
 
 export async function load({ params, url }) {
 	// get ID from params
@@ -10,6 +10,8 @@ export async function load({ params, url }) {
 	// get doc for additional information
 	const docRef = doc(firestore, 'domain', id);
 	const domainDoc = await getDoc(docRef);
+
+	gscData.set(domainDoc.data().gscData);
 
 	// returns last 5 scans ordered by date
 	const data = collectionStore(
@@ -22,6 +24,6 @@ export async function load({ params, url }) {
 		name: domainDoc.data().name,
 		datesCollection: data,
 		gsc: domainDoc.data().gscAccess,
-		gscData: domainDoc.data().gscData
+		gscData: gscData
 	};
 }

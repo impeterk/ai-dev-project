@@ -56,12 +56,13 @@ export const actions = {
 		domainName = 'https://' + domainName;
 		// 0. Check if application has access to GSC property
 		if (await hasAccess(domainName)) {
-			// 1. TBD - Try to get the GSC data from Firebase first (stored on domain level) - this should be defined in page.js load() function probably, so it's loaded together with the website
+			// 1. TBD Try to get the GSC data from Firebase first (stored on domain level) 
+			// - this should be defined in page.js load() function probably, so it's loaded together with the website
 			try {
 				// 2. In case there are no data (user did not retrieve them previously), then retrieve them from GSC
-				const response = await getData(domainName, domainId, '2023-01-01', '2023-03-31', ['query']);
-				// 3. TBD - If the data are retrieved from GSC, store them to Firebase
-				// 4. TBD - Return the data either from Firebase or directly from Firebase
+				// const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30', ['page']);
+				const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30');
+				// 3. Return the data from the front-end
 				return {
 					status: 'success',
 					data: response.data
