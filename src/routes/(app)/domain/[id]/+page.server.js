@@ -3,25 +3,34 @@ import { hasAccess } from '../../../../lib/gapi/utils.js';
 import { getData } from '../../../../lib/gapi/getData.js';
 
 /**
- * Defines actions associated with scanning a domain.
+ * Defines actions associated with scanning a domain and retrieving data from Google Search Console.
  *
- * The primary action is the default action which:
+ * The `startScan` action initiates the scanning process for a domain:
  * 1. Retrieves form data from the request.
- * 2. Extracts the 'domainid' from the form data and constructs a URL (`rescanDomain`) based on it.
+ * 2. Extracts the domain ID, domain name, starting URL, and AI toggle settings from the form data.
  * 3. Sets the current timestamp as `dateOfScan` indicating the initiation time of the scan.
  * 4. Initiates the scanning process of the website using `initiateScan`. This involves
  *    crawling the website, scraping its data, storing the scraped data to the database, and subsequently evaluating the data.
- *
  * The action returns immediately after initiating the scan without waiting for its completion.
  *
- * (Note: There's commented-out code that potentially can be used for time tracking purposes, to measure the elapsed time of the scan.
- * This is currently not active in the function.)
+ * The `gsc` action retrieves data from Google Search Console for a domain:
+ * 1. Retrieves form data from the request.
+ * 2. Extracts the domain name and ID from the form data.
+ * 3. Checks if the application has access to the Google Search Console property for the domain.
+ * 4. If access is granted, gets the latest data from Google Search Console and returns it.
+ * If an error occurs at any point in the function, it catches the error and returns a failure status and the error message.
  *
  * @param {Object} context - The context object contains request details.
  * @param {Object} context.request - The incoming request object.
  * @returns {Promise} - Resolves once the initiation of scanning process is complete, or rejects if there's an error.
  */
 export const actions = {
+	/**
+	 * Initiates the scanning process for a domain.
+	 *
+	 * @param {Object} context.request - The incoming request object.
+	 * @returns {Promise} - Resolves once the initiation of scanning process is complete, or rejects if there's an error.
+	 */
 	startScan: async ({ request }) => {
 		let formData = await request.formData();
 		let domainId = formData.get('domainid');
@@ -49,37 +58,40 @@ export const actions = {
 		// console.log(((endTime - startTime) / 1000).toFixed(2));
 	},
 
-	gsc: async ({ request }) => {
-		let formData = await request.formData();
-		let domainName = formData.get('domainName');
-		let domainId = formData.get('domainId');
-		domainName = 'https://' + domainName;
-		// 0. Check if application has access to GSC property
-		if (await hasAccess(domainName)) {
-			// 1. TBD Try to get the GSC data from Firebase first (stored on domain level) 
-			// - this should be defined in page.js load() function probably, so it's loaded together with the website
-			try {
-				// 2. In case there are no data (user did not retrieve them previously), then retrieve them from GSC
-				// const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30', ['page']);
-				const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30');
-				// 3. Return the data from the front-end
-				return {
-					status: 'success',
-					data: response.data
-				};
-			} catch (error) {
-				return {
-					status: 'failure',
-					data: {
-						message: error.message
-					}
-				};
-			}
-		}
 
-		return {
-			status: 'failure',
-			data: 'No data found. There might be an issue with access to domain property in Google Search Console.'
-		};
+	/**
+	 * Retrieves data from Google Search Console for a domain.
+	 *
+	 * @param {Object} context.request - The incoming request object.
+	 * @returns {Promise} - Resolves with the data from Google Search Console, or rejects with an error message.
+	 */
+	gsc: async ({ request }) => {
+		try {
+			let formData = await request.formData();
+			let domainName = 'https://' + formData.get('domainName');
+			let domainId = formData.get('domainId');
+
+			// Check if application has access to GSC property
+			const access = await hasAccess(domainName);
+			if (!access) {
+				throw new Error('No data found. There might be an issue with access to domain property in Google Search Console.');
+			}
+
+			// Get the latest data from Google search console
+			const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30');
+
+			// Return the data from the front-end
+			return {
+				status: 'success',
+				data: response.data
+			};
+		} catch (error) {
+			return {
+				status: 'failure',
+				data: {
+					message: error.message
+				}
+			};
+		}
 	}
 };
