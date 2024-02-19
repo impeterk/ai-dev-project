@@ -16,7 +16,7 @@
 <nav class="flex h-full w-24 flex-col justify-between bg-gradient-to-b from-primary to-accent">
 	<ul class="font-small">
 		<NavLink href="/" tooltip="home">
-			<Icon icon="mdi:home" class="text-inherit" />
+			<Icon icon="mdi:home" class="text-inherit"  />
 		</NavLink>
 		<NavLink href="/newdomain" tooltip="New Domain">
 			<Icon icon="mdi:file-document-plus" class="text-inherit" />

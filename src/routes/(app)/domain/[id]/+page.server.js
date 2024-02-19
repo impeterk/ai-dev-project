@@ -67,7 +67,7 @@ export const actions = {
 				// 4. TBD - Return the data either from Firebase or directly from Firebase
 				return {
 					status: 'success',
-					data: response.data
+					data: 'response.data'
 				};
 			} catch (error) {
 				return {

@@ -32,9 +32,9 @@
 </script>
 
 <div class="pagination relative w-full pt-12">
-	<div class="relativebox-border mx-auto flex h-12 items-center justify-center gap-5 text-primary">
+	<div class="relative box-border mx-auto flex h-12 items-center justify-center gap-5 text-primary">
 		<!-- visible based entries, so we do not over/under flow the collection -->
-		{#if $firstVisible.id !== $firstInCollection.id}
+		{#if $firstVisible?.id !== $firstInCollection?.id}
 			<button
 				data-sveltekit-preload-data="off"
 				on:click={previosLoad(
@@ -44,7 +44,7 @@
 					$firstVisible,
 					$currentUserOrgId
 				)}
-				class="flex h-12 items-center gap-4"
+				class="flex h-12 items-center gap-4 absolute  right-1/2 -translate-x-1/2 "
 			>
 				<Icon icon="mdi:chevron-left" class="text-3xl" />
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
@@ -65,7 +65,7 @@
 				>
 			</div>
 		</div>
-		{#if $lastVisible.id !== $lastInCollection.id}
+		{#if $lastVisible?.id !== $lastInCollection?.id}
 			<button
 				data-sveltekit-preload-data="off"
 				on:click={nextLoad(
@@ -75,7 +75,7 @@
 					$lastVisible,
 					$currentUserOrgId
 				)}
-				class="flex h-12 items-center gap-4"
+				class="flex h-12 items-center gap-4 absolute left-1/2 translate-x-1/2 "
 			>
 				<div class="h-3 w-3 rounded-full outline outline-offset-1 outline-primary" />
 				<Icon icon="mdi:chevron-right" class="text-3xl" />

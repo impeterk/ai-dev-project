@@ -1,11 +1,6 @@
 <script>
 	// imports
-	import {
-		SearchOutline,
-		CirclePlusSolid,
-		AngleDownSolid,
-		AngleRightSolid
-	} from 'flowbite-svelte-icons';
+	import Status from "$lib/components/status.svelte"
 	import { TableSearch } from 'flowbite-svelte';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
@@ -50,7 +45,7 @@
 				/>
 			</div>
 		</header>
-		<ul class="devide-y w-full space-y-4 pt-12" role="list">
+		<ul class="devide-y w-full space-y-4 pt-12 " role="list">
 			{#each $domains as domain}
 				<li class="list__item group grid grid-cols-6">
 					<a
@@ -73,17 +68,7 @@
 						{/if}
 					</div>
 
-					<p
-						class="button w-1/2 shrink-0"
-						class:bg-warning={domain.status == 'added'}
-						class:bg-success={domain.status == 'finished'}
-						class:bg-error={domain.status == 'aborted'}
-						class:bg-secondary={domain.status == 'scanning'}
-						class:bg-yellow-300={domain.status == 'evaluating'}
-						class:bg-purple-200={domain.status == 'ai magic'}
-					>
-						{domain.status}
-					</p>
+					<Status status={domain?.status}/>
 					<button
 						class="ml-auto flex items-center gap-2 rounded-xl px-4 py-2 outline-1 outline-primary hover:bg-secondary active:bg-secondary active:outline"
 					>

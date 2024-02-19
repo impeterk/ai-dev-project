@@ -9,10 +9,10 @@
 	import { currentCollection, breadcrumbs } from '$lib/store';
 	import { onDestroy, beforeUpdate } from 'svelte';
 	import { TableSearch } from 'flowbite-svelte';
-	import { dateFormatter, timeFormatter } from '$lib/utils/dateFormatter';
+	import {dateTimeFormatter} from '$lib/utils/dateFormatter';
 	import { fade, fly } from 'svelte/transition';
 
-	const { id, date } = $page.params;
+	const pageDate = $page.params.date;
 	let expanded = null;
 
 	$: results = $currentCollection;
@@ -20,19 +20,21 @@
 	// breadcrumbs
 	// TODO: rework to generate from server
 	$: beforeUpdate(async () => {
-		await $breadcrumbs.set(date, {
-			id: `${dateFormatter(Number(date))} ${timeFormatter(Number(date))}`,
+		const {date, time} = dateTimeFormatter(pageDate)
+		await $breadcrumbs.set(pageDate, {
+			id: `${date} ${time}`,
 			link: $page.url.pathname
 		});
 	});
 	$: onDestroy(async () => {
-		await $breadcrumbs.delete(date);
+		await $breadcrumbs.delete(pageDate);
 	});
 
 	$: handleExpandUrl = (index) => {
 		activeTab = 'body';
 		expanded = expanded === index ? null : index;
 	};
+
 </script>
 
 <Main>
@@ -42,7 +44,7 @@
 			class="grid grid-cols-3 items-center rounded-xl bg-gradient-to-r from-primary to-accent px-4 text-slate-100"
 		>
 			<h3 class="text-2xl font-semibold">
-				<span>{dateFormatter(date)} : {timeFormatter(date)}</span>
+				<!-- <span>{date} : {time}</span> -->
 			</h3>
 			<div class="flex w-1/2 items-center justify-between justify-self-center">
 				<h3>Impediments</h3>
@@ -65,7 +67,7 @@
 					<p class="col-span-2 col-start-1 break-words pr-2">
 						{url.url?.replace('https://', '') || url.url}
 					</p>
-					<div class="col-span-1 flex flex-wrap content-center gap-4">
+					<div class="col-span-1 flex flex-wrap content-center gap-4 justify-self-end">
 						<button class="" on:click={handleExpandUrl(index)}>
 							<div class="flex items-center gap-2 overflow-hidden">
 								See more
@@ -80,7 +82,7 @@
 					</div>
 				</li>
 				{#if expanded === index}
-					<div class="w-full" transition:fade={{ duration: 300 }}>
+					<div class="w-full min-h-[50vh]" transition:fade={{ duration: 300 }}>
 						<header
 							class=" mx-4 flex w-full px-2 text-2xl font-bold text-white transition-all duration-200 ease-linear"
 						>

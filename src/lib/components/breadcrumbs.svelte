@@ -14,7 +14,7 @@
 		{/if}
 		{#each $breadcrumbs as link}
 			<li
-				class="flex text-lg underline-offset-4 {$page.url.pathname.split('/').at(-1) === link[1].id
+				class="flex text-lg underline-offset-4 {$page.url.pathname.split('/').at(-1) === link[0]
 					? 'text-xl text-accent underline'
 					: 'text-lg text-primary'}"
 			>

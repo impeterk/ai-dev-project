@@ -34,4 +34,7 @@
   .list__item {
     @apply items-center w-full justify-items-center overflow-hidden rounded-xl bg-base px-3 py-4 outline-1 outline-accent/50 hover:bg-accent/10 hover:outline
   }
+  .card {
+    @apply rounded-lg border p-6 bg-secondary text-primary
+  }
 }
