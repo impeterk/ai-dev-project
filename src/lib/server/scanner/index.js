@@ -1,10 +1,9 @@
-
-import { updateDomain, updateQueue } from '../../firebase/updateStatus';
-import { writeDataInBatches } from '../../firebase/addCollection';
+import { updateDomain, updateQueue } from '$lib/firebase/updateStatus';
+import { writeDataInBatches } from '$lib/firebase/addCollection';
 import { firestore } from '$lib/firebase';
 import { doc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 
-import { hasAccess } from '../../gapi/utils';
+import { hasAccess } from '$lib/gapi/utils';
 
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
@@ -97,4 +96,5 @@ export async function initiateScan(domain, dateOfScan, startingUrl, domainName, 
 			console.error('Error during initiateScan:', error);
 			await updateDomain(domain, { status: 'aborted' });
 		});
+}
 }

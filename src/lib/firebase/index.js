@@ -15,7 +15,7 @@ export const firebaseConfig = {
 console.log('Running apps:');
 console.log(getApps());
 
-const app = initializeApp(firebaseConfig, 'main');
+const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 const auth = getAuth(app);
 

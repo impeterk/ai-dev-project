@@ -1,9 +1,12 @@
-import * as pkg from 'firebase-admin';
+import pkg from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
 import serviceAccount from '../../../../service-account.json';
-let admin
+
 try {
-admin = pkg.initializeApp({ credential: pkg.credential.cert(serviceAccount) });
+pkg.initializeApp({ credential: pkg.credential.cert(serviceAccount) });
 } catch(error) {
     console.error(error)
 }
-export { admin };
+export { pkg as admin };
+

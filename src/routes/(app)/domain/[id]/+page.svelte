@@ -164,27 +164,6 @@
 			</form>
 		{/if}
 
-		<ol>
-			{#each $datesCollection as date, index}
-				<li class="flex w-full items-center p-2">
-					<p class="ml-4 w-8">{index + 1}.</p>
-					<p class="text-lg">
-						<span>{dateFormatter(date.id)}</span>
-						<span>{timeFormatter(date.id) || ''}</span>
-					</p>
-					<p class="ml-8 text-lg">
-						{date.totalPages || 'In progress '}
-					</p>
-					<p class="ml-auto mr-4">
-						<a
-							href="/domain/{id}/{date.id}"
-							type="button"
-							class=" rounded-lg border border-gray-300 bg-white px-2 py-1 text-lg font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-							>Continue</a
-						>
-					</p>
-				</li>
-			</ul>
 			<!-- 3 cards at the top -->
 			<section class="grid min-h-[220px] grid-cols-3 grid-rows-1">
 				<Card heading="Summary" />

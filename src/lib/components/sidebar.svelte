@@ -27,6 +27,6 @@
 		tooltip="Log Out"
 		class="group flex items-center justify-center rounded-xl border-primary p-5 m-2 hover:bg-secondary hover:text-primary text-white"
 	>
-		<ArrowRightFromBracketSolid class="h-3/4 w-3/4 text-inherit" />
+		<Icon icon="mdi:logout" class="text-4xl text-inherit" />
 	</button>
 </nav>
