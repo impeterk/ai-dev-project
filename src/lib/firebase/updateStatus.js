@@ -1,5 +1,5 @@
 import { firestore } from '$lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, query, getDocs, where } from 'firebase/firestore';
 
 /**
  * Asynchronously updates the status of a given domain in Firestore. If the update fails,
@@ -31,4 +31,20 @@ export async function updateDomain(domain, options) {
 
         return false;
     }
+}
+
+export async function updateQueue(dateOfScan) {
+    const q = query(collection(firestore, 'queue'), where('dateOfScan', '==', dateOfScan))
+    const querySnapshot = await getDocs(q)
+
+    let queueItemId
+    querySnapshot.forEach(async (doc) => {
+        queueItemId = doc.id
+    })
+
+    await updateDoc(doc(firestore, `queue/${queueItemId}`), {
+        status: 'running'
+    })
+
+    return queueItemId
 }

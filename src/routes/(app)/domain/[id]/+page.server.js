@@ -36,7 +36,10 @@ export const actions = {
 		// creates a date when the scan started
 		const dateOfScan = Date.now();
 
-		// let startTime = Date.now();
+		let response = await fetch('/api/scan/enqueue', {
+			method: 'POST',
+			body: JSON.stringify({ domainId, startingUrl, aiToggle })
+		})
 
 		console.log('Form Data:');
 		console.log(formData);

@@ -1,5 +1,5 @@
 <script>
-	import { FilePlusSolid, HomeSolid, ArrowRightFromBracketSolid } from 'flowbite-svelte-icons';
+	import Icon from '@iconify/svelte';
 	import NavLink from './navlink.svelte';
 
 	async function logout() {
@@ -16,10 +16,10 @@
 <nav class="flex h-full w-24 flex-col justify-between bg-gradient-to-b from-primary to-accent">
 	<ul class="font-small">
 		<NavLink href="/" tooltip="home">
-			<HomeSolid class="h-3/4 w-3/4 text-inherit" />
+			<Icon icon="mdi:home" class="text-inherit" />
 		</NavLink>
 		<NavLink href="/newdomain" tooltip="New Domain">
-			<FilePlusSolid class="h-3/4 w-3/4 text-inherit" />
+			<Icon icon="mdi:file-document-plus" class="text-inherit" />
 		</NavLink>
 	</ul>
 	<button

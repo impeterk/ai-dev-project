@@ -1,3 +1,37 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    border-radius: 5px;
+    @apply bg-secondary;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    @apply bg-primary;
+}
+
+
+@layer base {
+  .animated {
+    @apply transition-all duration-200 delay-75;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) 
+  }
+}
+@layer components {
+
+  .button {
+    @apply rounded-lg px-2 py-1 text-center
+  }
+  .list__item {
+    @apply items-center w-full justify-items-center overflow-hidden rounded-xl bg-base px-3 py-4 outline-1 outline-accent/50 hover:bg-accent/10 hover:outline
+  }
+}

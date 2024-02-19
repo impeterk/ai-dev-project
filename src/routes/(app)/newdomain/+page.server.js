@@ -4,7 +4,6 @@ import { adjustDomain } from '../../../lib/utils/adjustDomain.js';
 import { initiateScan } from '../../../lib/server/scanner/index.js';
 import { hasAccess } from '../../../lib/gapi/utils.js';
 
-let domainRef = collection(firestore, 'domain');
 
 export const actions = {
 	// registers new domain in the database
