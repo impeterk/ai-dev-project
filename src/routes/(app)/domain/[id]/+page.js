@@ -1,7 +1,9 @@
 import { firestore } from '$lib/firebase';
 import { collectionStore, docStore } from 'sveltefire';
 import { getDoc, doc, orderBy, query, limit, collection } from 'firebase/firestore';
-import { breadcrumbs, gscData } from '$lib/store';
+import { breadcrumbs, gscData, resetGscData } from '$lib/store';
+import { filterDomainData } from '../../../../lib/gapi/filterData.js';
+import { printLog } from '../../../../lib/utils/logger.js';
 
 export async function load({ params, url }) {
 	// get ID from params
@@ -11,7 +13,18 @@ export async function load({ params, url }) {
 	const docRef = doc(firestore, 'domain', id);
 	const domainDoc = await getDoc(docRef);
 
-	gscData.set(domainDoc.data().gscData);
+	// Filter the full domain data with custom algorithm
+	// and set the GSC data returned from FB
+	if (domainDoc.data().gscData) {
+		console.log('Filtering!');
+		const filtered = filterDomainData(domainDoc.data().gscData);
+		if (filtered.length > 0) {
+			console.log('Setting!');
+			gscData.set(filtered);
+		} else {
+			resetGscData();
+		}
+	}
 
 	// returns last 5 scans ordered by date
 	const data = collectionStore(
@@ -24,6 +37,6 @@ export async function load({ params, url }) {
 		name: domainDoc.data().name,
 		datesCollection: data,
 		gsc: domainDoc.data().gscAccess,
-		gscData: gscData
+		gscData: gscData != [] ? gscData : null
 	};
 }

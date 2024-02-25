@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store';
-
 export const placeholder = writable({ url: 'https://tangit.sk' });
 
 export const userLocale = writable(null);
@@ -20,5 +19,12 @@ export const currentUserOrgId = writable(null);
 
 export const gscData = writable(new Array());
 
+
+
 // breadcrumbs
 export const breadcrumbs = writable(new Map());
+
+// reset gscData
+export const resetGscData = () => {
+    gscData.set([]);
+};
