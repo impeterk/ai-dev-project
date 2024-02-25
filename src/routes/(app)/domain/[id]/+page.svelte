@@ -165,10 +165,9 @@
 	</section>
 
 	<!-- GSC Data section-->
-	{#if gscData && gsc}
+	{#if gsc && gscData}
 		<section class="my-2 w-full">
 			<span class="text-sm font-thin text-slate-500">Google Search Console data</span>
-
 			<ol class="rounded-md bg-white">
 				{#each $gscData as result}
 					<li class="grid w-full grid-cols-12 items-center rounded-md p-2 hover:bg-slate-100">
