@@ -4,6 +4,7 @@ import { firestore } from '$lib/firebase';
 import { doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { hasAccess } from '../../gapi/utils';
+import { getData } from '../../gapi/getData';
 
 import { initiateCrawler } from '../crawler';
 import { initiateEvaluation } from '../evaluator';
@@ -59,6 +60,12 @@ export async function initiateScan(domain, dateOfScan, startingUrl, domainName, 
 		})
 		.then(async () => {
 			await initiateSuggestions(domain, dateOfScan, aiToggle);
+		})
+		.then(async () => {
+			if (gsc) {
+				console.log('Getting GSC data');
+				await getData('https://' + domainName, domain, '2023-01-01', '2024-01-30');
+			}
 		})
 		.then(async () => {
 			console.log('Scan completely finished');
