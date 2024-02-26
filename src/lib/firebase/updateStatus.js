@@ -34,14 +34,16 @@ export async function updateDomain(domain, options) {
 }
 
 export async function updateQueue(dateOfScan) {
-    const q = query(collection(firestore, 'queue'), where('dateOfScan', '==', dateOfScan))
+    console.log(dateOfScan)
+    const q = query(collection(firestore, 'queue'), where('dateOfScan', '==', Number(dateOfScan)))
     const querySnapshot = await getDocs(q)
+
 
     let queueItemId
     querySnapshot.forEach(async (doc) => {
+        console.log({doc})
         queueItemId = doc.id
     })
-
     await updateDoc(doc(firestore, `queue/${queueItemId}`), {
         status: 'running'
     })

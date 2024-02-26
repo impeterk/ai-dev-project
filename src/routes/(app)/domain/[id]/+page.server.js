@@ -22,7 +22,7 @@ import { getData } from '../../../../lib/gapi/getData.js';
  * @returns {Promise} - Resolves once the initiation of scanning process is complete, or rejects if there's an error.
  */
 export const actions = {
-	startScan: async ({ request }) => {
+	startScan: async ({ request, fetch }) => {
 		let formData = await request.formData();
 		let domainId = formData.get('domainid');
 		let domainName = formData.get('domainName');
@@ -38,13 +38,12 @@ export const actions = {
 
 		let response = await fetch('/api/scan/enqueue', {
 			method: 'POST',
-			body: JSON.stringify({ domainId, startingUrl, aiToggle })
+			body: JSON.stringify({ domainId, startingUrl, aiToggle, dateOfScan })
 		})
+		if (response) {
+			initiateScan(domainId, dateOfScan, startingUrl, domainName, aiToggle);
+		}
 
-		console.log('Form Data:');
-		console.log(formData);
-
-		initiateScan(domainId, dateOfScan, startingUrl, domainName, aiToggle);
 
 		// Time Tracking
 		// let endTime = Date.now();
