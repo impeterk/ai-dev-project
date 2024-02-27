@@ -1,6 +1,5 @@
 <script>
 	export let data;
-	let showDialog = false;
 	import Main from '$lib/components/main.svelte';
 	import { dateTimeFormatter } from '$lib/utils/dateFormatter.js';
 	import { enhance } from '$app/forms';
@@ -8,7 +7,7 @@
 	import { breadcrumbs } from '$lib/store';
 	import { page } from '$app/stores';
 	import { beforeUpdate } from 'svelte';
-	import Modal from "$lib/components/modal.svelte"
+	import Modal from '$lib/components/modal.svelte';
 	import { Doc } from 'sveltefire';
 	import Icon from '@iconify/svelte';
 	import Card from './Card.svelte';
@@ -20,7 +19,7 @@
 		meta: false,
 		social: false
 	};
-
+	let showDialog = true;
 	$: {
 		if (aiToggle.all) {
 			aiToggle.body = aiToggle.meta = aiToggle.social = true;
@@ -44,12 +43,68 @@
 		lastScanDate = `${date} ${time}`;
 	}
 	$: console.log($datesCollection);
+
 </script>
 
 <Main>
 	<svelte:fragment slot="title">Domain Dashboard</svelte:fragment>
 	<section class="w-full">
-		<Modal></Modal>
+		<Modal bind:showDialog>
+			<h2 slot="header" class="text-xl font-medium mb-4">Configure your scan</h2>
+			<form
+				method="POST"
+				action="?/startScan"
+				class="flex flex-col w-full content-center justify-end gap-4 p-4"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update();
+						showDialog = false;
+					};
+				}}
+			>
+				<h3 class="">Starting Url</h3>
+				<input hidden value={id} name="domainid" />
+				<input hidden value={name} name="domainName" />
+				<div class="relative flex w-full">
+					<input bind:value={startingUrl} name="startingUrl" class="bg-slate-300 rounded-lg px-2 py-1.5 p-1 w-full" />
+					<Icon icon="mdi:pencil" class="absolute right-2 top-2 text-xl"/> 
+				</div>
+				<!-- Start of toggles for AI suggestions -->
+				<div class="flex flex-row gap-5 text-white">
+					<Toggle styling="bg-primary"
+						toggleName="aiAll" bind:toggleState={aiToggle.all} updateFn={null} label="All" />
+					<Toggle styling="bg-body"
+						toggleName="aiBody"
+						bind:toggleState={aiToggle.body}
+						updateFn={updateAllState}
+						label="Body"
+					/>
+					<Toggle styling="bg-meta"
+						toggleName="aiMeta"
+						bind:toggleState={aiToggle.meta}
+						updateFn={updateAllState}
+						label="Meta"
+					/>
+					<Toggle styling="bg-social"
+						toggleName="aiSocial"
+						bind:toggleState={aiToggle.social}
+						updateFn={updateAllState}
+						label="Social"
+					/>
+				</div>
+				<div class="flex justify-center">
+					<Toggle styling="bg-ai-magic"
+							toggleName="aiBody"
+							bind:toggleState={aiToggle.body}
+							updateFn={updateAllState}
+							label="AI Magic Only"
+					/>
+				</div>
+				<!-- End of toggles for AI suggestions -->
+			</form>
+				<button slot="button" type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
+					>Scan</button>
+		</Modal>
 		<section class="flex min-h-[1000px] flex-col">
 			<!-- top header -->
 			<ul class="text-md mt-5 min-h-[50px] w-full table-auto font-bold">
@@ -71,49 +126,6 @@
 			</ul>
 
 			<!-- Show dialog to set up starting Url for the scan e.g. domain/procuts -->
-			{#if showDialog}
-				<form
-					method="POST"
-					action="?/startScan"
-					class="flex w-full content-center items-center justify-end gap-4 bg-slate-100 p-4"
-					use:enhance={() => {
-						return async ({ update }) => {
-							await update();
-							showDialog = false;
-						};
-					}}
-				>
-					<h3 class="text-xl font-medium">Starting Url</h3>
-					<input hidden value={id} name="domainid" />
-					<input hidden value={name} name="domainName" />
-					<input bind:value={startingUrl} name="startingUrl" class="border-slate-600 p-1" />
-					<!-- Start of toggles for AI suggestions -->
-					<Toggle toggleName="aiAll" bind:toggleState={aiToggle.all} updateFn={null} label="All" />
-					<Toggle
-						toggleName="aiBody"
-						bind:toggleState={aiToggle.body}
-						updateFn={updateAllState}
-						label="Body"
-					/>
-					<Toggle
-						toggleName="aiMeta"
-						bind:toggleState={aiToggle.meta}
-						updateFn={updateAllState}
-						label="Meta"
-					/>
-					<Toggle
-						toggleName="aiSocial"
-						bind:toggleState={aiToggle.social}
-						updateFn={updateAllState}
-						label="Social"
-					/>
-					<!-- End of toggles for AI suggestions -->
-					<button type="submit" class=" mr-2 rounded bg-slate-600 px-2.5 py-1 text-slate-100"
-						>Start New Scan</button
-					>
-				</form>
-			{/if}
-
 			<!-- 3 cards at the top -->
 			<section class="grid min-h-[220px] grid-cols-3 grid-rows-1">
 				<Card heading="Summary" />
@@ -137,15 +149,18 @@
 					<div class="flex items-center justify-between px-4">
 						<h2 class="py-2 text-3xl font-bold text-primary">Scan Overview</h2>
 						<button
-							on:click={() => (showDialog = !showDialog)}
-							class="button ml-auto inline-flex translate-y-1.5 gap-2 rounded-b-none bg-primary px-4 py-2 text-white group relative"
+							on:click={() => (showDialog = true)}
+							class="button group relative ml-auto inline-flex translate-y-1.5 gap-2 rounded-b-none bg-primary px-4 py-2 text-white"
 						>
-						 <span class="transform group-hover:-translate-x-full group-hover:visible transition duration-500 ease-in-out  group-hover:opacity-100 absolute w-max bg-primary py-2 top-0 px-2 rounded-tl-lg" class:-translate-x-full={showDialog}
-						 class:opacity-100={showDialog}
-						 class:invisible={!showDialog}
-						 class:visible={showDialog}
-						 class:opacity-0={!showDialog}
-						 class:translate-x-full={!showDialog}>New Scan</span>
+							<span
+								class="absolute top-0 w-max transform rounded-tl-lg bg-primary px-2 py-2 transition duration-500 ease-in-out group-hover:visible group-hover:-translate-x-full group-hover:opacity-100"
+								class:-translate-x-full={showDialog}
+								class:opacity-100={showDialog}
+								class:invisible={!showDialog}
+								class:visible={showDialog}
+								class:opacity-0={!showDialog}
+								class:translate-x-full={!showDialog}>New Scan</span
+							>
 							<Icon icon="mdi:plus-circle" class="text-2xl" />
 						</button>
 					</div>

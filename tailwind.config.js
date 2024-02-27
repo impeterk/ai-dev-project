@@ -15,8 +15,8 @@ export default {
 				'body': '#751CDC',
 				'meta': '#7B61FF',
 				'social': '#AC73E6',
-				'schema': '#8D00CF'
-
+				'schema': '#8D00CF',
+				'ai-magic': '#6ECBFF'
 			}
 		}
 	},
