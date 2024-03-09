@@ -64,7 +64,7 @@ export async function initiateScan(domain, dateOfScan, startingUrl, domainName, 
 		.then(async () => {
 			if (gsc) {
 				console.log('Getting GSC data');
-				await getData('https://' + domainName, domain, '2023-01-01', '2024-01-30');
+				await getData('https://' + domainName, domain, '2023-01-01', '2024-01-30', null, dateOfScan);
 			}
 		})
 		.then(async () => {
