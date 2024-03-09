@@ -12,9 +12,16 @@ import { filterDomainData } from './filterData';
  * @param {string[]} dimensions - An array of dimensions for the data retrieval.
  * @returns {Promise<object>} - A promise that resolves to the response data from the API.
  */
-export async function getData(domain, domainId, startDate, endDate, dimensions = null) {
+export async function getData(
+	domain,
+	domainId,
+	startDate,
+	endDate,
+	dimensions = null,
+	dateOfScan = null
+) {
 	try {
-		const config = getConfig(domainId ? domainId : domain);
+		const config = getConfig(domainId ? domainId : domain, dateOfScan);
 
 		// Search query parameters for google search console
 		const parameters = {
@@ -29,15 +36,16 @@ export async function getData(domain, domainId, startDate, endDate, dimensions =
 
 		// TBD - THIS SHOULD BE RAN ONLY ONCE IN 1-3 MONTHS
 		// TO AVOID EXCEEDING GSC API QUOTA LIMITS
-
 		const response = await gapi.searchanalytics.query(parameters);
-
+		console.log(response.status);
+		console.log(response.data);
 		if (response && response.status === 200 && response.data) {
 			// Filter the data with custom algorithm
 			// const perspectivePages = filterDomainData(response.data.rows);
 
 			// Store the filtered data in Firebase
 			// await updateSearchConsoleDocument(config, perspectivePages);
+			console.log('Storing the data...');
 			await updateSearchConsoleDocument(config, response.data.rows);
 		}
 

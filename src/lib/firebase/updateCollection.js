@@ -17,7 +17,7 @@ import { doc, updateDoc } from 'firebase/firestore';
  */
 
 export async function updateIssueDocument(config, data) {
-	const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/scannedurls/${config.urlId}`;
+	const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/scannedurls/${config.urlId}/`;
 
 	await updateDoc(doc(firestore, pathToUrlUpdate), {
 		issues: data
@@ -59,7 +59,7 @@ export async function updateSuggestionDocument(config, data) {
  * and updates the specified document's 'gscData' field with the provided data, using the 'dateOfScan' as the key.
  */
 export async function updateSearchConsoleDocument(config, data) {
-	const pathToUrlUpdate = `domain/${config.domain}/`;
+	const pathToUrlUpdate = `domain/${config.domain}/dateofscan/${config.dateOfScan}/`;
 
 	await updateDoc(doc(firestore, pathToUrlUpdate), {
 		gscData: data

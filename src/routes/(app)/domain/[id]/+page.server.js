@@ -1,7 +1,4 @@
 import { initiateScan } from '../../../../lib/server/scanner';
-import { hasAccess } from '../../../../lib/gapi/utils.js';
-import { getData } from '../../../../lib/gapi/getData.js';
-
 /**
  * Defines actions associated with scanning a domain and retrieving data from Google Search Console.
  *
@@ -56,43 +53,5 @@ export const actions = {
 		// let endTime = Date.now();
 		// console.log('Elapsed time: ');
 		// console.log(((endTime - startTime) / 1000).toFixed(2));
-	},
-
-	/**
-	 * Retrieves data from Google Search Console for a domain.
-	 *
-	 * @param {Object} context.request - The incoming request object.
-	 * @returns {Promise} - Resolves with the data from Google Search Console, or rejects with an error message.
-	 */
-	gsc: async ({ request }) => {
-		try {
-			let formData = await request.formData();
-			let domainName = 'https://' + formData.get('domainName');
-			let domainId = formData.get('domainId');
-
-			// Check if application has access to GSC property
-			const access = await hasAccess(domainName);
-			if (!access) {
-				throw new Error(
-					'No data found. There might be an issue with access to domain property in Google Search Console.'
-				);
-			}
-
-			// Get the latest data from Google search console
-			const response = await getData(domainName, domainId, '2023-01-01', '2024-01-30');
-
-			// Return the data to the front-end
-			return {
-				status: 'success',
-				data: response.data
-			};
-		} catch (error) {
-			return {
-				status: 'failure',
-				data: {
-					message: error.message
-				}
-			};
-		}
 	}
 };

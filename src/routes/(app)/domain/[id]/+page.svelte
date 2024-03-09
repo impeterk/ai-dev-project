@@ -10,7 +10,7 @@
 
 	import { page } from '$app/stores';
 	import { beforeUpdate } from 'svelte';
-	$: ({ id, name, datesCollection, gsc, gscData } = data);
+	$: ({ id, name, datesCollection } = data);
 	$: startingUrl = `https://${name}`;
 	$: aiToggle = {
 		all: false,
@@ -75,18 +75,6 @@
 			<div class="flex content-center justify-between px-8 pt-4">
 				<p>date of scan</p>
 				<p>scanned pages</p>
-				{#if gsc}
-					<form method="POST" action="?/gsc" use:enhance>
-						<input hidden value={name} name="domainName" />
-						<input hidden value={id} name="domainId" />
-
-						<button
-							type="submit"
-							class="rounded border border-slate-100 px-2.5 py-1 text-slate-100 hover:border-green-200 hover:bg-green-200 hover:text-slate-900"
-							>Get GSC data</button
-						>
-					</form>
-				{/if}
 				<button
 					class="rounded bg-slate-200 px-2.5 py-1 text-slate-900 hover:bg-green-200"
 					on:click={() => (showDialog = !showDialog)}>New scan</button
@@ -163,37 +151,4 @@
 			<Spinner />
 		{/if}
 	</section>
-
-	<!-- GSC Data section-->
-	{#if gsc && gscData}
-		<section class="my-2 w-full">
-			<span class="text-sm font-thin text-slate-500">Google Search Console data</span>
-			<ol class="rounded-md bg-white">
-				{#each $gscData as result}
-					<li class="grid w-full grid-cols-12 items-center rounded-md p-2 hover:bg-slate-100">
-						<p class="col-span-8 text-sm">
-							<span class="block text-xs font-thin">Page</span>
-							<span>{result.keys[0]}</span>
-						</p>
-						<p class="col-span-1 ml-4 text-sm">
-							<span class="block text-xs font-thin">Imp.</span>
-							{result.impressions}
-						</p>
-						<p class="col-span-1 ml-4 text-sm">
-							<span class="block text-xs font-thin">Clicks</span>
-							{result.clicks}
-						</p>
-						<p class="col-span-1 ml-4 text-sm">
-							<span class="block text-xs font-thin">Ctr</span>
-							{result.ctr.toFixed(2)}
-						</p>
-						<p class="col-span-1 ml-4 text-sm">
-							<span class="block text-xs font-thin">Position</span>
-							{result.position.toFixed(2)}
-						</p>
-					</li>
-				{/each}
-			</ol>
-		</section>
-	{/if}
 </Main>
