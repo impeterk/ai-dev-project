@@ -6,13 +6,14 @@
  * @returns {void}
  */
 export function printLog(label, value) {
-	console.log('                         |');
-	console.log('                         |');
-	console.log('************************START**********************');
+	console.log('                                             ');
+	console.log(
+		'************************' + new Date().toLocaleTimeString() + '**********************'
+	);
 	console.log(label + ':');
 	console.log(value);
-	console.log('************************END************************');
-	console.log('                         |');
-	console.log('                         |');
-
+	console.log(
+		'************************' + new Date().toLocaleTimeString() + '**********************'
+	);
+	console.log('                                            ');
 }

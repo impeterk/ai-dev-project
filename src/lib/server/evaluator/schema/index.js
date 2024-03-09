@@ -9,7 +9,7 @@ import { printLog } from '../../../utils/logger';
  * @param {Object} data - The data to be validated against the schema.
  * @returns {string} - The status of the schema data. Possible values are 'MISSING', 'OK', or 'INVALID'.
  */
-export async function checkSchemaData(data) {
+export function checkSchemaData(data) {
 	if (isEmpty(data)) {
 		return STATUS.MISSING;
 	}

@@ -1,4 +1,5 @@
 <script>
+	export let data;
 	import Main from '$lib/components/main.svelte';
 	// set main title(h1) on the page
 
@@ -9,10 +10,11 @@
 	import { currentCollection, breadcrumbs } from '$lib/store';
 	import { onDestroy, beforeUpdate } from 'svelte';
 
-	const { id, date } = $page.params;
+	const { id, date } = $page;
 	let expanded = null;
 
 	$: results = $currentCollection;
+	$: gscData = data;
 
 	// breadcrumbs
 	// TODO: rework to generate from server
@@ -26,6 +28,8 @@
 
 <Main>
 	<svelte:fragment slot="title">URL Results</svelte:fragment>
+
+	<!-- URL Results -->
 	<section class="">
 		<div class="flex flex-col bg-slate-500 p-4 text-slate-100">
 			<div class="mx-4 flex items-center justify-between">
@@ -105,6 +109,40 @@
 					</div>
 				{/if}
 			{/each}
+			<!-- GSC Data section-->
+			<section>
+				{#if gscData}
+					<section class="my-2 w-full">
+						<span class="text-sm font-thin text-slate-500">Google Search Console data</span>
+						<ol class="rounded-md bg-white">
+							{#each $gscData as result}
+								<li class="grid w-full grid-cols-12 items-center rounded-md p-2 hover:bg-slate-100">
+									<p class="col-span-8 text-sm">
+										<span class="block text-xs font-thin">Page</span>
+										<span>{result.keys[0]}</span>
+									</p>
+									<p class="col-span-1 ml-4 text-sm">
+										<span class="block text-xs font-thin">Imp.</span>
+										{result.impressions}
+									</p>
+									<p class="col-span-1 ml-4 text-sm">
+										<span class="block text-xs font-thin">Clicks</span>
+										{result.clicks}
+									</p>
+									<p class="col-span-1 ml-4 text-sm">
+										<span class="block text-xs font-thin">Ctr</span>
+										{result.ctr.toFixed(2)}
+									</p>
+									<p class="col-span-1 ml-4 text-sm">
+										<span class="block text-xs font-thin">Position</span>
+										{result.position.toFixed(2)}
+									</p>
+								</li>
+							{/each}
+						</ol>
+					</section>
+				{/if}
+			</section>
 		</ol>
 
 		<Pagination />
